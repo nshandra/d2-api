@@ -1,5 +1,8 @@
-import Axios, { AxiosBasicCredentials, AxiosInstance } from "axios";
+import "axios-debug-log";
+import axios, { AxiosBasicCredentials, AxiosInstance } from "axios";
 import _ from "lodash";
+//import { stringify } from "querystring";
+import qs from "qs";
 
 export const joinPath = (...parts: (string | undefined | null)[]): string => {
     return _(parts)
@@ -9,9 +12,14 @@ export const joinPath = (...parts: (string | undefined | null)[]): string => {
 };
 
 export const prepareConnection = (baseURL: string, auth?: AxiosBasicCredentials): AxiosInstance => {
-    return Axios.create({
+    const instance = axios.create({
         baseURL,
         auth,
-        withCredentials: !auth
+        withCredentials: !auth,
+        paramsSerializer: function(params) {
+            return qs.stringify(params, { arrayFormat: "repeat" });
+        },
     });
+
+    return instance;
 };

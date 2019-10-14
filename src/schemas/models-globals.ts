@@ -55,3 +55,10 @@ export interface D2Expression {
     missingValueStrategy: "NEVER_SKIP" | "SKIP_IF_ANY_VALUE_MISSING" | "SKIP_IF_ALL_VALUES_MISSING";
     slidingWindow: boolean;
 }
+
+export interface D2Sharing {
+    publicAccess: string;
+    externalAccess: boolean;
+    userAccesses: D2Access[];
+    userGroupAccesses: D2Access[];
+}

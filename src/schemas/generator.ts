@@ -18,6 +18,8 @@ interface SchemaProperty {
 interface Schema {
     klass: string;
     properties: SchemaProperty[];
+    plural: string;
+    metadata: boolean;
 }
 
 const interfaceFromClass: _.Dictionary<string> = {
@@ -75,8 +77,7 @@ const getType = (property: SchemaProperty): string => {
             if (interfaceName) {
                 return interfaceName;
             } else {
-                console.log(property.klass);
-                //throw "complex";
+                console.log(`Complex type defaults to any: ${property.klass}`);
                 return "any";
             }
         default:
@@ -123,20 +124,34 @@ const start = async () => {
     const args = getArgsParser();
     const schemaUrl = joinPath(args.url, "/api/schemas.json");
     const { schemas } = (await axios.get(schemaUrl)).data as { schemas: Schema[] };
+    const metadataModels = _(schemas)
+        .filter(schema => schema.metadata)
+        .map(schema => schema.plural)
+        .value();
     const globalProperties = fs.readFileSync(path.join(__dirname, "models-globals.ts"));
     const schemasString = schemas.map(schema => createModelInterface(schema)).join("\n\n");
+    const modelsDeclaration = `
+        export enum Model {
+            ${metadataModels.map(model => `${model} = "${model}"`).join(",\n")}
+        }
 
-    const parts = [globalProperties, schemasString];
+        export type ModelName = keyof typeof Model;
+    `;
+    console.log(modelsDeclaration);
+
+    const parts = [globalProperties, schemasString, modelsDeclaration];
     const prettierConfigFile = await prettier.resolveConfigFile();
     if (!prettierConfigFile) throw new Error("Cannot find prettier config file");
+    /*
     const prettierConfig = await prettier.resolveConfig(prettierConfigFile);
     const data = prettier.format(parts.join("\n\n"), {
         parser: "babel",
         ...prettierConfig,
     });
+    */
+    const data = parts.join("\n\n");
 
     const tsPath = path.join(__dirname, "models.ts");
-
     fs.writeFile(tsPath, data, err => {
         if (err) console.error(err);
         else console.log(`Written: ${tsPath}`);
