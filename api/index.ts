@@ -26,7 +26,7 @@ export interface D2ApiResponse {
 
 export type D2ApiIdentifier = string;
 
-export default class {
+export default class D2Api {
     private apiPath: string;
     private connection: AxiosInstance;
 
