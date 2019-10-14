@@ -1,8 +1,11 @@
 import Axios, { AxiosBasicCredentials, AxiosInstance } from "axios";
+import _ from "lodash";
 
 export const joinPath = (...parts: (string | undefined | null)[]): string => {
-    const realParts = parts.filter(part => !!part) as string[];
-    return realParts.map(part => part.replace(/^\/+|\/+$/g, "")).join("/");
+    return _(parts)
+        .map(part => (part ? part.replace(/^\/+|\/+$/g, "") : null))
+        .compact()
+        .join("/");
 };
 
 export const prepareConnection = (baseURL: string, auth?: AxiosBasicCredentials): AxiosInstance => {
