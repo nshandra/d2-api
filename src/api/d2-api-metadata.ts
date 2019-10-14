@@ -23,6 +23,42 @@ export interface PostOptions {
     overrideUser: string;
 }
 
+export interface Stats {
+    created: number;
+    updated: number;
+    deleted: number;
+    ignored: number;
+    total: number;
+}
+
+export interface MetadataResponse {
+    importParams: PostOptions;
+    status: "OK" | "ERROR";
+    stats: Stats;
+    typeReports: TypeReport[];
+}
+
+export interface ErrorReport {
+    message: string;
+    mainKlass: string;
+    errorKlass: string;
+    errorProperty: string;
+    errorCode: string;
+}
+
+export interface ObjectReport {
+    klass: string;
+    index: number;
+    uid: string;
+    errorReports: ErrorReport[];
+}
+
+export interface TypeReport {
+    klass: string;
+    stats: Stats;
+    objectReports: ObjectReport[];
+}
+
 export default class D2ApiMetadata {
     d2Api: D2Api;
 

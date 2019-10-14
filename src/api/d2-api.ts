@@ -31,7 +31,7 @@ export default class D2Api {
     private apiPath: string;
     private connection: AxiosInstance;
     metadata: D2ApiMetadata;
-    models: { [K in ModelName]: D2ApiModel };
+    models: { [MN in ModelName]: D2ApiModel<MN> };
 
     public constructor({ baseUrl, apiVersion, auth }: D2ApiOptions) {
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
@@ -40,7 +40,7 @@ export default class D2Api {
         this.models = _(Object.keys(Model))
             .map(modelName => [modelName, new D2ApiModel(this, modelName)])
             .fromPairs()
-            .value() as { [K in ModelName]: D2ApiModel };
+            .value() as { [MN in ModelName]: D2ApiModel<MN> };
     }
 
     public request<T>(

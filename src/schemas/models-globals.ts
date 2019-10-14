@@ -1,6 +1,6 @@
 type Id = string;
 
-export interface D2IdentifiableObject {
+export interface Ref {
     id: Id;
 }
 
@@ -61,4 +61,15 @@ export interface D2Sharing {
     externalAccess: boolean;
     userAccesses: D2Access[];
     userGroupAccesses: D2Access[];
+}
+
+export interface MessageDestination {
+    users?: Ref[];
+    userGroups?: Ref[];
+    organisationUnits?: Ref[];
+}
+
+export interface Message extends MessageDestination {
+    subject: string;
+    text?: string;
 }

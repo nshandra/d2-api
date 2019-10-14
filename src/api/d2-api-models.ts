@@ -22,11 +22,11 @@ export interface GetParams {
     fields?: string;
 }
 
-export default class D2ApiModel {
+export default class D2ApiModel<T> {
     d2Api: D2Api;
-    name: string;
+    name: T;
 
-    constructor(d2Api: D2Api, name: string) {
+    constructor(d2Api: D2Api, name: T) {
         this.d2Api = d2Api;
         this.name = name;
     }
