@@ -50,7 +50,7 @@ function getFieldsAsString(modelFields: FieldsSelector): string {
     return _(modelFields)
         .map((value, key) => {
             if (typeof value === "boolean") {
-                return value ? key : null;
+                return value ? key.replace(/^\$/, ":") : null;
             } else {
                 return key + "[" + getFieldsAsString(value) + "]";
             }
@@ -59,8 +59,12 @@ function getFieldsAsString(modelFields: FieldsSelector): string {
         .join(",");
 }
 
-export function getParams(modelOptions: GetOptionValue, modelName?: string): _.Dictionary<any> {
+export function processFieldsFilterParams(
+    modelOptions: GetOptionValue,
+    modelName?: string
+): _.Dictionary<any> {
     const join = (s: string) => _.compact([modelName, s]).join(":");
+
     return _.pickBy({
         [join("fields")]: modelOptions.fields && getFieldsAsString(modelOptions.fields),
         [join("filter")]:

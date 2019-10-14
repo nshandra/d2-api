@@ -1,6 +1,6 @@
 import _ from "lodash";
 import D2Api, { Params } from "./d2-api";
-import { GetOptionValue, getParams } from "./common";
+import { GetOptionValue, processFieldsFilterParams } from "./common";
 
 interface GetOptions {
     [model: string]: GetOptionValue;
@@ -68,7 +68,7 @@ export default class D2ApiMetadata {
 
     get(options: GetOptions) {
         const metadataOptions = _(options)
-            .map((modelOptions, modelName) => getParams(modelOptions, modelName))
+            .map((modelOptions, modelName) => processFieldsFilterParams(modelOptions, modelName))
             .reduce(_.merge, {});
         return this.d2Api.get("/metadata", metadataOptions);
     }

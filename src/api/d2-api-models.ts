@@ -1,6 +1,6 @@
 import _ from "lodash";
-import D2Api, { D2ApiResponse } from "./d2-api";
-import { GetOptionValue, getParams } from "./common";
+import D2Api, { D2ApiResponse, Params } from "./d2-api";
+import { GetOptionValue, processFieldsFilterParams } from "./common";
 import { AxiosResponse } from "axios";
 
 export interface Pager {
@@ -15,25 +15,33 @@ export interface PaginatedObjects<T> {
     objects: T[];
 }
 
-export interface GetParams {
+export type GetOptions = GetOptionValue & {
     pageSize?: number;
     paging?: boolean;
-    filter?: string[];
+    order?: string;
+};
+
+export interface GetParams {
     fields?: string;
+    filter?: string[];
+    pageSize?: number;
+    paging?: boolean;
+    order?: string;
 }
 
 export default class D2ApiModel<T> {
     d2Api: D2Api;
-    name: T;
+    name: string;
 
-    constructor(d2Api: D2Api, name: T) {
+    constructor(d2Api: D2Api, name: string) {
         this.d2Api = d2Api;
         this.name = name;
     }
 
-    get<T>(options: GetOptionValue): D2ApiResponse<PaginatedObjects<T>> {
-        const params = getParams(options);
-        const { cancel, response } = this.d2Api.get<any>(`/${this.name}`, params);
+    get<GetOptions_ extends GetOptions>(options: GetOptions_): D2ApiResponse<PaginatedObjects<T>> {
+        const paramsFieldsFilter = processFieldsFilterParams(options);
+        const params = { ...options, ...paramsFieldsFilter } as GetParams;
+        const { cancel, response } = this.d2Api.get<any>(`/${this.name}`, params as Params);
         const responseWithObjects = response.then(response_ => ({
             ...response_,
             data: {
@@ -41,6 +49,7 @@ export default class D2ApiModel<T> {
                 objects: response_.data[this.name],
             },
         })) as Promise<AxiosResponse<PaginatedObjects<T>>>;
+
         return { cancel, response: responseWithObjects };
     }
 }

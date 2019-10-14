@@ -1,4 +1,4 @@
-import { Model, ModelName } from "./../schemas/models";
+import { Model, D2Models } from "./../schemas/models";
 import Axios, { AxiosInstance, AxiosResponse, Canceler, AxiosBasicCredentials } from "axios";
 import _ from "lodash";
 
@@ -27,11 +27,13 @@ export interface D2ApiResponse<T> {
 
 export type D2ApiIdentifier = string;
 
+type Models = { [MN in keyof D2Models]: D2ApiModel<D2Models[MN]> };
+
 export default class D2Api {
     private apiPath: string;
     private connection: AxiosInstance;
     metadata: D2ApiMetadata;
-    models: { [MN in ModelName]: D2ApiModel<MN> };
+    models: Models;
 
     public constructor({ baseUrl, apiVersion, auth }: D2ApiOptions) {
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
@@ -40,7 +42,7 @@ export default class D2Api {
         this.models = _(Object.keys(Model))
             .map(modelName => [modelName, new D2ApiModel(this, modelName)])
             .fromPairs()
-            .value() as { [MN in ModelName]: D2ApiModel<MN> };
+            .value() as Models;
     }
 
     public request<T>(

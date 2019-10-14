@@ -47,7 +47,7 @@ const getType = (property: SchemaProperty): string => {
 
     switch (propertyType) {
         case "REFERENCE":
-            return "D2IdentifiableObject";
+            return "Ref";
         case "COLLECTION":
             if (!itemPropertyType || !itemKlass) throw new Error("Missing item info");
 
@@ -124,20 +124,22 @@ const start = async () => {
     const args = getArgsParser();
     const schemaUrl = joinPath(args.url, "/api/schemas.json");
     const { schemas } = (await axios.get(schemaUrl)).data as { schemas: Schema[] };
-    const metadataModels = _(schemas)
+    const models = _(schemas)
         .filter(schema => schema.metadata)
-        .map(schema => schema.plural)
         .value();
     const globalProperties = fs.readFileSync(path.join(__dirname, "models-globals.ts"));
     const schemasString = schemas.map(schema => createModelInterface(schema)).join("\n\n");
     const modelsDeclaration = `
         export enum Model {
-            ${metadataModels.map(model => `${model} = "${model}"`).join(",\n")}
+            ${models.map(model => `${model.plural} = "${model.plural}"`).join(",\n")}
         }
 
-        export type ModelName = keyof typeof Model;
+        export type D2Models = {
+            ${models.map(model => `${model.plural}: D2${getClassName(model.klass)}`).join("; ")}
+        }
+
+        export type D2Model = D2Models[keyof D2Models];
     `;
-    console.log(modelsDeclaration);
 
     const parts = [globalProperties, schemasString, modelsDeclaration];
     const prettierConfigFile = await prettier.resolveConfigFile();
