@@ -1,12 +1,17 @@
+import { joinPath } from "./../utils/connection";
 import axios from "axios";
+import path from "path";
 import _ from "lodash";
 import prettier from "prettier";
 import fs from "fs";
+import argparse from "argparse";
 
 interface SchemaProperty {
     fieldName: string;
     propertyType: string;
+    itemPropertyType?: string;
     constants?: string[];
+    klass: string;
     itemKlass?: string;
 }
 
@@ -15,16 +20,41 @@ interface Schema {
     properties: SchemaProperty[];
 }
 
-const getClassName = (klass: string) => klass.split(".").pop();
+const interfaceFromClass: _.Dictionary<string> = {
+    "org.hisp.dhis.security.acl.Access": "D2Access",
+    "org.hisp.dhis.attribute.AttributeValue": "D2AttributeValue",
+    "org.hisp.dhis.translation.Translation": "D2Translation",
+    "org.hisp.dhis.user.UserGroupAccess": "D2UserGroupAccess",
+    "org.hisp.dhis.user.UserAccess": "D2UserAccess",
+    "org.hisp.dhis.common.ObjectStyle": "D2Style",
+    "org.hisp.dhis.common.DimensionalKeywords": "D2DimensionalKeywords",
+    "com.vividsolutions.jts.geom.Geometry": "D2Geometry",
+    "org.hisp.dhis.dataset.DataSetElement": "D2DataSetElement",
+    "org.hisp.dhis.dataset.DataInputPeriod": "D2DataInputPeriod",
+    "org.hisp.dhis.expression.Expression": "D2Expression",
+    "org.hisp.dhis.period.PeriodType": "string", // TODO
+    "org.hisp.dhis.category.CategoryDimension": "D2CategoryDimension",
+    "java.lang.Object": "object",
+    "java.util.Map": "object",
+};
 
-const getType = (type: string, constants: string[] = [], itemKlass?: string) => {
-    switch (type) {
+const getClassName = (klass: string): string => _.last(klass.split(".")) || "unknown";
+
+const getType = (property: SchemaProperty): string => {
+    const { fieldName, propertyType, klass, constants, itemPropertyType, itemKlass } = property;
+
+    switch (propertyType) {
         case "REFERENCE":
             return "D2IdentifiableObject";
         case "COLLECTION":
-            if (itemKlass === "java.lang.String") return "string[]";
-            if (itemKlass === "java.lang.Integer") return "number[]";
-            return "D2IdentifiableObject[]";
+            if (!itemPropertyType || !itemKlass) throw new Error("Missing item info");
+
+            const innerType = getType({
+                fieldName,
+                propertyType: itemPropertyType,
+                klass: itemKlass,
+            });
+            return `(${innerType})[]`;
         case "TEXT":
         case "URL":
         case "PHONENUMBER":
@@ -35,59 +65,81 @@ const getType = (type: string, constants: string[] = [], itemKlass?: string) => 
         case "DATE":
             return "Date";
         case "IDENTIFIER":
-            return "Identifier";
+            return "Id";
         case "INTEGER":
             return "number";
         case "CONSTANT":
-            return constants.map(constant => `"${constant}"`).join(" | ");
+            return constants ? constants.map(constant => `"${constant}"`).join(" | ") : "never";
         case "COMPLEX":
-            return "any";
+            const interfaceName = interfaceFromClass[klass];
+            if (interfaceName) {
+                return interfaceName;
+            } else {
+                console.log(property.klass);
+                //throw "complex";
+                return "any";
+            }
         default:
-            return type.toLowerCase();
+            return propertyType.toLowerCase();
     }
 };
 
-const createType = (name: string, type: string) => `type ${name} = ${type};`;
+function createInterface(name: string, properties: _.Dictionary<string>, parent?: string): string {
+    const interfaceString = ["interface", name, parent ? `extends ${parent}` : ""].join(" ");
+    const propertiesString = _(properties)
+        .toPairs()
+        .sortBy()
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(";");
 
-const createProperty = ({ fieldName, propertyType, constants, itemKlass }: SchemaProperty) =>
-    `${fieldName === "uid" ? "id" : fieldName}: ${getType(propertyType, constants, itemKlass)};`;
-
-const createInterface = ({ klass, properties }: Schema, parent?: string) => `
-interface D2${getClassName(klass)} ${parent ? `extends ${parent}` : ""} {
-    ${properties
-        .filter(({ fieldName }) => fieldName !== undefined)
-        .map(createProperty)
-        .join("")}
+    return `export ${interfaceString} {
+        ${propertiesString}
+    }`;
 }
-`;
 
-const start = async () => {
-    const { schemas } = (await axios.get("https://play.dhis2.org/2.32.2/api/schemas.json", {
-        auth: { username: "admin", password: "district" },
-        params: {
-            fields: "klass,properties[fieldName,propertyType,constants,itemKlass]",
-        },
-    })).data as { schemas: Schema[] };
+function createModelInterface(schema: Schema, parent?: string): string {
+    const properties = _(schema.properties)
+        .map(property => [
+            property.fieldName === "uid" ? "id" : property.fieldName,
+            getType(property),
+        ])
+        .fromPairs()
+        .value();
 
-    const Identifier = createType("Identifier", "string");
+    return createInterface("D2" + getClassName(schema.klass), properties, parent);
+}
 
-    const IdentifiableObject = createInterface({
-        klass: "IdentifiableObject",
-        properties: [{ fieldName: "id", propertyType: "IDENTIFIER" }],
+function getArgsParser() {
+    const parser = new argparse.ArgumentParser();
+    parser.addArgument(["-u", "--url"], {
+        required: true,
+        help: "DHIS2 instance URL: http://username:password@server:port",
     });
 
-    const Schemas = schemas.map(schema => createInterface(schema, "D2IdentifiableObject")).join("");
+    return parser.parseArgs();
+}
 
+const start = async () => {
+    const args = getArgsParser();
+    const schemaUrl = joinPath(args.url, "/api/schemas.json");
+    const { schemas } = (await axios.get(schemaUrl)).data as { schemas: Schema[] };
+    const globalProperties = fs.readFileSync(path.join(__dirname, "models-globals.ts"));
+    const schemasString = schemas.map(schema => createModelInterface(schema)).join("\n\n");
+
+    const parts = [globalProperties, schemasString];
     const prettierConfigFile = await prettier.resolveConfigFile();
+    if (!prettierConfigFile) throw new Error("Cannot find prettier config file");
     const prettierConfig = await prettier.resolveConfig(prettierConfigFile);
-    const data = prettier.format([Identifier, IdentifiableObject, Schemas].join("\n"), {
+    const data = prettier.format(parts.join("\n\n"), {
         parser: "babel",
         ...prettierConfig,
     });
 
-    fs.writeFile("types.d.ts", data, err => {
+    const tsPath = path.join(__dirname, "models.ts");
+
+    fs.writeFile(tsPath, data, err => {
         if (err) console.error(err);
-        else console.log("Done!");
+        else console.log(`Written: ${tsPath}`);
     });
 };
 

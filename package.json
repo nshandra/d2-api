@@ -21,6 +21,9 @@
   "dependencies": {
     "@babel/runtime": "^7.5.4",
     "@dhis2/d2-i18n": "^1.0.5",
+    "@types/argparse": "^1.0.36",
+    "@types/prettier": "^1.18.3",
+    "argparse": "^1.0.10",
     "axios": "^0.19.0",
     "btoa": "^1.2.1",
     "cronstrue": "^1.81.0",
