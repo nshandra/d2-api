@@ -3,8 +3,8 @@ import _ from "lodash";
 
 import { Model, D2Models } from "./../schemas/models";
 import { joinPath, prepareConnection } from "../utils/connection";
-import D2ApiMetadata from "./d2-api-metadata";
-import D2ApiModel from "./d2-api-models";
+import D2ApiMetadata from "./metadata";
+import D2ApiModel from "./models";
 
 import { Params, D2ApiResponse } from "./common";
 

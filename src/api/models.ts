@@ -1,6 +1,6 @@
 import _ from "lodash";
-import { Ref } from "./../schemas/models";
-import D2Api from "./d2-api"
+import { Ref } from "../schemas/models";
+import D2Api from "./d2-api";
 import {
     GetOptionValue,
     processFieldsFilterParams,
