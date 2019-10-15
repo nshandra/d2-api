@@ -1,13 +1,14 @@
 import _ from "lodash";
 import { Ref } from "./../schemas/models";
-import D2Api, {
+import D2Api from "./d2-api"
+import {
     GetOptionValue,
     processFieldsFilterParams,
     D2ApiResponse,
     Params,
     mapD2ApiResponse,
     GenericResponse,
-} from "./d2-api";
+} from "./common";
 
 export interface Pager {
     page: number;

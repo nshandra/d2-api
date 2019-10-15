@@ -8,6 +8,20 @@ Typescript library for DHIS2 api
 $ yarn generate-schemas http://admin:district@localhost:8080
 ```
 
+## Development
+
+```
+$ yarn build
+$ cd build
+$ yarn link
+```
+
+On your app:
+
+```
+$ yarn link d2-api
+```
+
 ## Usage
 
 ### Metadata models

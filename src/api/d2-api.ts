@@ -6,25 +6,7 @@ import { joinPath, prepareConnection } from "../utils/connection";
 import D2ApiMetadata from "./d2-api-metadata";
 import D2ApiModel from "./d2-api-models";
 
-import {
-    GenericResponse,
-    Params,
-    D2ApiResponse,
-    GetOptionValue,
-    processFieldsFilterParams,
-    ErrorReport,
-    mapD2ApiResponse,
-} from "./common";
-
-export {
-    GenericResponse,
-    Params,
-    D2ApiResponse,
-    GetOptionValue,
-    processFieldsFilterParams,
-    ErrorReport,
-    mapD2ApiResponse,
-};
+import { Params, D2ApiResponse } from "./common";
 
 export interface D2ApiOptions {
     baseUrl: string;
