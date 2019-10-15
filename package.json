@@ -1,18 +1,18 @@
 {
-    "name": "metadata-synchronization-server",
-    "description": "Advanced metadata synchronization utility",
+    "name": "d2-api",
+    "description": "Typed wrapper over DHIS2 API",
     "version": "0.1.0",
     "license": "GPL-3.0",
     "author": "EyeSeeTea team",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/eyeseetea/metadata-synchronization-server.git"
+        "url": "git+https://github.com/eyeseetea/d2-api.git"
     },
     "scripts": {
         "start": "NODE_ENV=development babel-watch src --extensions \".js,.jsx,.ts,.tsx\"",
         "clean": "rimraf build",
         "prebuild": "yarn clean",
-        "build": "babel src --out-dir build --extensions \".js,.jsx,.ts,.tsx\"",
+        "build": "babel src --out-dir build --extensions \".js,.jsx,.ts,.tsx\" && tsc && cp package.json build/",
         "predist": "rimraf dist && yarn build",
         "dist": "ncc build build/ -m",
         "postdist": "cp dist/index.js $npm_package_name.js",
