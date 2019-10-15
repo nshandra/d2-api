@@ -8,8 +8,10 @@ import D2ApiModel from "./d2-api-models";
 
 import { Params, D2ApiResponse } from "./common";
 
+export { D2ApiResponse };
+
 export interface D2ApiOptions {
-    baseUrl: string;
+    baseUrl?: string;
     apiVersion?: number;
     auth?: AxiosBasicCredentials;
 }
@@ -18,11 +20,13 @@ type Models = { [MN in keyof D2Models]: D2ApiModel<D2Models[MN]> };
 
 export default class D2Api {
     private apiPath: string;
-    private connection: AxiosInstance;
-    metadata: D2ApiMetadata;
-    models: Models;
 
-    public constructor({ baseUrl, apiVersion, auth }: D2ApiOptions) {
+    public connection: AxiosInstance;
+    public metadata: D2ApiMetadata;
+    public models: Models;
+
+    public constructor(options?: D2ApiOptions) {
+        const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         this.connection = prepareConnection(this.apiPath, auth);
         this.metadata = new D2ApiMetadata(this);
