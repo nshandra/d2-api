@@ -1,7 +1,13 @@
 import _ from "lodash";
-import D2Api, { D2ApiResponse, Params } from "./d2-api";
-import { GetOptionValue, processFieldsFilterParams } from "./common";
-import { AxiosResponse } from "axios";
+import { Ref } from "./../schemas/models";
+import D2Api, {
+    GetOptionValue,
+    processFieldsFilterParams,
+    D2ApiResponse,
+    Params,
+    mapD2ApiResponse,
+    GenericResponse,
+} from "./d2-api";
 
 export interface Pager {
     page: number;
@@ -15,11 +21,19 @@ export interface PaginatedObjects<T> {
     objects: T[];
 }
 
-export type GetOptions = GetOptionValue & {
-    pageSize?: number;
-    paging?: boolean;
-    order?: string;
-};
+export type GetOptions = GetOptionValue &
+    Partial<{
+        pageSize: number;
+        paging: boolean;
+        order: string;
+        rootJunction: "AND" | "OR";
+    }>;
+
+export interface UpdateOptions {
+    preheatCache: boolean;
+    strategy: "CREATE_AND_UPDATE" | "CREATE" | "UPDATE" | "DELETE";
+    mergeMode: "REPLACE" | "MERGE";
+}
 
 export interface GetParams {
     fields?: string;
@@ -41,15 +55,27 @@ export default class D2ApiModel<T> {
     get<GetOptions_ extends GetOptions>(options: GetOptions_): D2ApiResponse<PaginatedObjects<T>> {
         const paramsFieldsFilter = processFieldsFilterParams(options);
         const params = { ...options, ...paramsFieldsFilter } as GetParams;
-        const { cancel, response } = this.d2Api.get<any>(`/${this.name}`, params as Params);
-        const responseWithObjects = response.then(response_ => ({
-            ...response_,
-            data: {
-                pager: response_.data.pager,
-                objects: response_.data[this.name],
-            },
-        })) as Promise<AxiosResponse<PaginatedObjects<T>>>;
+        const apiResponse = this.d2Api.get<any>(`/${this.name}`, params as Params);
+        const { name } = this;
+        function useObjectsProperty(data: any): PaginatedObjects<T> {
+            return {
+                pager: data.pager,
+                objects: data[name],
+            };
+        }
 
-        return { cancel, response: responseWithObjects };
+        return mapD2ApiResponse(apiResponse, useObjectsProperty);
+    }
+
+    post(payload: object, options?: UpdateOptions): D2ApiResponse<GenericResponse> {
+        return this.d2Api.post(`/${this.name}`, (options || {}) as Params, payload);
+    }
+
+    put<T extends Ref>(payload: T, options?: UpdateOptions): D2ApiResponse<GenericResponse> {
+        return this.d2Api.put(`/${this.name}/${payload.id}`, (options || {}) as Params, payload);
+    }
+
+    delete<T extends Ref>(payload: T): D2ApiResponse<GenericResponse> {
+        return this.d2Api.delete(`/${this.name}/${payload.id}`);
     }
 }

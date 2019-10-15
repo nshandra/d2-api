@@ -1,4 +1,13 @@
 import _ from "lodash";
+import { Canceler, AxiosResponse } from "axios";
+
+export interface ErrorReport {
+    message: string;
+    mainKlass: string;
+    errorKlass: string;
+    errorProperty: string;
+    errorCode: string;
+}
 
 export interface FieldsSelector {
     [property: string]: boolean | FieldsSelector;
@@ -77,4 +86,40 @@ export function processFieldsFilterParams(
                 )
             ),
     });
+}
+
+export interface D2ApiResponse<T> {
+    cancel: Canceler;
+    response: Promise<AxiosResponse<T>>;
+}
+
+export function mapD2ApiResponse<R, T>(
+    apiResponse: D2ApiResponse<R>,
+    mapper: (apiResponse: R) => T
+): D2ApiResponse<T> {
+    const { cancel, response } = apiResponse;
+    const mappedResponse = response.then(response_ => ({
+        ...response_,
+        data: mapper(response_.data),
+    }));
+    return { cancel, response: mappedResponse };
+}
+
+export type D2ApiRequestParamsValue = string | number | boolean | undefined;
+
+export interface Params {
+    [key: string]: D2ApiRequestParamsValue | D2ApiRequestParamsValue[];
+}
+
+export interface GenericResponse {
+    httpStatus: "OK" | "Conflict";
+    httpStatusCode: number;
+    status: "OK" | "ERROR";
+    message?: string;
+    response?: {
+        responseType: "ObjectReport";
+        uid: string;
+        klass: string;
+        errorReports?: ErrorReport[];
+    };
 }

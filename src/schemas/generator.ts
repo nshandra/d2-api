@@ -56,7 +56,7 @@ const getType = (property: SchemaProperty): string => {
                 propertyType: itemPropertyType,
                 klass: itemKlass,
             });
-            return `(${innerType})[]`;
+            return `${innerType}[]`;
         case "TEXT":
         case "URL":
         case "PHONENUMBER":
@@ -77,7 +77,7 @@ const getType = (property: SchemaProperty): string => {
             if (interfaceName) {
                 return interfaceName;
             } else {
-                console.log(`Complex type defaults to any: ${property.klass}`);
+                console.log(`Unsupported complex type, default to any: ${property.klass}`);
                 return "any";
             }
         default:
@@ -112,8 +112,7 @@ function createModelInterface(schema: Schema, parent?: string): string {
 
 function getArgsParser() {
     const parser = new argparse.ArgumentParser();
-    parser.addArgument(["-u", "--url"], {
-        required: true,
+    parser.addArgument("url", {
         help: "DHIS2 instance URL: http://username:password@server:port",
     });
 
@@ -144,13 +143,6 @@ const start = async () => {
     const parts = [globalProperties, schemasString, modelsDeclaration];
     const prettierConfigFile = await prettier.resolveConfigFile();
     if (!prettierConfigFile) throw new Error("Cannot find prettier config file");
-    /*
-    const prettierConfig = await prettier.resolveConfig(prettierConfigFile);
-    const data = prettier.format(parts.join("\n\n"), {
-        parser: "babel",
-        ...prettierConfig,
-    });
-    */
     const data = parts.join("\n\n");
 
     const tsPath = path.join(__dirname, "models.ts");

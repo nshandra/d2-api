@@ -1,6 +1,13 @@
 import _ from "lodash";
-import D2Api, { Params } from "./d2-api";
-import { GetOptionValue, processFieldsFilterParams } from "./common";
+import {
+    GetOptionValue,
+    processFieldsFilterParams,
+    Params,
+    ErrorReport,
+    D2ApiResponse,
+    mapD2ApiResponse,
+} from "./common";
+import D2Api from "./d2-api";
 
 interface GetOptions {
     [model: string]: GetOptionValue;
@@ -38,14 +45,6 @@ export interface MetadataResponse {
     typeReports: TypeReport[];
 }
 
-export interface ErrorReport {
-    message: string;
-    mainKlass: string;
-    errorKlass: string;
-    errorProperty: string;
-    errorCode: string;
-}
-
 export interface ObjectReport {
     klass: string;
     index: number;
@@ -66,14 +65,29 @@ export default class D2ApiMetadata {
         this.d2Api = d2Api;
     }
 
-    get(options: GetOptions) {
+    get<T>(options: GetOptions): D2ApiResponse<T> {
         const metadataOptions = _(options)
             .map((modelOptions, modelName) => processFieldsFilterParams(modelOptions, modelName))
             .reduce(_.merge, {});
-        return this.d2Api.get("/metadata", metadataOptions);
+
+        function createEmpty(data: T): T {
+            return _(options)
+                .mapValues(() => [])
+                .merge(data)
+                .value();
+        }
+
+        const apiResponse = this.d2Api.get<T>("/metadata", metadataOptions);
+        return mapD2ApiResponse(apiResponse, createEmpty);
     }
 
-    post(payload: object, options?: PostOptions) {
-        return this.d2Api.post("/metadata", (options || {}) as Params, payload);
+    post(data: object, options?: PostOptions): D2ApiResponse<MetadataResponse> {
+        return this.d2Api.request({
+            method: "post",
+            url: "/metadata",
+            params: (options || {}) as Params,
+            data,
+            validateStatus: (status: number) => status >= 200 && status < 300,
+        });
     }
 }

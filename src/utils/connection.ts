@@ -16,9 +16,8 @@ export const prepareConnection = (baseURL: string, auth?: AxiosBasicCredentials)
         baseURL,
         auth,
         withCredentials: !auth,
-        paramsSerializer: function(params) {
-            return qs.stringify(params, { arrayFormat: "repeat" });
-        },
+        paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
+        validateStatus: status => status >= 200 && status < 300, // default
     });
 
     return instance;
