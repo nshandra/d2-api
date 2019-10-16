@@ -69,16 +69,16 @@ export default class D2ApiMetadata {
         const metadataOptions = _(options)
             .map((modelOptions, modelName) => processFieldsFilterParams(modelOptions, modelName))
             .reduce(_.merge, {});
+        const apiResponse = this.d2Api.get<T>("/metadata", metadataOptions);
 
-        function createEmpty(data: T): T {
+        function defaultToEmptyCollections(data: T): T {
             return _(options)
                 .mapValues(() => [])
                 .merge(data)
                 .value();
         }
 
-        const apiResponse = this.d2Api.get<T>("/metadata", metadataOptions);
-        return mapD2ApiResponse(apiResponse, createEmpty);
+        return mapD2ApiResponse(apiResponse, defaultToEmptyCollections);
     }
 
     post(data: object, options?: PostOptions): D2ApiResponse<MetadataResponse> {

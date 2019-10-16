@@ -1,3 +1,5 @@
+import { D2Models } from "./../schemas/models";
+import { Pager } from "./../../build/api/models.d";
 import _ from "lodash";
 import { Ref } from "../schemas/models";
 import D2Api from "./d2-api";
@@ -44,39 +46,41 @@ export interface GetParams {
     order?: string;
 }
 
-export default class D2ApiModel<T> {
+export default class D2ApiModel<ModelName extends keyof D2Models> {
     d2Api: D2Api;
-    name: string;
+    modelName: ModelName;
 
-    constructor(d2Api: D2Api, name: string) {
+    constructor(d2Api: D2Api, modelName: ModelName) {
         this.d2Api = d2Api;
-        this.name = name;
+        this.modelName = modelName;
     }
 
-    get<GetOptions_ extends GetOptions>(options: GetOptions_): D2ApiResponse<PaginatedObjects<T>> {
+    get(options: GetOptions): D2ApiResponse<PaginatedObjects<D2Models[ModelName]>> {
+        // TODO: use GetOptions to automatically infer paginated or paginated objects
         const paramsFieldsFilter = processFieldsFilterParams(options);
         const params = { ...options, ...paramsFieldsFilter } as GetParams;
-        const apiResponse = this.d2Api.get<any>(`/${this.name}`, params as Params);
-        const { name } = this;
-        function useObjectsProperty(data: any): PaginatedObjects<T> {
-            return {
-                pager: data.pager,
-                objects: data[name],
-            };
-        }
-
-        return mapD2ApiResponse(apiResponse, useObjectsProperty);
+        const apiResponse = this.d2Api.get<
+            { [K in ModelName]: D2Models[ModelName][] } & { pager: Pager }
+        >(this.modelName as string, params as Params);
+        return mapD2ApiResponse(apiResponse, data => ({
+            pager: data.pager,
+            objects: data[this.modelName] as D2Models[ModelName][],
+        }));
     }
 
     post(payload: object, options?: UpdateOptions): D2ApiResponse<GenericResponse> {
-        return this.d2Api.post(`/${this.name}`, (options || {}) as Params, payload);
+        return this.d2Api.post(this.modelName, (options || {}) as Params, payload);
     }
 
     put<T extends Ref>(payload: T, options?: UpdateOptions): D2ApiResponse<GenericResponse> {
-        return this.d2Api.put(`/${this.name}/${payload.id}`, (options || {}) as Params, payload);
+        return this.d2Api.put(
+            `/${this.modelName}/${payload.id}`,
+            (options || {}) as Params,
+            payload
+        );
     }
 
     delete<T extends Ref>(payload: T): D2ApiResponse<GenericResponse> {
-        return this.d2Api.delete(`/${this.name}/${payload.id}`);
+        return this.d2Api.delete(`/${this.modelName}/${payload.id}`);
     }
 }

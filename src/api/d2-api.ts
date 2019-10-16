@@ -16,7 +16,7 @@ export interface D2ApiOptions {
     auth?: AxiosBasicCredentials;
 }
 
-type Models = { [MN in keyof D2Models]: D2ApiModel<D2Models[MN]> };
+type Models = { [ModelName in keyof D2Models]: D2ApiModel<ModelName> };
 
 export default class D2Api {
     private apiPath: string;
@@ -31,7 +31,7 @@ export default class D2Api {
         this.connection = prepareConnection(this.apiPath, auth);
         this.metadata = new D2ApiMetadata(this);
         this.models = _(Object.keys(Model))
-            .map(modelName => [modelName, new D2ApiModel(this, modelName)])
+            .map((modelName: keyof D2Models) => [modelName, new D2ApiModel(this, modelName)])
             .fromPairs()
             .value() as Models;
     }
