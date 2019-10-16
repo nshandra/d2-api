@@ -1,6 +1,6 @@
+import { D2Models } from "./../schemas/models";
 import _ from "lodash";
 import {
-    GetOptionValue,
     processFieldsFilterParams,
     Params,
     ErrorReport,
@@ -8,10 +8,8 @@ import {
     mapD2ApiResponse,
 } from "./common";
 import D2Api from "./d2-api";
-
-interface GetOptions {
-    [model: string]: GetOptionValue;
-}
+import { Selector, SelectedPick } from "./inference";
+import { Filter } from "./common";
 
 export interface PostOptions {
     importMode: "COMMIT" | "VALIDATE";
@@ -58,6 +56,23 @@ export interface TypeReport {
     objectReports: ObjectReport[];
 }
 
+type RootSelector = {
+    [D2Model in keyof D2Models]?: {
+        fields: Selector<D2Models[D2Model]>;
+        filter?: Filter | Filter[];
+    };
+};
+
+type Get<Obj, Key> = Key extends keyof Obj ? Obj[Key] : never;
+
+type RootPick<RootSelectorE extends RootSelector> = {
+    [ModelKey in keyof RootSelectorE & keyof D2Models]: Array<
+        SelectedPick<D2Models[ModelKey], Get<RootSelectorE[ModelKey], "fields">>
+    >;
+};
+
+//type Debug1 = RootPick<{ dataSets: { fields: { id: true } } }>;
+
 export default class D2ApiMetadata {
     d2Api: D2Api;
 
@@ -65,14 +80,15 @@ export default class D2ApiMetadata {
         this.d2Api = d2Api;
     }
 
-    get<T>(options: GetOptions): D2ApiResponse<T> {
-        const metadataOptions = _(options)
+    get<RootSelectorE extends RootSelector, Data = RootPick<RootSelectorE>>(
+        selector: RootSelectorE
+    ): D2ApiResponse<Data> {
+        const metadataOptions = _(selector)
             .map((modelOptions, modelName) => processFieldsFilterParams(modelOptions, modelName))
             .reduce(_.merge, {});
-        const apiResponse = this.d2Api.get<T>("/metadata", metadataOptions);
-
-        function defaultToEmptyCollections(data: T): T {
-            return _(options)
+        const apiResponse = this.d2Api.get<Data>("/metadata", metadataOptions);
+        function defaultToEmptyCollections(data: Data): Data {
+            return _(selector)
                 .mapValues(() => [])
                 .merge(data)
                 .value();
