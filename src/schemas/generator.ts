@@ -13,6 +13,8 @@ interface SchemaProperty {
     constants?: string[];
     klass: string;
     itemKlass?: string;
+    persisted: boolean;
+    owner: boolean;
 }
 
 interface Schema {
@@ -40,10 +42,11 @@ const interfaceFromClass: _.Dictionary<string> = {
     "java.util.Map": "object",
 };
 
-const getClassName = (klass: string): string => _.last(klass.split(".")) || "unknown";
+const getModelName = (schema: Schema): string =>
+    "D2" + (_.last(schema.klass.split(".")) || "unknown");
 
 const getType = (property: SchemaProperty): string => {
-    const { fieldName, propertyType, klass, constants, itemPropertyType, itemKlass } = property;
+    const { propertyType, klass, constants, itemPropertyType, itemKlass } = property;
 
     switch (propertyType) {
         case "REFERENCE":
@@ -52,7 +55,7 @@ const getType = (property: SchemaProperty): string => {
             if (!itemPropertyType || !itemKlass) throw new Error("Missing item info");
 
             const innerType = getType({
-                fieldName,
+                ...property,
                 propertyType: itemPropertyType,
                 klass: itemKlass,
             });
@@ -107,7 +110,7 @@ function createModelInterface(schema: Schema, parent?: string): string {
         .fromPairs()
         .value();
 
-    return createInterface("D2" + getClassName(schema.klass), properties, parent);
+    return createInterface(getModelName(schema), properties, parent);
 }
 
 function getArgsParser() {
@@ -119,6 +122,27 @@ function getArgsParser() {
     return parser.parseArgs();
 }
 
+function quote(s: string): string {
+    return '"' + s + '"';
+}
+
+function getPropertiesUnion(
+    schema: Schema,
+    predicate: (property: SchemaProperty) => boolean
+): string {
+    return schema.properties
+        .filter(predicate)
+        .map(property => quote(property.fieldName))
+        .join(" | ");
+}
+
+/*
+const fieldPresets = {
+    identifiable: ["id", "name", "code", "created", "lastUpdated"],
+    nameable: ["id", "name", "shortName", "code", "description", "created", "lastUpdated"],
+};
+*/
+
 const start = async () => {
     const args = getArgsParser();
     const schemaUrl = joinPath(args.url, "/api/schemas.json");
@@ -129,20 +153,53 @@ const start = async () => {
     const globalProperties = fs.readFileSync(path.join(__dirname, "models-globals.ts"));
     const schemasString = schemas.map(schema => createModelInterface(schema)).join("\n\n");
     const modelsDeclaration = `
-        export enum Model {
+        export type D2Model =
+            ${models.map(model => getModelName(model)).join(" |")}
+
+        export enum D2ModelEnum {
             ${models.map(model => `${model.plural} = "${model.plural}"`).join(",\n")}
         }
 
-        export type D2Models = {
-            ${models.map(model => `${model.plural}: D2${getClassName(model.klass)}`).join("; ")}
+        export type D2ModelsInfoI = {
+            [K in D2ModelEnum]: {
+                model: D2Model;
+                fieldPresets: {
+                    [K in FieldPreset]: string;
+                };
+            }
         }
 
-        export type D2Model = D2Models[keyof D2Models];
+        export interface D2ModelsInfo extends D2ModelsInfoI {
+            ${models.map(
+                model => `${model.plural}: {
+                model: ${getModelName(model)},
+                fieldPresets: {
+                    $all: keyof ${getModelName(model)},
+                    $identifiable: FieldPresets["identifiable"]
+                    $nameable: FieldPresets["nameable"]
+                    $persisted: ${getPropertiesUnion(model, p => p.persisted)};
+                    $owner: ${getPropertiesUnion(model, p => p.owner)};
+                }
+                }`
+            )}
+        }
+
+        export type D2Models = {
+            [K in keyof D2ModelsInfo]: D2ModelsInfo[K]["model"]
+        }
     `;
 
     const parts = [globalProperties, schemasString, modelsDeclaration];
     const prettierConfigFile = await prettier.resolveConfigFile();
     if (!prettierConfigFile) throw new Error("Cannot find prettier config file");
+
+    /*
+    const prettierConfig = await prettier.resolveConfig(prettierConfigFile);
+    const data = prettier.format(parts.join("\n\n"), {
+        parser: "babel",
+        ...prettierConfig,
+    });
+    */
     const data = parts.join("\n\n");
 
     const tsPath = path.join(__dirname, "models.ts");

@@ -1,7 +1,7 @@
 import Axios, { AxiosInstance, AxiosBasicCredentials, AxiosRequestConfig } from "axios";
 import _ from "lodash";
 
-import { Model, D2Models } from "./../schemas/models";
+import { D2Models, D2ModelEnum } from "./../schemas/models";
 import { joinPath, prepareConnection } from "../utils/connection";
 import D2ApiMetadata from "./metadata";
 import D2ApiModel from "./models";
@@ -30,7 +30,7 @@ export default class D2Api {
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         this.connection = prepareConnection(this.apiPath, auth);
         this.metadata = new D2ApiMetadata(this);
-        this.models = _(Object.keys(Model))
+        this.models = _(Object.keys(D2ModelEnum))
             .map((modelName: keyof D2Models) => [modelName, new D2ApiModel(this, modelName)])
             .fromPairs()
             .value() as Models;

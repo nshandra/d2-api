@@ -73,3 +73,10 @@ export interface Message extends MessageDestination {
     subject: string;
     text?: string;
 }
+
+export type FieldPreset = "$all" | "$identifiable" | "$nameable" | "$persisted" | "$owner";
+
+export interface FieldPresets {
+    identifiable: "id" | "name" | "code" | "created" | "lastUpdated";
+    nameable: "id" | "name" | "shortName" | "code" | "description" | "created" | "lastUpdated";
+}

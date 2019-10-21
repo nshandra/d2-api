@@ -57,8 +57,8 @@ export interface TypeReport {
 }
 
 type RootSelector = {
-    [D2Model in keyof D2Models]?: {
-        fields: Selector<D2Models[D2Model]>;
+    [ModelKey in keyof D2Models]?: {
+        fields: Selector<D2Models[ModelKey]>;
         filter?: Filter | Filter[];
     };
 };

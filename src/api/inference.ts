@@ -1,3 +1,5 @@
+import { FieldPreset } from "./../schemas/models";
+
 /* Generic Helpers */
 
 type If<Condition, Then, Else> = Condition extends true ? Then : Else;
@@ -29,14 +31,6 @@ type SelectorValue =
 
 // https://docs.dhis2.org/2.30/en/developer/html/dhis2_developer_manual_full.html#webapi_metadata_field_filter
 
-interface NamedSelectors {
-    $all: boolean;
-    $identifiable: boolean;
-    $nameable: boolean;
-    $persisted: boolean;
-    $owner: boolean;
-}
-
 export type Selector<Model> = {
     [Key in keyof Model]?: If<
         IsLiteral<Model[Key]>,
@@ -46,7 +40,9 @@ export type Selector<Model> = {
             : Selector<Model[Key]>
     >;
 } &
-    Partial<NamedSelectors>;
+    {
+        [K in FieldPreset]?: boolean;
+    };
 
 export type ValidateSameKeys<SM, ModelSelector> = Exclude<
     keyof SM,
@@ -61,14 +57,17 @@ export type SelectedPickValidated<Model, SM> = SM extends ValidateSameKeys<SM, S
 
 export type SelectedPick<Model, ModelSelector extends Selector<Model>> = OmitNever<
     {
-        [Key in keyof ModelSelector & keyof Model]: ModelSelector[Key] extends object
-            ? Model[Key] extends Array<infer T>
-                ? SelectedPickValidated<T, ModelSelector[Key]>[]
-                : SelectedPickValidated<Model[Key], ModelSelector[Key]>
-            : ModelSelector[Key] extends true
-            ? (IsLiteral<Model[Key]> extends true
-                  ? Model[Key]
-                  : (Model extends { id: string } ? { id: string } : never))
-            : never;
-    }
+        [FieldPresetK in FieldPreset]: {};
+    }[FieldPreset] &
+        {
+            [Key in keyof ModelSelector & keyof Model]: ModelSelector[Key] extends object
+                ? Model[Key] extends Array<infer T>
+                    ? SelectedPickValidated<T, ModelSelector[Key]>[]
+                    : SelectedPickValidated<Model[Key], ModelSelector[Key]>
+                : ModelSelector[Key] extends true
+                ? (IsLiteral<Model[Key]> extends true
+                      ? Model[Key]
+                      : (Model extends { id: string } ? { id: string } : never))
+                : never;
+        }
 >;
