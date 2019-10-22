@@ -1,4 +1,4 @@
-import { D2Models } from "./../schemas/models";
+import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
 import {
     processFieldsFilterParams,
@@ -8,7 +8,7 @@ import {
     mapD2ApiResponse,
 } from "./common";
 import D2Api from "./d2-api";
-import { Selector, SelectedPick } from "./inference";
+import { Selector, SelectedPick, GetFields } from "./inference";
 import { Filter } from "./common";
 
 export interface PostOptions {
@@ -57,21 +57,17 @@ export interface TypeReport {
 }
 
 type RootSelector = {
-    [ModelKey in keyof D2Models]?: {
-        fields: Selector<D2Models[ModelKey]>;
+    [ModelKey in keyof D2ModelSchemas]?: {
+        fields: Selector<D2ModelSchemas[ModelKey]>;
         filter?: Filter | Filter[];
     };
 };
 
-type Get<Obj, Key> = Key extends keyof Obj ? Obj[Key] : never;
-
 type RootPick<RootSelectorE extends RootSelector> = {
-    [ModelKey in keyof RootSelectorE & keyof D2Models]: Array<
-        SelectedPick<D2Models[ModelKey], Get<RootSelectorE[ModelKey], "fields">>
+    [ModelKey in keyof RootSelectorE & keyof D2ModelSchemas]: Array<
+        SelectedPick<D2ModelSchemas[ModelKey], GetFields<RootSelectorE[ModelKey]>>
     >;
 };
-
-//type Debug1 = RootPick<{ dataSets: { fields: { id: true } } }>;
 
 export default class D2ApiMetadata {
     d2Api: D2Api;

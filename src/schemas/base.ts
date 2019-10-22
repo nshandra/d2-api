@@ -1,3 +1,5 @@
+import { OmitNever } from "../api/inference";
+
 export type Id = string;
 
 export interface Ref {
@@ -13,12 +15,24 @@ export interface D2Access {
     manage: boolean;
 }
 
+type GetDefaultSchema<Model> = {
+    fields: Model;
+    fieldPresets: {
+        $all: keyof Model;
+        $identifiable: FieldPresets["identifiable"];
+        $nameable: FieldPresets["nameable"];
+        $persisted: keyof Model;
+        $owner: keyof Model;
+    };
+};
+
 export interface D2Translation {
     property: string;
     locale: string;
     value: string;
 }
 
+/*
 export interface D2UserGroupAccess {
     access: string;
     userGroupUid: Id;
@@ -32,6 +46,7 @@ export interface D2UserAccess {
     displayName: string;
     id: Id;
 }
+*/
 
 export interface D2Style {
     color: string;
@@ -55,6 +70,13 @@ export interface D2Expression {
     missingValueStrategy: "NEVER_SKIP" | "SKIP_IF_ANY_VALUE_MISSING" | "SKIP_IF_ALL_VALUES_MISSING";
     slidingWindow: boolean;
 }
+
+export type D2AccessSchema = GetDefaultSchema<D2Access>;
+export type D2TranslationSchema = GetDefaultSchema<D2Translation>;
+export type D2StyleSchema = GetDefaultSchema<D2Style>;
+export type D2DimensionalKeywordsSchema = GetDefaultSchema<D2DimensionalKeywords>;
+export type D2GeometrySchema = GetDefaultSchema<D2Geometry>;
+export type D2ExpressionSchema = GetDefaultSchema<D2Expression>;
 
 export interface D2Sharing {
     publicAccess: string;
@@ -80,3 +102,9 @@ export interface FieldPresets {
     identifiable: "id" | "name" | "code" | "created" | "lastUpdated";
     nameable: "id" | "name" | "shortName" | "code" | "description" | "created" | "lastUpdated";
 }
+
+export type Preset<Fields, Properties> = OmitNever<
+    {
+        [K in Properties & keyof Fields]: Fields[K] extends Ref ? Ref : Fields[K];
+    }
+>;

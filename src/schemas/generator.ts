@@ -7,7 +7,8 @@ import fs from "fs";
 import argparse from "argparse";
 
 interface SchemaProperty {
-    fieldName: string;
+    name: string;
+    fieldName?: string;
     propertyType: string;
     itemPropertyType?: string;
     constants?: string[];
@@ -20,41 +21,69 @@ interface SchemaProperty {
 interface Schema {
     klass: string;
     properties: SchemaProperty[];
+    name: string;
     plural: string;
     metadata: boolean;
 }
 
+interface Schemas {
+    [className: string]: Schema;
+}
+
 const interfaceFromClass: _.Dictionary<string> = {
-    "org.hisp.dhis.security.acl.Access": "D2Access",
-    "org.hisp.dhis.attribute.AttributeValue": "D2AttributeValue",
-    "org.hisp.dhis.translation.Translation": "D2Translation",
-    "org.hisp.dhis.user.UserGroupAccess": "D2UserGroupAccess",
-    "org.hisp.dhis.user.UserAccess": "D2UserAccess",
-    "org.hisp.dhis.common.ObjectStyle": "D2Style",
-    "org.hisp.dhis.common.DimensionalKeywords": "D2DimensionalKeywords",
-    "com.vividsolutions.jts.geom.Geometry": "D2Geometry",
-    "org.hisp.dhis.dataset.DataSetElement": "D2DataSetElement",
-    "org.hisp.dhis.dataset.DataInputPeriod": "D2DataInputPeriod",
-    "org.hisp.dhis.expression.Expression": "D2Expression",
-    "org.hisp.dhis.period.PeriodType": "string", // TODO
-    "org.hisp.dhis.category.CategoryDimension": "D2CategoryDimension",
+    "org.hisp.dhis.security.acl.Access": "D2AccessSchema",
+    "org.hisp.dhis.translation.Translation": "D2TranslationSchema",
+    "org.hisp.dhis.common.ObjectStyle": "D2StyleSchema",
+    "org.hisp.dhis.common.DimensionalKeywords": "D2DimensionalKeywordsSchema",
+    "com.vividsolutions.jts.geom.Geometry": "D2GeometrySchema",
+    "org.hisp.dhis.expression.Expression": "D2ExpressionSchema",
+    "org.hisp.dhis.period.PeriodType": "string",
+    "org.hisp.dhis.chart.Series": "any",
+    "org.hisp.dhis.common.DataDimensionItem": "any",
+    "org.hisp.dhis.common.DimensionalObject": "any",
+    "org.hisp.dhis.interpretation.Mention": "any",
+    "org.hisp.dhis.message.Message": "any",
+    "org.hisp.dhis.message.UserMessage": "any",
+    "org.hisp.dhis.period.Period": "any",
+    "org.hisp.dhis.period.RelativePeriods": "any",
+    "org.hisp.dhis.programstagefilter.EventQueryCriteria": "any",
+    "org.hisp.dhis.relationship.RelationshipConstraint": "any",
+    "org.hisp.dhis.relationship.RelationshipItem": "any",
+    "org.hisp.dhis.render.DeviceRenderTypeMap": "any",
+    "org.hisp.dhis.reporttable.ReportParams": "any",
+    "org.hisp.dhis.sms.command.code.SMSCode": "any",
+    "org.hisp.dhis.sms.command.SMSSpecialCharacter": "any",
+    "org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue": "any",
+    "org.hisp.dhis.trackedentitycomment.TrackedEntityComment": "any",
+    "org.hisp.dhis.trackedentityfilter.EventFilter": "any",
+    "org.hisp.dhis.trackedentityfilter.FilterPeriod": "any",
+    "org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension": "any",
+    "org.hisp.dhis.trackedentity.TrackedEntityProgramOwner": "any",
+    "org.hisp.dhis.common.DimensionalItemObject": "any",
+
     "java.lang.Object": "object",
     "java.util.Map": "object",
 };
 
-const getModelName = (schema: Schema): string =>
-    "D2" + (_.last(schema.klass.split(".")) || "unknown");
+function getModelName(klass: string, suffix?: string): string {
+    const className = _.last(klass.split("."));
+    if (!className) {
+        throw "No class name";
+    } else {
+        return `D2${className}${suffix || ""}`;
+    }
+}
 
-const getType = (property: SchemaProperty): string => {
-    const { propertyType, klass, constants, itemPropertyType, itemKlass } = property;
+const getType = (schemas: Schemas, property: SchemaProperty): string => {
+    const { propertyType, constants, itemPropertyType, itemKlass } = property;
 
     switch (propertyType) {
         case "REFERENCE":
-            return "Ref";
+            return getInterface(schemas, property);
         case "COLLECTION":
             if (!itemPropertyType || !itemKlass) throw new Error("Missing item info");
 
-            const innerType = getType({
+            const innerType = getType(schemas, {
                 ...property,
                 propertyType: itemPropertyType,
                 klass: itemKlass,
@@ -76,18 +105,27 @@ const getType = (property: SchemaProperty): string => {
         case "CONSTANT":
             return constants ? constants.map(constant => `"${constant}"`).join(" | ") : "never";
         case "COMPLEX":
-            const interfaceName = interfaceFromClass[klass];
-            if (interfaceName) {
-                return interfaceName;
-            } else {
-                console.log(`Unsupported complex type, default to any: ${property.klass}`);
-                return "any";
-            }
+            return getInterface(schemas, property);
         default:
             return propertyType.toLowerCase();
     }
 };
 
+function getInterface(schemas: Schemas, property: SchemaProperty): string {
+    const className = _.last(property.klass.split(".")) || "";
+    //throw "error";
+
+    if (schemas[className]) {
+        return `D2${className}`;
+    } else if (interfaceFromClass[property.klass]) {
+        return interfaceFromClass[property.klass];
+    } else {
+        console.log(`Unsupported complex type, default to any: ${property.klass}`);
+        return "any";
+    }
+}
+
+/*
 function createInterface(name: string, properties: _.Dictionary<string>, parent?: string): string {
     const interfaceString = ["interface", name, parent ? `extends ${parent}` : ""].join(" ");
     const propertiesString = _(properties)
@@ -100,17 +138,17 @@ function createInterface(name: string, properties: _.Dictionary<string>, parent?
         ${propertiesString}
     }`;
 }
+*/
 
-function createModelInterface(schema: Schema, parent?: string): string {
-    const properties = _(schema.properties)
+function getModelProperties(schemas: Schemas, schema: Schema): string {
+    return _(schema.properties)
         .map(property => [
-            property.fieldName === "uid" ? "id" : property.fieldName,
-            getType(property),
+            (property.fieldName === "uid" ? "id" : property.fieldName) || property.name,
+            getType(schemas, property),
         ])
-        .fromPairs()
-        .value();
-
-    return createInterface(getModelName(schema), properties, parent);
+        .sortBy()
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(";");
 }
 
 function getArgsParser() {
@@ -130,66 +168,90 @@ function getPropertiesUnion(
     schema: Schema,
     predicate: (property: SchemaProperty) => boolean
 ): string {
-    return schema.properties
-        .filter(predicate)
-        .map(property => quote(property.fieldName))
-        .join(" | ");
+    return (
+        schema.properties
+            .filter(predicate)
+            .map(property => quote(property.fieldName || property.name))
+            .join(" | ") || "never"
+    );
 }
 
 /*
-const fieldPresets = {
+const presets = {
     identifiable: ["id", "name", "code", "created", "lastUpdated"],
     nameable: ["id", "name", "shortName", "code", "description", "created", "lastUpdated"],
 };
+
+function joinS(xs: string[]): string {
+    return xs.map(quote).join(" | ");
+}
 */
 
 const start = async () => {
     const args = getArgsParser();
-    const schemaUrl = joinPath(args.url, "/api/schemas.json");
+    const schemaUrl = joinPath(args.url, "/api/schemas.json?fields=:all,metadata");
     const { schemas } = (await axios.get(schemaUrl)).data as { schemas: Schema[] };
     const models = _(schemas)
         .filter(schema => schema.metadata)
         .value();
-    const globalProperties = fs.readFileSync(path.join(__dirname, "models-globals.ts"));
-    const schemasString = schemas.map(schema => createModelInterface(schema)).join("\n\n");
+    const schemasByClassName = _.keyBy(schemas, schema => _.last(schema.klass.split(".")) || "");
+
     const modelsDeclaration = `
+        import { Id, D2AccessSchema, D2TranslationSchema, D2GeometrySchema, Preset, FieldPresets,
+                 D2StyleSchema, D2DimensionalKeywordsSchema, D2ExpressionSchema } from './base';
+
+        ${schemas
+            .map(
+                schema => `
+                export type ${getModelName(schema.klass)} = {
+                    ${getModelProperties(schemasByClassName, schema)}
+                };
+            `
+            )
+            .join("\n\n")}
+
+        ${schemas
+            .map(schema => {
+                const modelName = getModelName(schema.klass);
+
+                return `
+                    export interface ${modelName}Schema {
+                        fields: ${modelName};
+                        fieldPresets: {
+                            $all:
+                                Preset<${modelName}, keyof ${modelName}>
+                            $identifiable:
+                                Preset<${modelName}, FieldPresets["identifiable"]>
+                            $nameable:
+                                Preset<${modelName}, FieldPresets["nameable"]>
+                            $persisted:
+                                Preset<${modelName}, ${getPropertiesUnion(
+                    schema,
+                    p => p.persisted
+                )}>
+                            $owner:
+                                Preset<${modelName}, ${getPropertiesUnion(schema, p => p.owner)}>
+                        }
+                    }
+                `;
+            })
+            .join("\n\n")}
+
         export type D2Model =
-            ${models.map(model => getModelName(model)).join(" |")}
+            ${models.map(model => getModelName(model.klass)).join(" | ")}
 
         export enum D2ModelEnum {
             ${models.map(model => `${model.plural} = "${model.plural}"`).join(",\n")}
         }
 
-        export type D2ModelsInfoI = {
-            [K in D2ModelEnum]: {
-                model: D2Model;
-                fieldPresets: {
-                    [K in FieldPreset]: string;
-                };
-            }
-        }
-
-        export interface D2ModelsInfo extends D2ModelsInfoI {
-            ${models.map(
-                model => `${model.plural}: {
-                model: ${getModelName(model)},
-                fieldPresets: {
-                    $all: keyof ${getModelName(model)},
-                    $identifiable: FieldPresets["identifiable"]
-                    $nameable: FieldPresets["nameable"]
-                    $persisted: ${getPropertiesUnion(model, p => p.persisted)};
-                    $owner: ${getPropertiesUnion(model, p => p.owner)};
-                }
-                }`
-            )}
-        }
-
-        export type D2Models = {
-            [K in keyof D2ModelsInfo]: D2ModelsInfo[K]["model"]
+        export type D2ModelSchemas = {
+            ${models
+                .map(model => `${model.plural}: ${getModelName(model.klass)}Schema`)
+                .join(",\n")}
         }
     `;
 
-    const parts = [globalProperties, schemasString, modelsDeclaration];
+    const parts = [modelsDeclaration];
     const prettierConfigFile = await prettier.resolveConfigFile();
     if (!prettierConfigFile) throw new Error("Cannot find prettier config file");
 
