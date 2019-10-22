@@ -1,5 +1,5 @@
 import { D2Models } from "./../schemas/models";
-import { Pager } from "./../../build/api/models.d";
+import { Pager } from "./models";
 import _ from "lodash";
 import { Ref } from "../schemas/models";
 import D2Api from "./d2-api";
