@@ -31,12 +31,12 @@ interface Schemas {
 }
 
 const interfaceFromClass: _.Dictionary<string> = {
-    "org.hisp.dhis.security.acl.Access": "D2AccessSchema",
-    "org.hisp.dhis.translation.Translation": "D2TranslationSchema",
-    "org.hisp.dhis.common.ObjectStyle": "D2StyleSchema",
-    "org.hisp.dhis.common.DimensionalKeywords": "D2DimensionalKeywordsSchema",
-    "com.vividsolutions.jts.geom.Geometry": "D2GeometrySchema",
-    "org.hisp.dhis.expression.Expression": "D2ExpressionSchema",
+    "org.hisp.dhis.security.acl.Access": "D2Access",
+    "org.hisp.dhis.translation.Translation": "D2Translation",
+    "org.hisp.dhis.common.ObjectStyle": "D2Style",
+    "org.hisp.dhis.common.DimensionalKeywords": "D2DimensionalKeywords",
+    "com.vividsolutions.jts.geom.Geometry": "D2Geometry",
+    "org.hisp.dhis.expression.Expression": "D2Expression",
     "org.hisp.dhis.period.PeriodType": "string",
     "org.hisp.dhis.chart.Series": "any",
     "org.hisp.dhis.common.DataDimensionItem": "any",
@@ -113,7 +113,6 @@ const getType = (schemas: Schemas, property: SchemaProperty): string => {
 
 function getInterface(schemas: Schemas, property: SchemaProperty): string {
     const className = _.last(property.klass.split(".")) || "";
-    //throw "error";
 
     if (schemas[className]) {
         return `D2${className}`;
@@ -144,7 +143,7 @@ function getModelProperties(schemas: Schemas, schema: Schema): string {
     return _(schema.properties)
         .map(property => [
             (property.fieldName === "uid" ? "id" : property.fieldName) || property.name,
-            getType(schemas, property),
+            getType(schemas, property, "Schema"),
         ])
         .sortBy()
         .map(([key, value]) => `${key}: ${value}`)
@@ -203,12 +202,22 @@ const start = async () => {
         ${schemas
             .map(
                 schema => `
-                export type ${getModelName(schema.klass)} = {
+                export type ${getModelName(schema.klass, "Schema")} = {
                     ${getModelProperties(schemasByClassName, schema)}
                 };
             `
             )
             .join("\n\n")}
+
+            ${schemas
+                .map(
+                    schema => `
+                    export type ${getModelName(schema.klass)} = {
+                        ${getModelProperties(schemasByClassName, schema)}
+                    };
+                `
+                )
+                .join("\n\n")}
 
         ${schemas
             .map(schema => {

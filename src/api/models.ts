@@ -1,5 +1,4 @@
 import { D2ModelSchemas } from "./../schemas/models";
-import { Pager } from "./../../build/api/models.d";
 import _ from "lodash";
 import { Ref } from "../schemas/base";
 import D2Api from "./d2-api";
@@ -24,7 +23,7 @@ export interface PaginatedObjects<T> {
     objects: T[];
 }
 
-export type GetOptions = GetOptionValue &
+export type GetOptions<ModelKey extends keyof D2ModelSchemas> = GetOptionValue<ModelKey> &
     Partial<{
         pageSize: number;
         paging: boolean;
@@ -55,10 +54,10 @@ export default class D2ApiModel<ModelName extends keyof D2ModelSchemas> {
         this.modelName = modelName;
     }
 
-    get(options: GetOptions): D2ApiResponse<PaginatedObjects<D2ModelSchemas[ModelName]>> {
+    get(options: GetOptions<ModelName>): D2ApiResponse<PaginatedObjects<any>> {
         // TODO: use GetOptions to automatically infer paginated or paginated objects
-        const paramsFieldsFilter = processFieldsFilterParams(options);
-        const params = { ...options, ...paramsFieldsFilter } as GetParams;
+        const paramsFieldsFilter = processFieldsFilterParams(options as any);
+        const params = { ...options, ...paramsFieldsFilter } as any;
         const apiResponse = this.d2Api.get<
             { [K in ModelName]: D2ModelSchemas[ModelName][] } & { pager: Pager }
         >(this.modelName as string, params as Params);

@@ -6,10 +6,10 @@ import {
     ErrorReport,
     D2ApiResponse,
     mapD2ApiResponse,
+    GetOptionValue,
 } from "./common";
 import D2Api from "./d2-api";
-import { Selector, SelectedPick, GetFields } from "./inference";
-import { Filter } from "./common";
+import { SelectedPick, GetFields } from "./inference";
 
 export interface PostOptions {
     importMode: "COMMIT" | "VALIDATE";
@@ -57,10 +57,7 @@ export interface TypeReport {
 }
 
 type RootSelector = {
-    [ModelKey in keyof D2ModelSchemas]?: {
-        fields: Selector<D2ModelSchemas[ModelKey]>;
-        filter?: Filter | Filter[];
-    };
+    [ModelKey in keyof D2ModelSchemas]?: GetOptionValue<ModelKey>;
 };
 
 type RootPick<RootSelectorE extends RootSelector> = {
@@ -80,7 +77,9 @@ export default class D2ApiMetadata {
         selector: RootSelectorE
     ): D2ApiResponse<Data> {
         const metadataOptions = _(selector)
-            .map((modelOptions, modelName) => processFieldsFilterParams(modelOptions, modelName))
+            .map((modelOptions, modelName) =>
+                processFieldsFilterParams(modelOptions as any, modelName)
+            )
             .reduce(_.merge, {});
         const apiResponse = this.d2Api.get<Data>("/metadata", metadataOptions);
         function defaultToEmptyCollections(data: Data): Data {
