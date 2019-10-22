@@ -74,20 +74,24 @@ function getModelName(klass: string, suffix?: string): string {
     }
 }
 
-const getType = (schemas: Schemas, property: SchemaProperty): string => {
+const getType = (schemas: Schemas, property: SchemaProperty, suffix?: string): string => {
     const { propertyType, constants, itemPropertyType, itemKlass } = property;
 
     switch (propertyType) {
         case "REFERENCE":
-            return getInterface(schemas, property);
+            return getInterface(schemas, property, suffix);
         case "COLLECTION":
             if (!itemPropertyType || !itemKlass) throw new Error("Missing item info");
 
-            const innerType = getType(schemas, {
-                ...property,
-                propertyType: itemPropertyType,
-                klass: itemKlass,
-            });
+            const innerType = getType(
+                schemas,
+                {
+                    ...property,
+                    propertyType: itemPropertyType,
+                    klass: itemKlass,
+                },
+                suffix
+            );
             return `${innerType}[]`;
         case "TEXT":
         case "URL":
@@ -95,27 +99,30 @@ const getType = (schemas: Schemas, property: SchemaProperty): string => {
         case "EMAIL":
         case "COLOR":
         case "PASSWORD":
-            return "string";
         case "DATE":
-            return "Date";
+            return "string";
         case "IDENTIFIER":
             return "Id";
         case "INTEGER":
             return "number";
         case "CONSTANT":
-            return constants ? constants.map(constant => `"${constant}"`).join(" | ") : "never";
+            return constants ? joinStr(constants) : "never";
         case "COMPLEX":
-            return getInterface(schemas, property);
+            return getInterface(schemas, property, suffix);
+        case "BOOLEAN":
+            return "boolean";
+        case "NUMBER":
+            return "number";
         default:
-            return propertyType.toLowerCase();
+            throw `Unsupported: ${propertyType}`;
     }
 };
 
-function getInterface(schemas: Schemas, property: SchemaProperty): string {
+function getInterface(schemas: Schemas, property: SchemaProperty, suffix?: string): string {
     const className = _.last(property.klass.split(".")) || "";
 
     if (schemas[className]) {
-        return `D2${className}`;
+        return `D2${className}${suffix || ""}`;
     } else if (interfaceFromClass[property.klass]) {
         return interfaceFromClass[property.klass];
     } else {
@@ -124,26 +131,11 @@ function getInterface(schemas: Schemas, property: SchemaProperty): string {
     }
 }
 
-/*
-function createInterface(name: string, properties: _.Dictionary<string>, parent?: string): string {
-    const interfaceString = ["interface", name, parent ? `extends ${parent}` : ""].join(" ");
-    const propertiesString = _(properties)
-        .toPairs()
-        .sortBy()
-        .map(([key, value]) => `${key}: ${value}`)
-        .join(";");
-
-    return `export ${interfaceString} {
-        ${propertiesString}
-    }`;
-}
-*/
-
-function getModelProperties(schemas: Schemas, schema: Schema): string {
+function getModelProperties(schemas: Schemas, schema: Schema, suffix?: string): string {
     return _(schema.properties)
         .map(property => [
             (property.fieldName === "uid" ? "id" : property.fieldName) || property.name,
-            getType(schemas, property, "Schema"),
+            getType(schemas, property, suffix),
         ])
         .sortBy()
         .map(([key, value]) => `${key}: ${value}`)
@@ -163,10 +155,7 @@ function quote(s: string): string {
     return '"' + s + '"';
 }
 
-function getPropertiesUnion(
-    schema: Schema,
-    predicate: (property: SchemaProperty) => boolean
-): string {
+function getProperties(schema: Schema, predicate: (property: SchemaProperty) => boolean): string {
     return (
         schema.properties
             .filter(predicate)
@@ -181,10 +170,11 @@ const presets = {
     nameable: ["id", "name", "shortName", "code", "description", "created", "lastUpdated"],
 };
 
-function joinS(xs: string[]): string {
+*/
+
+function joinStr(xs: string[]): string {
     return xs.map(quote).join(" | ");
 }
-*/
 
 const start = async () => {
     const args = getArgsParser();
@@ -196,36 +186,29 @@ const start = async () => {
     const schemasByClassName = _.keyBy(schemas, schema => _.last(schema.klass.split(".")) || "");
 
     const modelsDeclaration = `
-        import { Id, D2AccessSchema, D2TranslationSchema, D2GeometrySchema, Preset, FieldPresets,
-                 D2StyleSchema, D2DimensionalKeywordsSchema, D2ExpressionSchema } from './base';
+        import { Id, Preset, FieldPresets,
+                 D2Access, D2Translation, D2Geometry,  D2Style,
+                 D2DimensionalKeywords, D2Expression } from './base';
 
         ${schemas
             .map(
                 schema => `
-                export type ${getModelName(schema.klass, "Schema")} = {
+                export type ${getModelName(schema.klass)} = {
                     ${getModelProperties(schemasByClassName, schema)}
                 };
             `
             )
             .join("\n\n")}
 
-            ${schemas
-                .map(
-                    schema => `
-                    export type ${getModelName(schema.klass)} = {
-                        ${getModelProperties(schemasByClassName, schema)}
-                    };
-                `
-                )
-                .join("\n\n")}
-
         ${schemas
             .map(schema => {
                 const modelName = getModelName(schema.klass);
+                const schemaName = getModelName(schema.klass, "Schema");
 
                 return `
-                    export interface ${modelName}Schema {
-                        fields: ${modelName};
+                    export interface ${schemaName} {
+                        model: ${modelName};
+                        fields: { ${getModelProperties(schemasByClassName, schema, "Schema")} }
                         fieldPresets: {
                             $all:
                                 Preset<${modelName}, keyof ${modelName}>
@@ -234,12 +217,9 @@ const start = async () => {
                             $nameable:
                                 Preset<${modelName}, FieldPresets["nameable"]>
                             $persisted:
-                                Preset<${modelName}, ${getPropertiesUnion(
-                    schema,
-                    p => p.persisted
-                )}>
+                                Preset<${modelName}, ${getProperties(schema, p => p.persisted)}>
                             $owner:
-                                Preset<${modelName}, ${getPropertiesUnion(schema, p => p.owner)}>
+                                Preset<${modelName}, ${getProperties(schema, p => p.owner)}>
                         }
                     }
                 `;

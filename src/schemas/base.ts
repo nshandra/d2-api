@@ -103,8 +103,8 @@ export interface FieldPresets {
     nameable: "id" | "name" | "shortName" | "code" | "description" | "created" | "lastUpdated";
 }
 
-export type Preset<Fields, Properties> = OmitNever<
+export type Preset<Model, Properties> = OmitNever<
     {
-        [K in Properties & keyof Fields]: Fields[K] extends Ref ? Ref : Fields[K];
+        [K in Properties & keyof Model]: Model[K] extends Ref ? Ref : Model[K];
     }
 >;

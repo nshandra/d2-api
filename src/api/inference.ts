@@ -1,4 +1,3 @@
-import { D2CategorySchema } from "./../schemas/models";
 import { FieldPreset } from "./../schemas/base";
 
 /* Generic Helpers */
@@ -32,17 +31,15 @@ type SelectorValue =
 
 // https://docs.dhis2.org/2.30/en/developer/html/dhis2_developer_manual_full.html#webapi_metadata_field_filter
 
-export type Selector<ModelSchema extends ModelSchemaBase> = {
+export type Selector<ModelSchema extends ModelInfoBase> = {
     [Key in keyof ModelSchema["fields"]]?:
         | boolean
         | If<
               IsLiteral<ModelSchema["fields"][Key]>,
               boolean, // TODO: functions
               ModelSchema["fields"][Key] extends Array<infer T>
-                  ? (
-                        | boolean
-                        | (T extends ModelSchemaBase ? Selector<T> : never)) /* | functions | */
-                  : ModelSchema["fields"][Key] extends ModelSchemaBase
+                  ? (boolean | (T extends ModelInfoBase ? Selector<T> : never)) /* | functions | */
+                  : ModelSchema["fields"][Key] extends ModelInfoBase
                   ? Selector<ModelSchema["fields"][Key]>
                   : ModelSchema["fields"][Key]
           >;
@@ -58,14 +55,14 @@ export type ValidateSameKeys<SM, ModelSelector> = Exclude<
     ? ModelSelector
     : { error: "Unknown keys in selector"; keys: Exclude<keyof SM, keyof ModelSelector> };
 
-export type SelectedPickValidated<Model extends ModelSchemaBase, SM> = SM extends ValidateSameKeys<
+export type SelectedPickValidated<Model extends ModelInfoBase, SM> = SM extends ValidateSameKeys<
     SM,
     Selector<Model>
 >
     ? SelectedPick<Model, SM>
     : never;
 
-interface ModelSchemaBase {
+interface ModelInfoBase {
     fields: { [s: string]: any };
     fieldPresets: {
         [FieldPresetK in FieldPreset]: { [s: string]: any };
@@ -79,25 +76,22 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
     : never;
 
 export type SelectedPick<
-    Model extends ModelSchemaBase,
-    ModelSelector extends Selector<Model>
-> = UnionToIntersection<Model["fieldPresets"][keyof ModelSelector & FieldPreset]> &
-    SelectedPickSimple<Model, ModelSelector>;
+    Schema extends ModelInfoBase,
+    SchemaSelector extends Selector<Schema>
+> = UnionToIntersection<Schema["fieldPresets"][keyof SchemaSelector & FieldPreset]> &
+    SelectedPickFields<Schema, SchemaSelector>;
 
-export type Result1 = SelectedPick<D2CategorySchema, { id: true; $identifiable: true }>;
-export type Result2 = D2CategorySchema["fieldPresets"];
-
-export type SelectedPickSimple<
-    Model extends ModelSchemaBase,
+export type SelectedPickFields<
+    Model extends ModelInfoBase,
     ModelSelector extends Selector<Model>
 > = OmitNever<
     {
         [Key in keyof ModelSelector & keyof Model["fields"]]: ModelSelector[Key] extends object
             ? Model["fields"][Key] extends Array<infer T>
-                ? T extends ModelSchemaBase
+                ? T extends ModelInfoBase
                     ? SelectedPickValidated<T, ModelSelector[Key]>[]
                     : T
-                : (Model["fields"][Key] extends ModelSchemaBase
+                : (Model["fields"][Key] extends ModelInfoBase
                       ? SelectedPickValidated<Model["fields"][Key], ModelSelector[Key]>
                       : Model["fields"][Key])
             : ModelSelector[Key] extends true

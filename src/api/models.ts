@@ -1,3 +1,4 @@
+import { SelectedPick, GetFields } from "./inference";
 import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
 import { Ref } from "../schemas/base";
@@ -45,35 +46,47 @@ export interface GetParams {
     order?: string;
 }
 
-export default class D2ApiModel<ModelName extends keyof D2ModelSchemas> {
+export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
     d2Api: D2Api;
-    modelName: ModelName;
+    modelName: ModelKey;
 
-    constructor(d2Api: D2Api, modelName: ModelName) {
+    constructor(d2Api: D2Api, modelName: ModelKey) {
         this.d2Api = d2Api;
         this.modelName = modelName;
     }
 
-    get(options: GetOptions<ModelName>): D2ApiResponse<PaginatedObjects<any>> {
+    get<
+        GetOptionsE extends GetOptions<ModelKey>,
+        Object = SelectedPick<D2ModelSchemas[ModelKey], GetFields<GetOptionsE>>
+    >(options: GetOptionsE): D2ApiResponse<PaginatedObjects<Object>> {
         // TODO: use GetOptions to automatically infer paginated or paginated objects
         const paramsFieldsFilter = processFieldsFilterParams(options as any);
         const params = { ...options, ...paramsFieldsFilter } as any;
         const apiResponse = this.d2Api.get<
-            { [K in ModelName]: D2ModelSchemas[ModelName][] } & { pager: Pager }
+            {
+                [K in ModelKey]: Object[];
+            } & { pager: Pager }
         >(this.modelName as string, params as Params);
+
         return mapD2ApiResponse(apiResponse, data => ({
             pager: data.pager,
-            objects: data[this.modelName] as D2ModelSchemas[ModelName][],
+            objects: data[this.modelName] as Object[],
         }));
     }
 
-    post(payload: object, options?: UpdateOptions): D2ApiResponse<GenericResponse> {
+    post<Payload extends Partial<D2ModelSchemas[ModelKey]["model"]>>(
+        payload: Payload,
+        options?: UpdateOptions
+    ): D2ApiResponse<GenericResponse> {
         return this.d2Api.post(this.modelName, (options || {}) as Params, payload);
     }
 
-    put<T extends Ref>(payload: T, options?: UpdateOptions): D2ApiResponse<GenericResponse> {
+    put<Payload extends Partial<D2ModelSchemas[ModelKey]["model"]>>(
+        payload: Payload,
+        options?: UpdateOptions
+    ): D2ApiResponse<GenericResponse> {
         return this.d2Api.put(
-            `/${this.modelName}/${payload.id}`,
+            [this.modelName, payload.id].join("/"),
             (options || {}) as Params,
             payload
         );
