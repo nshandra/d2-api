@@ -92,7 +92,7 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
         );
     }
 
-    delete<T extends Ref>(payload: T): D2ApiResponse<GenericResponse> {
+    delete<Object extends Ref>(payload: Object): D2ApiResponse<GenericResponse> {
         return this.d2Api.delete(`/${this.modelName}/${payload.id}`);
     }
 }

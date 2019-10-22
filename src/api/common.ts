@@ -1,7 +1,7 @@
 import { Filter } from "./common";
 import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
-import { Canceler, AxiosResponse } from "axios";
+import { Canceler } from "axios";
 import { Selector } from "./inference";
 
 export interface ErrorReport {
@@ -96,9 +96,15 @@ export function processFieldsFilterParams(
     });
 }
 
-export interface D2ApiResponse<T> {
+export interface D2Response<Data> {
+    status: number;
+    data: Data;
+    headers: _.Dictionary<string>;
+}
+
+export interface D2ApiResponse<Data> {
     cancel: Canceler;
-    response: Promise<AxiosResponse<T>>;
+    response: Promise<D2Response<Data>>;
 }
 
 export function mapD2ApiResponse<R, T>(

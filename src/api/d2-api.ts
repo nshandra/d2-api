@@ -38,8 +38,13 @@ export default class D2Api {
 
     public request<T>(config: AxiosRequestConfig): D2ApiResponse<T> {
         const { token: cancelToken, cancel } = Axios.CancelToken.source();
-        const response = this.connection({ cancelToken, ...config });
-        return { cancel, response };
+        const axiosResponse = this.connection({ cancelToken, ...config });
+        const apiResponse = axiosResponse.then(response_ => ({
+            status: response_.status,
+            data: response_.data as T,
+            headers: response_.headers,
+        }));
+        return { cancel, response: apiResponse };
     }
 
     public get<T>(url: string, params?: Params) {
