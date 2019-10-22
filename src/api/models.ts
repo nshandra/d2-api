@@ -19,9 +19,12 @@ export interface Pager {
     pageSize: number;
 }
 
-export interface PaginatedObjects<T> {
-    pager: Pager;
+export interface NonPaginatedObjects<T> {
     objects: T[];
+}
+
+export interface PaginatedObjects<T> extends NonPaginatedObjects<T> {
+    pager: Pager;
 }
 
 export type GetOptions<ModelKey extends keyof D2ModelSchemas> = GetOptionValue<ModelKey> &
@@ -46,6 +49,11 @@ export interface GetParams {
     order?: string;
 }
 
+type GetObject<ModelKey extends keyof D2ModelSchemas, Options> = SelectedPick<
+    D2ModelSchemas[ModelKey],
+    GetFields<Options>
+>;
+
 export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
     d2Api: D2Api;
     modelName: ModelKey;
@@ -56,10 +64,18 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
     }
 
     get<
-        GetOptionsE extends GetOptions<ModelKey>,
-        Object = SelectedPick<D2ModelSchemas[ModelKey], GetFields<GetOptionsE>>
-    >(options: GetOptionsE): D2ApiResponse<PaginatedObjects<Object>> {
-        // TODO: use GetOptions to automatically infer paginated or paginated objects
+        Options extends GetOptions<ModelKey> & { paging?: true },
+        Object = GetObject<ModelKey, Options>
+    >(options: Options): D2ApiResponse<PaginatedObjects<Object>>;
+
+    get<
+        Options extends GetOptions<ModelKey> & { paging?: false },
+        Object = GetObject<ModelKey, Options>
+    >(options: Options): D2ApiResponse<NonPaginatedObjects<Object>>;
+
+    get<Options extends GetOptions<ModelKey>, Object = GetObject<ModelKey, Options>>(
+        options: Options
+    ): D2ApiResponse<PaginatedObjects<Object>> | D2ApiResponse<NonPaginatedObjects<Object>> {
         const paramsFieldsFilter = processFieldsFilterParams(options as any);
         const params = { ...options, ...paramsFieldsFilter } as any;
         const apiResponse = this.d2Api.get<
@@ -68,10 +84,12 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
             } & { pager: Pager }
         >(this.modelName as string, params as Params);
 
-        return mapD2ApiResponse(apiResponse, data => ({
-            pager: data.pager,
-            objects: data[this.modelName] as Object[],
-        }));
+        return mapD2ApiResponse(apiResponse, data => {
+            return {
+                ...(options.paging ? { pager: data.pager } : {}),
+                objects: data[this.modelName] as Object[],
+            };
+        });
     }
 
     post<Payload extends Partial<D2ModelSchemas[ModelKey]["model"]>>(
