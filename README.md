@@ -1,11 +1,11 @@
 # d2-api
 
-Typescript library for DHIS2 api
+Typescript library for the DHIS2 API.
 
 ## Generate schesmas
 
 ```
-$ yarn generate-schemas http://admin:district@localhost:8080
+$ yarn generate-schemas https://admin:district@play.dhis2.org/2.30
 ```
 
 ## Development
@@ -22,7 +22,23 @@ On your app:
 $ yarn link d2-api
 ```
 
+## Publish
+
+```
+$ yarn build
+$ yarn publish [--tag beta] [--patch | --minor | --major]
+```
+
 ## Usage
+
+### Create API instance
+
+```
+const api = new D2Api({
+    baseUrl: "https://play.dhis2.org/2.30",
+    auth: { username: "admin", password: "district" },
+});
+```
 
 ### Metadata models
 
@@ -43,9 +59,10 @@ const { cancel, response } = api.models.dataSets.get({
         code: { $like: "DS_" },
     },
     order: "name:asc",
+    paging: false,
 });
 
-console.log({ cancel, data: (await response).data });
+console.log({ cancel, data: (await response).data.objects[0].name });
 ```
 
 #### POST (create)
@@ -85,7 +102,7 @@ const { cancel, response } = api.metadata.get({
         fields: {
             id: true,
             name: true,
-            categoryOptions: {
+            organisationUnits: {
                 id: true,
                 name: true,
             },
@@ -114,4 +131,6 @@ const { cancel, response } = api.metadata.post({
         periodType: "Monthly",
     }],
 });
+
+console.log((await response).data)
 ```
