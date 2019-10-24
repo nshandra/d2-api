@@ -4,3 +4,4 @@ export default D2Api;
 export * from "./api/d2-api";
 
 export * from "./schemas/models";
+export { SelectedPick } from "./api/inference";

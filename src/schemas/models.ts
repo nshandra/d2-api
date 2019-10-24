@@ -12,8 +12,8 @@ import {
 
 export type D2AttributeValue = {
     attribute: D2Attribute;
-    created: Date;
-    lastUpdated: Date;
+    created: string;
+    lastUpdated: string;
     value: string;
 };
 
@@ -22,7 +22,7 @@ export type D2UserAuthorityGroup = {
     attributeValues: D2AttributeValue[];
     authorities: string[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -30,7 +30,7 @@ export type D2UserAuthorityGroup = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -51,7 +51,7 @@ export type D2Attribute = {
     categoryOptionGroupSetAttribute: boolean;
     code: Id;
     constantAttribute: boolean;
-    created: Date;
+    created: string;
     dataElementAttribute: boolean;
     dataElementGroupAttribute: boolean;
     dataElementGroupSetAttribute: boolean;
@@ -68,7 +68,7 @@ export type D2Attribute = {
     id: Id;
     indicatorAttribute: boolean;
     indicatorGroupAttribute: boolean;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSetAttribute: boolean;
     mandatory: boolean;
@@ -130,9 +130,9 @@ export type D2User = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     avatar: D2FileResource;
-    birthday: Date;
+    birthday: string;
     code: Id;
-    created: Date;
+    created: string;
     dataViewOrganisationUnits: D2OrganisationUnit[];
     displayName: string;
     education: string;
@@ -151,8 +151,8 @@ export type D2User = {
     introduction: string;
     jobTitle: string;
     languages: string;
-    lastCheckedInterpretations: Date;
-    lastUpdated: Date;
+    lastCheckedInterpretations: string;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     nationality: string;
@@ -177,14 +177,14 @@ export type D2UserGroup = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     managedByGroups: D2UserGroup[];
     managedGroups: D2UserGroup[];
@@ -201,14 +201,14 @@ export type D2ExternalFileResource = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -230,7 +230,7 @@ export type D2SqlView = {
         | "CACHE_TWO_WEEKS"
         | "RESPECT_SYSTEM_SETTING";
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -238,7 +238,7 @@ export type D2SqlView = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -254,7 +254,7 @@ export type D2Constant = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayDescription: string;
     displayName: string;
@@ -264,7 +264,7 @@ export type D2Constant = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -281,7 +281,7 @@ export type D2OAuth2Client = {
     attributeValues: D2AttributeValue[];
     cid: Id;
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -289,7 +289,7 @@ export type D2OAuth2Client = {
     grantTypes: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -305,7 +305,7 @@ export type D2Option = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: string;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -314,7 +314,7 @@ export type D2Option = {
     formName: string;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     optionSet: D2OptionSet;
@@ -333,7 +333,7 @@ export type D2JobConfiguration = {
     code: Id;
     configurable: boolean;
     continuousExecution: boolean;
-    created: Date;
+    created: string;
     cronExpression: string;
     displayName: string;
     enabled: boolean;
@@ -375,14 +375,14 @@ export type D2JobConfiguration = {
         | "LEADER_ELECTION"
         | "LEADER_RENEWAL"
         | "COMPLETE_DATA_SET_REGISTRATION_IMPORT";
-    lastExecuted: Date;
+    lastExecuted: string;
     lastExecutedStatus: "RUNNING" | "COMPLETED" | "STOPPED" | "SCHEDULED" | "DISABLED" | "FAILED";
     lastRuntimeExecution: string;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     leaderOnlyJob: boolean;
     name: string;
-    nextExecutionTime: Date;
+    nextExecutionTime: string;
     publicAccess: string;
     translations: D2Translation[];
     user: D2User;
@@ -395,14 +395,14 @@ export type D2OptionSet = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     options: D2Option[];
@@ -459,7 +459,7 @@ export type D2OptionGroupSet = {
     allItems: boolean;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataDimension: boolean;
     dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     description: string;
@@ -494,7 +494,7 @@ export type D2OptionGroupSet = {
     href: string;
     id: Id;
     items: any[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     members: D2OptionGroup[];
@@ -526,7 +526,7 @@ export type D2OptionGroup = {
         | "DEFAULT";
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     dimensionItem: string;
     dimensionItemType:
@@ -552,7 +552,7 @@ export type D2OptionGroup = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -572,14 +572,14 @@ export type D2ColorSet = {
     attributeValues: D2AttributeValue[];
     code: Id;
     colors: D2Color[];
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -593,14 +593,14 @@ export type D2LegendSet = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legends: D2Legend[];
     name: string;
@@ -631,11 +631,11 @@ export type D2OrganisationUnit = {
         | "DEFAULT";
     attributeValues: D2AttributeValue[];
     children: D2OrganisationUnit[];
-    closedDate: Date;
+    closedDate: string;
     code: Id;
     comment: string;
     contactPerson: string;
-    created: Date;
+    created: string;
     dataSets: D2DataSet[];
     description: string;
     dimensionItem: string;
@@ -665,7 +665,7 @@ export type D2OrganisationUnit = {
     groups: D2OrganisationUnitGroup[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     leaf: boolean;
     legendSet: D2LegendSet;
@@ -673,7 +673,7 @@ export type D2OrganisationUnit = {
     level: number;
     memberCount: number;
     name: string;
-    openingDate: Date;
+    openingDate: string;
     organisationUnit: D2OrganisationUnit[];
     parent: D2OrganisationUnit;
     path: string;
@@ -694,14 +694,14 @@ export type D2OrganisationUnitLevel = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     level: number;
     name: string;
@@ -732,7 +732,7 @@ export type D2OrganisationUnitGroup = {
     attributeValues: D2AttributeValue[];
     code: Id;
     color: string;
-    created: Date;
+    created: string;
     description: string;
     dimensionItem: string;
     dimensionItemType:
@@ -761,7 +761,7 @@ export type D2OrganisationUnitGroup = {
     groupSets: D2OrganisationUnitGroupSet[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -796,7 +796,7 @@ export type D2OrganisationUnitGroupSet = {
     attributeValues: D2AttributeValue[];
     code: Id;
     compulsory: boolean;
-    created: Date;
+    created: string;
     dataDimension: boolean;
     dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     description: string;
@@ -832,7 +832,7 @@ export type D2OrganisationUnitGroupSet = {
     id: Id;
     includeSubhierarchyInAnalytics: boolean;
     items: any[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     name: string;
@@ -865,7 +865,7 @@ export type D2CategoryOption = {
     categories: D2Category[];
     categoryOptionCombos: D2CategoryOptionCombo[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     dimensionItem: string;
     dimensionItemType:
@@ -886,7 +886,7 @@ export type D2CategoryOption = {
     displayDescription: string;
     displayName: string;
     displayShortName: string;
-    endDate: Date;
+    endDate: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
@@ -894,7 +894,7 @@ export type D2CategoryOption = {
     href: string;
     id: Id;
     isDefault: boolean;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -902,7 +902,7 @@ export type D2CategoryOption = {
     organisationUnits: D2OrganisationUnit[];
     publicAccess: string;
     shortName: string;
-    startDate: Date;
+    startDate: string;
     style: D2Style;
     translations: D2Translation[];
     user: D2User;
@@ -928,7 +928,7 @@ export type D2CategoryOptionGroup = {
         | "DEFAULT";
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     description: string;
     dimensionItem: string;
@@ -956,7 +956,7 @@ export type D2CategoryOptionGroup = {
     groupSets: D2CategoryOptionGroupSet[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -989,7 +989,7 @@ export type D2CategoryOptionGroupSet = {
     allItems: boolean;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataDimension: boolean;
     dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     description: string;
@@ -1024,7 +1024,7 @@ export type D2CategoryOptionGroupSet = {
     href: string;
     id: Id;
     items: any[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     members: D2CategoryOptionGroup[];
@@ -1058,7 +1058,7 @@ export type D2Category = {
     categoryCombos: D2CategoryCombo[];
     categoryOptions: D2CategoryOption[];
     code: Id;
-    created: Date;
+    created: string;
     dataDimension: boolean;
     dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     description: string;
@@ -1093,7 +1093,7 @@ export type D2Category = {
     href: string;
     id: Id;
     items: any[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     name: string;
@@ -1110,7 +1110,7 @@ export type D2CategoryCombo = {
     attributeValues: D2AttributeValue[];
     categories: D2Category[];
     code: Id;
-    created: Date;
+    created: string;
     dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     displayName: string;
     externalAccess: boolean;
@@ -1119,7 +1119,7 @@ export type D2CategoryCombo = {
     href: string;
     id: Id;
     isDefault: boolean;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     optionCombos: D2CategoryOptionCombo[];
@@ -1151,7 +1151,7 @@ export type D2CategoryOptionCombo = {
     categoryCombo: D2CategoryCombo;
     categoryOptions: D2CategoryOption[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     dimensionItem: string;
     dimensionItemType:
@@ -1178,7 +1178,7 @@ export type D2CategoryOptionCombo = {
     href: string;
     id: Id;
     ignoreApproval: boolean;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -1212,7 +1212,7 @@ export type D2DataElement = {
     categoryCombo: D2CategoryCombo;
     code: Id;
     commentOptionSet: D2OptionSet;
-    created: Date;
+    created: string;
     dataSetElements: D2DataSetElement[];
     description: string;
     dimensionItem: string;
@@ -1244,7 +1244,7 @@ export type D2DataElement = {
     groups: D2DataElementGroup[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -1306,7 +1306,7 @@ export type D2DataElementGroup = {
         | "DEFAULT";
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     dimensionItem: string;
     dimensionItemType:
@@ -1333,7 +1333,7 @@ export type D2DataElementGroup = {
     groupSets: D2DataElementGroupSet[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -1367,7 +1367,7 @@ export type D2DataElementGroupSet = {
     attributeValues: D2AttributeValue[];
     code: Id;
     compulsory: boolean;
-    created: Date;
+    created: string;
     dataDimension: boolean;
     dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     description: string;
@@ -1402,7 +1402,7 @@ export type D2DataElementGroupSet = {
     href: string;
     id: Id;
     items: any[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     members: D2DataElementGroup[];
@@ -1427,14 +1427,14 @@ export type D2AnalyticsTableHook = {
         | "VALIDATION_RESULT";
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     phase: "RESOURCE_TABLE_POPULATED" | "ANALYTICS_TABLE_POPULATED";
@@ -1464,7 +1464,7 @@ export type D2IndicatorType = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     factor: number;
@@ -1472,7 +1472,7 @@ export type D2IndicatorType = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     number: boolean;
@@ -1504,7 +1504,7 @@ export type D2Indicator = {
     annualized: boolean;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataSets: D2DataSet[];
     decimals: number;
     denominator: string;
@@ -1537,7 +1537,7 @@ export type D2Indicator = {
     href: string;
     id: Id;
     indicatorType: D2IndicatorType;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -1558,7 +1558,7 @@ export type D2IndicatorGroup = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -1566,7 +1566,7 @@ export type D2IndicatorGroup = {
     groupSet: D2IndicatorGroupSet;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     members: D2Indicator[];
     name: string;
@@ -1582,7 +1582,7 @@ export type D2IndicatorGroupSet = {
     attributeValues: D2AttributeValue[];
     code: Id;
     compulsory: boolean;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -1590,7 +1590,7 @@ export type D2IndicatorGroupSet = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     members: D2IndicatorGroup[];
     name: string;
@@ -1605,7 +1605,7 @@ export type D2DataEntryForm = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -1614,7 +1614,7 @@ export type D2DataEntryForm = {
     href: string;
     htmlCode: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -1646,7 +1646,7 @@ export type D2DataSet = {
     code: Id;
     compulsoryDataElementOperands: D2DataElementOperand[];
     compulsoryFieldsCompleteOnly: boolean;
-    created: Date;
+    created: string;
     dataElementDecoration: boolean;
     dataEntryForm: D2DataEntryForm;
     dataInputPeriods: D2DataInputPeriod[];
@@ -1682,7 +1682,7 @@ export type D2DataSet = {
     id: Id;
     indicators: D2Indicator[];
     interpretations: D2Interpretation[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -1715,7 +1715,7 @@ export type D2DataSetNotificationTemplate = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataSetNotificationTrigger: "DATA_SET_COMPLETION" | "SCHEDULED_DAYS";
     dataSets: D2DataSet[];
     deliveryChannels: never[];
@@ -1725,7 +1725,7 @@ export type D2DataSetNotificationTemplate = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     messageTemplate: string;
     name: string;
@@ -1748,7 +1748,7 @@ export type D2Section = {
     attributeValues: D2AttributeValue[];
     categoryCombos: D2CategoryCombo[];
     code: Id;
-    created: Date;
+    created: string;
     dataElements: D2DataElement[];
     dataSet: D2DataSet;
     description: string;
@@ -1760,7 +1760,7 @@ export type D2Section = {
     href: string;
     id: Id;
     indicators: D2Indicator[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -1778,14 +1778,14 @@ export type D2DataApprovalLevel = {
     attributeValues: D2AttributeValue[];
     categoryOptionGroupSet: D2CategoryOptionGroupSet;
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     level: number;
     name: string;
@@ -1803,7 +1803,7 @@ export type D2DataApprovalWorkflow = {
     attributeValues: D2AttributeValue[];
     categoryCombo: D2CategoryCombo;
     code: Id;
-    created: Date;
+    created: string;
     dataSets: D2DataSet[];
     displayName: string;
     externalAccess: boolean;
@@ -1811,7 +1811,7 @@ export type D2DataApprovalWorkflow = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     levels: D2DataApprovalLevel[];
     name: string;
@@ -1843,7 +1843,7 @@ export type D2ValidationRule = {
         | "DEFAULT";
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     dimensionItem: string;
     dimensionItemType:
@@ -1872,7 +1872,7 @@ export type D2ValidationRule = {
     id: Id;
     importance: "HIGH" | "MEDIUM" | "LOW";
     instruction: string;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     leftSide: D2Expression;
     legendSet: D2LegendSet;
@@ -1904,7 +1904,7 @@ export type D2ValidationRuleGroup = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -1912,7 +1912,7 @@ export type D2ValidationRuleGroup = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     members: D2ValidationRule[];
     name: string;
@@ -1927,14 +1927,14 @@ export type D2ValidationNotificationTemplate = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     messageTemplate: string;
     name: string;
@@ -1970,7 +1970,7 @@ export type D2TrackedEntityAttribute = {
     attributeValues: D2AttributeValue[];
     code: Id;
     confidential: boolean;
-    created: Date;
+    created: string;
     description: string;
     dimensionItem: string;
     dimensionItemType:
@@ -2003,7 +2003,7 @@ export type D2TrackedEntityAttribute = {
     href: string;
     id: Id;
     inherit: boolean;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -2057,7 +2057,7 @@ export type D2TrackedEntityType = {
     allowAuditLog: boolean;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayDescription: string;
     displayName: string;
@@ -2069,7 +2069,7 @@ export type D2TrackedEntityType = {
     formName: string;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     maxTeiCountToReturn: number;
     minAttributesRequiredToSearch: number;
@@ -2088,7 +2088,7 @@ export type D2TrackedEntityTypeAttribute = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayInList: boolean;
     displayName: string;
     displayShortName: string;
@@ -2097,7 +2097,7 @@ export type D2TrackedEntityTypeAttribute = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     mandatory: boolean;
     name: string;
@@ -2142,7 +2142,7 @@ export type D2ProgramTrackedEntityAttributeGroup = {
     attributeValues: D2AttributeValue[];
     attributes: D2ProgramTrackedEntityAttribute[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayDescription: string;
     displayName: string;
@@ -2152,7 +2152,7 @@ export type D2ProgramTrackedEntityAttributeGroup = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -2168,7 +2168,7 @@ export type D2ProgramStageSection = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataElements: D2DataElement[];
     description: string;
     displayName: string;
@@ -2178,7 +2178,7 @@ export type D2ProgramStageSection = {
     formName: string;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     programIndicators: D2ProgramIndicator[];
@@ -2197,7 +2197,7 @@ export type D2ProgramNotificationTemplate = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     deliveryChannels: never[];
     displayName: string;
     externalAccess: boolean;
@@ -2205,7 +2205,7 @@ export type D2ProgramNotificationTemplate = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     messageTemplate: string;
     name: string;
@@ -2244,7 +2244,7 @@ export type D2ProgramStage = {
     autoGenerateEvent: boolean;
     blockEntryForm: boolean;
     code: Id;
-    created: Date;
+    created: string;
     dataEntryForm: D2DataEntryForm;
     description: string;
     displayDescription: string;
@@ -2263,7 +2263,7 @@ export type D2ProgramStage = {
     hideDueDate: boolean;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     minDaysFromStart: number;
     name: string;
@@ -2295,7 +2295,7 @@ export type D2SMSCommand = {
     codeValueSeparator: string;
     codes: any[];
     completenessMethod: "ALL_DATAVALUE" | "AT_LEAST_ONE_DATAVALUE" | "DO_NOT_MARK_COMPLETE";
-    created: Date;
+    created: string;
     currentPeriodUsedForReporting: boolean;
     dataset: D2DataSet;
     defaultMessage: string;
@@ -2305,7 +2305,7 @@ export type D2SMSCommand = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     moreThanOneOrgUnitMessage: string;
     name: string;
@@ -2340,7 +2340,7 @@ export type D2Program = {
     categoryCombo: D2CategoryCombo;
     code: Id;
     completeEventsExpiryDays: number;
-    created: Date;
+    created: string;
     dataEntryForm: D2DataEntryForm;
     description: string;
     displayDescription: string;
@@ -2360,7 +2360,7 @@ export type D2Program = {
     id: Id;
     ignoreOverdueEvents: boolean;
     incidentDateLabel: string;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     maxTeiCountToReturn: number;
     minAttributesRequiredToSearch: number;
@@ -2422,7 +2422,7 @@ export type D2EventChart = {
     columnDimensions: string[];
     columns: any[];
     completedOnly: boolean;
-    created: Date;
+    created: string;
     cumulativeValues: boolean;
     dataDimensionItems: any[];
     dataElementDimensions: D2TrackedEntityDataElementDimension[];
@@ -2434,7 +2434,7 @@ export type D2EventChart = {
     displayName: string;
     displayShortName: string;
     domainAxisLabel: string;
-    endDate: Date;
+    endDate: string;
     eventStatus: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
     externalAccess: boolean;
     favorite: boolean;
@@ -2450,7 +2450,7 @@ export type D2EventChart = {
     id: Id;
     interpretations: D2Interpretation[];
     itemOrganisationUnitGroups: D2OrganisationUnitGroup[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
     legendSet: D2LegendSet;
@@ -2481,7 +2481,7 @@ export type D2EventChart = {
     shortName: string;
     showData: boolean;
     sortOrder: number;
-    startDate: Date;
+    startDate: string;
     subscribed: boolean;
     subscribers: string[];
     subtitle: string;
@@ -2541,7 +2541,7 @@ export type D2EventReport = {
     columnDimensions: string[];
     columns: any[];
     completedOnly: boolean;
-    created: Date;
+    created: string;
     dataDimensionItems: any[];
     dataElementDimensions: D2TrackedEntityDataElementDimension[];
     dataElementGroupSetDimensions: D2DataElementGroupSetDimension[];
@@ -2553,7 +2553,7 @@ export type D2EventReport = {
     displayDescription: string;
     displayName: string;
     displayShortName: string;
-    endDate: Date;
+    endDate: string;
     eventStatus: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
     externalAccess: boolean;
     favorite: boolean;
@@ -2569,7 +2569,7 @@ export type D2EventReport = {
     id: Id;
     interpretations: D2Interpretation[];
     itemOrganisationUnitGroups: D2OrganisationUnitGroup[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     orgUnitField: string;
@@ -2593,7 +2593,7 @@ export type D2EventReport = {
     showDimensionLabels: boolean;
     showHierarchy: boolean;
     sortOrder: number;
-    startDate: Date;
+    startDate: string;
     subscribed: boolean;
     subscribers: string[];
     subtitle: string;
@@ -2615,7 +2615,7 @@ export type D2ProgramSection = {
     attributeValues: D2AttributeValue[];
     attributes: D2TrackedEntityAttribute[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -2624,7 +2624,7 @@ export type D2ProgramSection = {
     formName: string;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     program: D2Program;
@@ -2660,7 +2660,7 @@ export type D2ProgramIndicator = {
     analyticsType: "EVENT" | "ENROLLMENT";
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     decimals: number;
     description: string;
     dimensionItem: string;
@@ -2692,7 +2692,7 @@ export type D2ProgramIndicator = {
     groups: D2ProgramIndicatorGroup[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -2711,7 +2711,7 @@ export type D2ProgramIndicatorGroup = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -2719,7 +2719,7 @@ export type D2ProgramIndicatorGroup = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     members: D2ProgramIndicator[];
     name: string;
@@ -2735,7 +2735,7 @@ export type D2RelationshipType = {
     attributeValues: D2AttributeValue[];
     bidirectional: boolean;
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -2745,7 +2745,7 @@ export type D2RelationshipType = {
     fromToName: string;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -2762,7 +2762,7 @@ export type D2ProgramRuleVariable = {
     attribute: D2TrackedEntityAttribute;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataElement: D2DataElement;
     displayName: string;
     externalAccess: boolean;
@@ -2770,7 +2770,7 @@ export type D2ProgramRuleVariable = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     program: D2Program;
@@ -2796,7 +2796,7 @@ export type D2ProgramRuleAction = {
     attributeValues: D2AttributeValue[];
     code: Id;
     content: string;
-    created: Date;
+    created: string;
     data: string;
     dataElement: D2DataElement;
     displayName: string;
@@ -2805,7 +2805,7 @@ export type D2ProgramRuleAction = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     location: string;
     name: string;
@@ -2846,7 +2846,7 @@ export type D2ProgramRule = {
     attributeValues: D2AttributeValue[];
     code: Id;
     condition: string;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -2854,7 +2854,7 @@ export type D2ProgramRule = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     priority: number;
@@ -2898,7 +2898,7 @@ export type D2MapView = {
     columns: any[];
     completedOnly: boolean;
     config: string;
-    created: Date;
+    created: string;
     dataDimensionItems: any[];
     dataElementDimensions: D2TrackedEntityDataElementDimension[];
     dataElementGroupSetDimensions: D2DataElementGroupSetDimension[];
@@ -2907,7 +2907,7 @@ export type D2MapView = {
     displayDescription: string;
     displayName: string;
     displayShortName: string;
-    endDate: Date;
+    endDate: string;
     eventClustering: boolean;
     eventCoordinateField: string;
     eventPointColor: string;
@@ -2930,7 +2930,7 @@ export type D2MapView = {
     labelFontStyle: string;
     labelFontWeight: string;
     labels: boolean;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     layer: string;
     legendSet: D2LegendSet;
@@ -2964,7 +2964,7 @@ export type D2MapView = {
     rows: any[];
     shortName: string;
     sortOrder: number;
-    startDate: Date;
+    startDate: string;
     styleDataItem: object;
     subscribed: boolean;
     subscribers: string[];
@@ -2994,7 +2994,7 @@ export type D2Report = {
         | "CACHE_TWO_WEEKS"
         | "RESPECT_SYSTEM_SETTING";
     code: Id;
-    created: Date;
+    created: string;
     designContent: string;
     displayName: string;
     externalAccess: boolean;
@@ -3002,7 +3002,7 @@ export type D2Report = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -3042,7 +3042,7 @@ export type D2ReportTable = {
     columnDimensions: string[];
     columns: any[];
     completedOnly: boolean;
-    created: Date;
+    created: string;
     cumulative: boolean;
     dataDimensionItems: any[];
     dataElementDimensions: D2TrackedEntityDataElementDimension[];
@@ -3053,7 +3053,7 @@ export type D2ReportTable = {
     displayDescription: string;
     displayName: string;
     displayShortName: string;
-    endDate: Date;
+    endDate: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
@@ -3068,7 +3068,7 @@ export type D2ReportTable = {
     id: Id;
     interpretations: D2Interpretation[];
     itemOrganisationUnitGroups: D2OrganisationUnitGroup[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
     legendDisplayStyle: "FILL" | "TEXT";
@@ -3096,7 +3096,7 @@ export type D2ReportTable = {
     showHierarchy: boolean;
     skipRounding: boolean;
     sortOrder: number;
-    startDate: Date;
+    startDate: string;
     subscribed: boolean;
     subscribers: string[];
     subtitle: string;
@@ -3118,7 +3118,7 @@ export type D2Document = {
     attributeValues: D2AttributeValue[];
     code: Id;
     contentType: string;
-    created: Date;
+    created: string;
     displayName: string;
     external: boolean;
     externalAccess: boolean;
@@ -3126,7 +3126,7 @@ export type D2Document = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -3139,7 +3139,7 @@ export type D2Document = {
 
 export type D2ValidationResult = {
     attributeOptionCombo: D2CategoryOptionCombo;
-    created: Date;
+    created: string;
     dayInPeriod: number;
     id: string;
     leftsideValue: number;
@@ -3177,7 +3177,7 @@ export type D2Chart = {
     colorSet: D2ColorSet;
     columns: any[];
     completedOnly: boolean;
-    created: Date;
+    created: string;
     cumulativeValues: boolean;
     dataDimensionItems: any[];
     dataElementDimensions: D2TrackedEntityDataElementDimension[];
@@ -3188,7 +3188,7 @@ export type D2Chart = {
     displayName: string;
     displayShortName: string;
     domainAxisLabel: string;
-    endDate: Date;
+    endDate: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
@@ -3202,7 +3202,7 @@ export type D2Chart = {
     id: Id;
     interpretations: D2Interpretation[];
     itemOrganisationUnitGroups: D2OrganisationUnitGroup[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
     legendSet: D2LegendSet;
@@ -3230,7 +3230,7 @@ export type D2Chart = {
     shortName: string;
     showData: boolean;
     sortOrder: number;
-    startDate: Date;
+    startDate: string;
     subscribed: boolean;
     subscribers: string[];
     subtitle: string;
@@ -3266,7 +3266,7 @@ export type D2Map = {
     attributeValues: D2AttributeValue[];
     basemap: string;
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayDescription: string;
     displayName: string;
@@ -3277,7 +3277,7 @@ export type D2Map = {
     href: string;
     id: Id;
     interpretations: D2Interpretation[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     latitude: number;
     longitude: number;
@@ -3300,7 +3300,7 @@ export type D2ExternalMapLayer = {
     attributeValues: D2AttributeValue[];
     attribution: string;
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -3308,7 +3308,7 @@ export type D2ExternalMapLayer = {
     href: string;
     id: Id;
     imageFormat: "PNG" | "JPG";
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     layers: string;
     legendSet: D2LegendSet;
@@ -3329,7 +3329,7 @@ export type D2Predictor = {
     annualSampleCount: number;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayDescription: string;
     displayName: string;
@@ -3341,7 +3341,7 @@ export type D2Predictor = {
     groups: D2PredictorGroup[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     organisationUnitLevels: D2OrganisationUnitLevel[];
@@ -3363,7 +3363,7 @@ export type D2PredictorGroup = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -3371,7 +3371,7 @@ export type D2PredictorGroup = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     members: D2Predictor[];
     name: string;
@@ -3389,7 +3389,7 @@ export type D2DashboardItem = {
     chart: D2Chart;
     code: Id;
     contentCount: number;
-    created: Date;
+    created: string;
     displayName: string;
     eventChart: D2EventChart;
     eventReport: D2EventReport;
@@ -3401,7 +3401,7 @@ export type D2DashboardItem = {
     id: Id;
     interpretationCount: number;
     interpretationLikeCount: number;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     map: D2Map;
     messages: boolean;
@@ -3438,7 +3438,7 @@ export type D2Dashboard = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayDescription: string;
     displayName: string;
@@ -3450,7 +3450,7 @@ export type D2Dashboard = {
     id: Id;
     itemCount: number;
     items: D2DashboardItem[];
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -3465,7 +3465,7 @@ export type D2PushAnalysis = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dashboard: D2Dashboard;
     displayName: string;
     externalAccess: boolean;
@@ -3473,7 +3473,7 @@ export type D2PushAnalysis = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     message: string;
     name: string;
@@ -3490,7 +3490,7 @@ export type D2KeyJsonValue = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -3498,7 +3498,7 @@ export type D2KeyJsonValue = {
     href: string;
     id: Id;
     key: string;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     namespace: string;
@@ -3521,7 +3521,7 @@ export type D2UserCredentials = {
     catDimensionConstraints: D2Category[];
     code: Id;
     cogsDimensionConstraints: D2CategoryOptionGroupSet[];
-    created: Date;
+    created: string;
     disabled: boolean;
     displayName: string;
     externalAccess: boolean;
@@ -3531,14 +3531,14 @@ export type D2UserCredentials = {
     href: string;
     id: Id;
     invitation: boolean;
-    lastLogin: Date;
-    lastUpdated: Date;
+    lastLogin: string;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     ldapId: string;
     name: string;
     openId: string;
     password: string;
-    passwordLastUpdated: Date;
+    passwordLastUpdated: string;
     publicAccess: string;
     selfRegistered: boolean;
     translations: D2Translation[];
@@ -3569,7 +3569,7 @@ export type D2ReportingRate = {
         | "DEFAULT";
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataSet: D2DataSet;
     description: string;
     dimensionItem: string;
@@ -3596,7 +3596,7 @@ export type D2ReportingRate = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -3615,11 +3615,13 @@ export type D2ReportingRate = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
+export type D2Icon = {};
+
 export type D2TrackedEntityInstanceFilter = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     enrollmentCreatedPeriod: any;
@@ -3631,7 +3633,7 @@ export type D2TrackedEntityInstanceFilter = {
     followup: boolean;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     program: D2Program;
@@ -3660,14 +3662,14 @@ export type D2InterpretationComment = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     mentions: any[];
     name: string;
@@ -3684,7 +3686,7 @@ export type D2MessageConversation = {
     assignee: D2User;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -3692,11 +3694,11 @@ export type D2MessageConversation = {
     followUp: boolean;
     href: string;
     id: Id;
-    lastMessage: Date;
+    lastMessage: string;
     lastSender: D2User;
     lastSenderFirstname: string;
     lastSenderSurname: string;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     messageCount: number;
     messageType: "PRIVATE" | "SYSTEM" | "VALIDATION_RESULT" | "TICKET";
@@ -3730,7 +3732,7 @@ export type D2Legend = {
     attributeValues: D2AttributeValue[];
     code: Id;
     color: string;
-    created: Date;
+    created: string;
     displayName: string;
     endValue: number;
     externalAccess: boolean;
@@ -3739,7 +3741,7 @@ export type D2Legend = {
     href: string;
     id: Id;
     image: string;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -3751,8 +3753,8 @@ export type D2Legend = {
 };
 
 export type D2DataInputPeriod = {
-    closingDate: Date;
-    openingDate: Date;
+    closingDate: string;
+    openingDate: string;
     period: any;
 };
 
@@ -3761,12 +3763,12 @@ export type D2ProgramInstance = {
     attributeValues: D2AttributeValue[];
     code: Id;
     comments: any[];
-    created: Date;
-    createdAtClient: Date;
+    created: string;
+    createdAtClient: string;
     deleted: boolean;
     displayName: string;
-    endDate: Date;
-    enrollmentDate: Date;
+    endDate: string;
+    enrollmentDate: string;
     entityInstance: D2TrackedEntityInstance;
     externalAccess: boolean;
     favorite: boolean;
@@ -3774,9 +3776,9 @@ export type D2ProgramInstance = {
     followup: boolean;
     href: string;
     id: Id;
-    incidentDate: Date;
-    lastUpdated: Date;
-    lastUpdatedAtClient: Date;
+    incidentDate: string;
+    lastUpdated: string;
+    lastUpdatedAtClient: string;
     lastUpdatedBy: D2User;
     messageConversations: D2MessageConversation[];
     name: string;
@@ -3800,7 +3802,7 @@ export type D2FileResource = {
     contentLength: string;
     contentMd5: string;
     contentType: string;
-    created: Date;
+    created: string;
     displayName: string;
     domain: "DATA_VALUE" | "PUSH_ANALYSIS" | "DOCUMENT" | "MESSAGE_ATTACHMENT" | "USER_AVATAR";
     externalAccess: boolean;
@@ -3808,7 +3810,7 @@ export type D2FileResource = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -3818,8 +3820,6 @@ export type D2FileResource = {
     userAccesses: D2UserAccess[];
     userGroupAccesses: D2UserGroupAccess[];
 };
-
-export type D2Icon = {};
 
 export type D2OrganisationUnitGroupSetDimension = {
     dimension: D2OrganisationUnitGroupSet;
@@ -3845,7 +3845,7 @@ export type D2ProgramTrackedEntityAttributeDimensionItem = {
     attribute: D2TrackedEntityAttribute;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     dimensionItem: string;
     dimensionItemType:
@@ -3871,7 +3871,7 @@ export type D2ProgramTrackedEntityAttributeDimensionItem = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -3892,7 +3892,7 @@ export type D2ProgramStageDataElement = {
     attributeValues: D2AttributeValue[];
     code: Id;
     compulsory: boolean;
-    created: Date;
+    created: string;
     dataElement: D2DataElement;
     displayInReports: boolean;
     displayName: string;
@@ -3901,7 +3901,7 @@ export type D2ProgramStageDataElement = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     programStage: D2ProgramStage;
@@ -3925,7 +3925,7 @@ export type D2MetadataVersion = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -3933,8 +3933,8 @@ export type D2MetadataVersion = {
     hashCode: string;
     href: string;
     id: Id;
-    importDate: Date;
-    lastUpdated: Date;
+    importDate: string;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -3950,14 +3950,14 @@ export type D2Color = {
     attributeValues: D2AttributeValue[];
     code: Id;
     color: string;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -3978,8 +3978,8 @@ export type D2TrackedEntityInstance = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
-    createdAtClient: Date;
+    created: string;
+    createdAtClient: string;
     deleted: boolean;
     displayName: string;
     externalAccess: boolean;
@@ -3989,8 +3989,8 @@ export type D2TrackedEntityInstance = {
     href: string;
     id: Id;
     inactive: boolean;
-    lastUpdated: Date;
-    lastUpdatedAtClient: Date;
+    lastUpdated: string;
+    lastUpdatedAtClient: string;
     lastUpdatedBy: D2User;
     name: string;
     organisationUnit: D2OrganisationUnit;
@@ -4032,7 +4032,7 @@ export type D2DataElementOperand = {
     attributeValues: D2AttributeValue[];
     categoryOptionCombo: D2CategoryOptionCombo;
     code: Id;
-    created: Date;
+    created: string;
     dataElement: D2DataElement;
     description: string;
     dimensionItem: string;
@@ -4059,7 +4059,7 @@ export type D2DataElementOperand = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -4083,7 +4083,7 @@ export type D2ProgramTrackedEntityAttribute = {
     attribute: D2TrackedEntityAttribute;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayInList: boolean;
     displayName: string;
     displayShortName: string;
@@ -4093,7 +4093,7 @@ export type D2ProgramTrackedEntityAttribute = {
     groups: D2ProgramTrackedEntityAttributeGroup[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     mandatory: boolean;
     name: string;
@@ -4145,14 +4145,14 @@ export type D2AnalyticsPeriodBoundary = {
     attributeValues: D2AttributeValue[];
     boundaryTarget: string;
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     offsetPeriodType: string;
@@ -4168,14 +4168,14 @@ export type D2ProgramStageInstance = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -4189,7 +4189,7 @@ export type D2Relationship = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     externalAccess: boolean;
@@ -4199,7 +4199,7 @@ export type D2Relationship = {
     from: any;
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
@@ -4218,7 +4218,7 @@ export type D2Interpretation = {
     chart: D2Chart;
     code: Id;
     comments: D2InterpretationComment[];
-    created: Date;
+    created: string;
     dataSet: D2DataSet;
     displayName: string;
     eventChart: D2EventChart;
@@ -4228,7 +4228,7 @@ export type D2Interpretation = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     likedBy: D2User[];
     likes: number;
@@ -4272,7 +4272,7 @@ export type D2ProgramDataElementDimensionItem = {
         | "DEFAULT";
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     dataElement: D2DataElement;
     description: string;
     dimensionItem: string;
@@ -4299,7 +4299,7 @@ export type D2ProgramDataElementDimensionItem = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
@@ -4343,7 +4343,7 @@ export type D2ProgramStageInstanceFilter = {
     access: D2Access;
     attributeValues: D2AttributeValue[];
     code: Id;
-    created: Date;
+    created: string;
     description: string;
     displayName: string;
     eventQueryCriteria: any;
@@ -4352,7 +4352,7 @@ export type D2ProgramStageInstanceFilter = {
     favorites: string[];
     href: string;
     id: Id;
-    lastUpdated: Date;
+    lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     program: Id;
@@ -4366,7 +4366,7 @@ export type D2ProgramStageInstanceFilter = {
 
 export interface D2AttributeValueSchema {
     model: D2AttributeValue;
-    fields: { attribute: D2AttributeSchema; created: Date; lastUpdated: Date; value: string };
+    fields: { attribute: D2AttributeSchema; created: string; lastUpdated: string; value: string };
     fieldPresets: {
         $all: Preset<D2AttributeValue, keyof D2AttributeValue>;
         $identifiable: Preset<D2AttributeValue, FieldPresets["identifiable"]>;
@@ -4383,7 +4383,7 @@ export interface D2UserAuthorityGroupSchema {
         attributeValues: D2AttributeValueSchema[];
         authorities: string[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -4391,7 +4391,7 @@ export interface D2UserAuthorityGroupSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -4452,7 +4452,7 @@ export interface D2AttributeSchema {
         categoryOptionGroupSetAttribute: boolean;
         code: Id;
         constantAttribute: boolean;
-        created: Date;
+        created: string;
         dataElementAttribute: boolean;
         dataElementGroupAttribute: boolean;
         dataElementGroupSetAttribute: boolean;
@@ -4469,7 +4469,7 @@ export interface D2AttributeSchema {
         id: Id;
         indicatorAttribute: boolean;
         indicatorGroupAttribute: boolean;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSetAttribute: boolean;
         mandatory: boolean;
@@ -4641,9 +4641,9 @@ export interface D2UserSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         avatar: D2FileResourceSchema;
-        birthday: Date;
+        birthday: string;
         code: Id;
-        created: Date;
+        created: string;
         dataViewOrganisationUnits: D2OrganisationUnitSchema[];
         displayName: string;
         education: string;
@@ -4662,8 +4662,8 @@ export interface D2UserSchema {
         introduction: string;
         jobTitle: string;
         languages: string;
-        lastCheckedInterpretations: Date;
-        lastUpdated: Date;
+        lastCheckedInterpretations: string;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         nationality: string;
@@ -4763,14 +4763,14 @@ export interface D2UserGroupSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         managedByGroups: D2UserGroupSchema[];
         managedGroups: D2UserGroupSchema[];
@@ -4830,14 +4830,14 @@ export interface D2ExternalFileResourceSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -4875,7 +4875,7 @@ export interface D2SqlViewSchema {
             | "CACHE_TWO_WEEKS"
             | "RESPECT_SYSTEM_SETTING";
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -4883,7 +4883,7 @@ export interface D2SqlViewSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -4945,7 +4945,7 @@ export interface D2ConstantSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayDescription: string;
         displayName: string;
@@ -4955,7 +4955,7 @@ export interface D2ConstantSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -5016,7 +5016,7 @@ export interface D2OAuth2ClientSchema {
         attributeValues: D2AttributeValueSchema[];
         cid: Id;
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -5024,7 +5024,7 @@ export interface D2OAuth2ClientSchema {
         grantTypes: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -5074,7 +5074,7 @@ export interface D2OptionSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: string;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -5083,7 +5083,7 @@ export interface D2OptionSchema {
         formName: string;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         optionSet: D2OptionSetSchema;
@@ -5140,7 +5140,7 @@ export interface D2JobConfigurationSchema {
         code: Id;
         configurable: boolean;
         continuousExecution: boolean;
-        created: Date;
+        created: string;
         cronExpression: string;
         displayName: string;
         enabled: boolean;
@@ -5182,7 +5182,7 @@ export interface D2JobConfigurationSchema {
             | "LEADER_ELECTION"
             | "LEADER_RENEWAL"
             | "COMPLETE_DATA_SET_REGISTRATION_IMPORT";
-        lastExecuted: Date;
+        lastExecuted: string;
         lastExecutedStatus:
             | "RUNNING"
             | "COMPLETED"
@@ -5191,11 +5191,11 @@ export interface D2JobConfigurationSchema {
             | "DISABLED"
             | "FAILED";
         lastRuntimeExecution: string;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         leaderOnlyJob: boolean;
         name: string;
-        nextExecutionTime: Date;
+        nextExecutionTime: string;
         publicAccess: string;
         translations: D2Translation[];
         user: D2UserSchema;
@@ -5256,14 +5256,14 @@ export interface D2OptionSetSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         options: D2OptionSchema[];
@@ -5364,7 +5364,7 @@ export interface D2OptionGroupSetSchema {
         allItems: boolean;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataDimension: boolean;
         dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         description: string;
@@ -5399,7 +5399,7 @@ export interface D2OptionGroupSetSchema {
         href: string;
         id: Id;
         items: any[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         members: D2OptionGroupSchema[];
@@ -5475,7 +5475,7 @@ export interface D2OptionGroupSchema {
             | "DEFAULT";
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         dimensionItem: string;
         dimensionItemType:
@@ -5501,7 +5501,7 @@ export interface D2OptionGroupSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -5565,14 +5565,14 @@ export interface D2ColorSetSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         colors: D2ColorSchema[];
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -5616,14 +5616,14 @@ export interface D2LegendSetSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legends: D2LegendSchema[];
         name: string;
@@ -5696,11 +5696,11 @@ export interface D2OrganisationUnitSchema {
             | "DEFAULT";
         attributeValues: D2AttributeValueSchema[];
         children: D2OrganisationUnitSchema[];
-        closedDate: Date;
+        closedDate: string;
         code: Id;
         comment: string;
         contactPerson: string;
-        created: Date;
+        created: string;
         dataSets: D2DataSetSchema[];
         description: string;
         dimensionItem: string;
@@ -5730,7 +5730,7 @@ export interface D2OrganisationUnitSchema {
         groups: D2OrganisationUnitGroupSchema[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         leaf: boolean;
         legendSet: D2LegendSetSchema;
@@ -5738,7 +5738,7 @@ export interface D2OrganisationUnitSchema {
         level: number;
         memberCount: number;
         name: string;
-        openingDate: Date;
+        openingDate: string;
         organisationUnit: D2OrganisationUnitSchema[];
         parent: D2OrganisationUnitSchema;
         path: string;
@@ -5822,14 +5822,14 @@ export interface D2OrganisationUnitLevelSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         level: number;
         name: string;
@@ -5892,7 +5892,7 @@ export interface D2OrganisationUnitGroupSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         color: string;
-        created: Date;
+        created: string;
         description: string;
         dimensionItem: string;
         dimensionItemType:
@@ -5921,7 +5921,7 @@ export interface D2OrganisationUnitGroupSchema {
         groupSets: D2OrganisationUnitGroupSetSchema[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -6005,7 +6005,7 @@ export interface D2OrganisationUnitGroupSetSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         compulsory: boolean;
-        created: Date;
+        created: string;
         dataDimension: boolean;
         dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         description: string;
@@ -6041,7 +6041,7 @@ export interface D2OrganisationUnitGroupSetSchema {
         id: Id;
         includeSubhierarchyInAnalytics: boolean;
         items: any[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         name: string;
@@ -6122,7 +6122,7 @@ export interface D2CategoryOptionSchema {
         categories: D2CategorySchema[];
         categoryOptionCombos: D2CategoryOptionComboSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         dimensionItem: string;
         dimensionItemType:
@@ -6143,7 +6143,7 @@ export interface D2CategoryOptionSchema {
         displayDescription: string;
         displayName: string;
         displayShortName: string;
-        endDate: Date;
+        endDate: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
@@ -6151,7 +6151,7 @@ export interface D2CategoryOptionSchema {
         href: string;
         id: Id;
         isDefault: boolean;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -6159,7 +6159,7 @@ export interface D2CategoryOptionSchema {
         organisationUnits: D2OrganisationUnitSchema[];
         publicAccess: string;
         shortName: string;
-        startDate: Date;
+        startDate: string;
         style: D2Style;
         translations: D2Translation[];
         user: D2UserSchema;
@@ -6236,7 +6236,7 @@ export interface D2CategoryOptionGroupSchema {
             | "DEFAULT";
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         description: string;
         dimensionItem: string;
@@ -6264,7 +6264,7 @@ export interface D2CategoryOptionGroupSchema {
         groupSets: D2CategoryOptionGroupSetSchema[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -6342,7 +6342,7 @@ export interface D2CategoryOptionGroupSetSchema {
         allItems: boolean;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataDimension: boolean;
         dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         description: string;
@@ -6377,7 +6377,7 @@ export interface D2CategoryOptionGroupSetSchema {
         href: string;
         id: Id;
         items: any[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         members: D2CategoryOptionGroupSchema[];
@@ -6457,7 +6457,7 @@ export interface D2CategorySchema {
         categoryCombos: D2CategoryComboSchema[];
         categoryOptions: D2CategoryOptionSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataDimension: boolean;
         dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         description: string;
@@ -6492,7 +6492,7 @@ export interface D2CategorySchema {
         href: string;
         id: Id;
         items: any[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         name: string;
@@ -6554,7 +6554,7 @@ export interface D2CategoryComboSchema {
         attributeValues: D2AttributeValueSchema[];
         categories: D2CategorySchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         displayName: string;
         externalAccess: boolean;
@@ -6563,7 +6563,7 @@ export interface D2CategoryComboSchema {
         href: string;
         id: Id;
         isDefault: boolean;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         optionCombos: D2CategoryOptionComboSchema[];
@@ -6638,7 +6638,7 @@ export interface D2CategoryOptionComboSchema {
         categoryCombo: D2CategoryComboSchema;
         categoryOptions: D2CategoryOptionSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         dimensionItem: string;
         dimensionItemType:
@@ -6665,7 +6665,7 @@ export interface D2CategoryOptionComboSchema {
         href: string;
         id: Id;
         ignoreApproval: boolean;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -6735,7 +6735,7 @@ export interface D2DataElementSchema {
         categoryCombo: D2CategoryComboSchema;
         code: Id;
         commentOptionSet: D2OptionSetSchema;
-        created: Date;
+        created: string;
         dataSetElements: D2DataSetElementSchema[];
         description: string;
         dimensionItem: string;
@@ -6767,7 +6767,7 @@ export interface D2DataElementSchema {
         groups: D2DataElementGroupSchema[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -6899,7 +6899,7 @@ export interface D2DataElementGroupSchema {
             | "DEFAULT";
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         dimensionItem: string;
         dimensionItemType:
@@ -6926,7 +6926,7 @@ export interface D2DataElementGroupSchema {
         groupSets: D2DataElementGroupSetSchema[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -7003,7 +7003,7 @@ export interface D2DataElementGroupSetSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         compulsory: boolean;
-        created: Date;
+        created: string;
         dataDimension: boolean;
         dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         description: string;
@@ -7038,7 +7038,7 @@ export interface D2DataElementGroupSetSchema {
         href: string;
         id: Id;
         items: any[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         members: D2DataElementGroupSchema[];
@@ -7109,14 +7109,14 @@ export interface D2AnalyticsTableHookSchema {
             | "VALIDATION_RESULT";
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         phase: "RESOURCE_TABLE_POPULATED" | "ANALYTICS_TABLE_POPULATED";
@@ -7180,7 +7180,7 @@ export interface D2IndicatorTypeSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         factor: number;
@@ -7188,7 +7188,7 @@ export interface D2IndicatorTypeSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         number: boolean;
@@ -7252,7 +7252,7 @@ export interface D2IndicatorSchema {
         annualized: boolean;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataSets: D2DataSetSchema[];
         decimals: number;
         denominator: string;
@@ -7285,7 +7285,7 @@ export interface D2IndicatorSchema {
         href: string;
         id: Id;
         indicatorType: D2IndicatorTypeSchema;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -7376,7 +7376,7 @@ export interface D2IndicatorGroupSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -7384,7 +7384,7 @@ export interface D2IndicatorGroupSchema {
         groupSet: D2IndicatorGroupSetSchema;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         members: D2IndicatorSchema[];
         name: string;
@@ -7442,7 +7442,7 @@ export interface D2IndicatorGroupSetSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         compulsory: boolean;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -7450,7 +7450,7 @@ export interface D2IndicatorGroupSetSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         members: D2IndicatorGroupSchema[];
         name: string;
@@ -7507,7 +7507,7 @@ export interface D2DataEntryFormSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -7516,7 +7516,7 @@ export interface D2DataEntryFormSchema {
         href: string;
         htmlCode: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -7582,7 +7582,7 @@ export interface D2DataSetSchema {
         code: Id;
         compulsoryDataElementOperands: D2DataElementOperandSchema[];
         compulsoryFieldsCompleteOnly: boolean;
-        created: Date;
+        created: string;
         dataElementDecoration: boolean;
         dataEntryForm: D2DataEntryFormSchema;
         dataInputPeriods: D2DataInputPeriodSchema[];
@@ -7618,7 +7618,7 @@ export interface D2DataSetSchema {
         id: Id;
         indicators: D2IndicatorSchema[];
         interpretations: D2InterpretationSchema[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -7749,7 +7749,7 @@ export interface D2DataSetNotificationTemplateSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataSetNotificationTrigger: "DATA_SET_COMPLETION" | "SCHEDULED_DAYS";
         dataSets: D2DataSetSchema[];
         deliveryChannels: never[];
@@ -7759,7 +7759,7 @@ export interface D2DataSetNotificationTemplateSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         messageTemplate: string;
         name: string;
@@ -7830,7 +7830,7 @@ export interface D2SectionSchema {
         attributeValues: D2AttributeValueSchema[];
         categoryCombos: D2CategoryComboSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataElements: D2DataElementSchema[];
         dataSet: D2DataSetSchema;
         description: string;
@@ -7842,7 +7842,7 @@ export interface D2SectionSchema {
         href: string;
         id: Id;
         indicators: D2IndicatorSchema[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -7906,14 +7906,14 @@ export interface D2DataApprovalLevelSchema {
         attributeValues: D2AttributeValueSchema[];
         categoryOptionGroupSet: D2CategoryOptionGroupSetSchema;
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         level: number;
         name: string;
@@ -7973,7 +7973,7 @@ export interface D2DataApprovalWorkflowSchema {
         attributeValues: D2AttributeValueSchema[];
         categoryCombo: D2CategoryComboSchema;
         code: Id;
-        created: Date;
+        created: string;
         dataSets: D2DataSetSchema[];
         displayName: string;
         externalAccess: boolean;
@@ -7981,7 +7981,7 @@ export interface D2DataApprovalWorkflowSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         levels: D2DataApprovalLevelSchema[];
         name: string;
@@ -8056,7 +8056,7 @@ export interface D2ValidationRuleSchema {
             | "DEFAULT";
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         dimensionItem: string;
         dimensionItemType:
@@ -8085,7 +8085,7 @@ export interface D2ValidationRuleSchema {
         id: Id;
         importance: "HIGH" | "MEDIUM" | "LOW";
         instruction: string;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         leftSide: D2Expression;
         legendSet: D2LegendSetSchema;
@@ -8175,7 +8175,7 @@ export interface D2ValidationRuleGroupSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -8183,7 +8183,7 @@ export interface D2ValidationRuleGroupSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         members: D2ValidationRuleSchema[];
         name: string;
@@ -8240,14 +8240,14 @@ export interface D2ValidationNotificationTemplateSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         messageTemplate: string;
         name: string;
@@ -8321,7 +8321,7 @@ export interface D2TrackedEntityAttributeSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         confidential: boolean;
-        created: Date;
+        created: string;
         description: string;
         dimensionItem: string;
         dimensionItemType:
@@ -8354,7 +8354,7 @@ export interface D2TrackedEntityAttributeSchema {
         href: string;
         id: Id;
         inherit: boolean;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -8490,7 +8490,7 @@ export interface D2TrackedEntityTypeSchema {
         allowAuditLog: boolean;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayDescription: string;
         displayName: string;
@@ -8502,7 +8502,7 @@ export interface D2TrackedEntityTypeSchema {
         formName: string;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         maxTeiCountToReturn: number;
         minAttributesRequiredToSearch: number;
@@ -8575,7 +8575,7 @@ export interface D2TrackedEntityTypeAttributeSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayInList: boolean;
         displayName: string;
         displayShortName: string;
@@ -8584,7 +8584,7 @@ export interface D2TrackedEntityTypeAttributeSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         mandatory: boolean;
         name: string;
@@ -8663,7 +8663,7 @@ export interface D2ProgramTrackedEntityAttributeGroupSchema {
         attributeValues: D2AttributeValueSchema[];
         attributes: D2ProgramTrackedEntityAttributeSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayDescription: string;
         displayName: string;
@@ -8673,7 +8673,7 @@ export interface D2ProgramTrackedEntityAttributeGroupSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -8727,7 +8727,7 @@ export interface D2ProgramStageSectionSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataElements: D2DataElementSchema[];
         description: string;
         displayName: string;
@@ -8737,7 +8737,7 @@ export interface D2ProgramStageSectionSchema {
         formName: string;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         programIndicators: D2ProgramIndicatorSchema[];
@@ -8800,7 +8800,7 @@ export interface D2ProgramNotificationTemplateSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         deliveryChannels: never[];
         displayName: string;
         externalAccess: boolean;
@@ -8808,7 +8808,7 @@ export interface D2ProgramNotificationTemplateSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         messageTemplate: string;
         name: string;
@@ -8895,7 +8895,7 @@ export interface D2ProgramStageSchema {
         autoGenerateEvent: boolean;
         blockEntryForm: boolean;
         code: Id;
-        created: Date;
+        created: string;
         dataEntryForm: D2DataEntryFormSchema;
         description: string;
         displayDescription: string;
@@ -8914,7 +8914,7 @@ export interface D2ProgramStageSchema {
         hideDueDate: boolean;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         minDaysFromStart: number;
         name: string;
@@ -9040,7 +9040,7 @@ export interface D2SMSCommandSchema {
         codeValueSeparator: string;
         codes: any[];
         completenessMethod: "ALL_DATAVALUE" | "AT_LEAST_ONE_DATAVALUE" | "DO_NOT_MARK_COMPLETE";
-        created: Date;
+        created: string;
         currentPeriodUsedForReporting: boolean;
         dataset: D2DataSetSchema;
         defaultMessage: string;
@@ -9050,7 +9050,7 @@ export interface D2SMSCommandSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         moreThanOneOrgUnitMessage: string;
         name: string;
@@ -9141,7 +9141,7 @@ export interface D2ProgramSchema {
         categoryCombo: D2CategoryComboSchema;
         code: Id;
         completeEventsExpiryDays: number;
-        created: Date;
+        created: string;
         dataEntryForm: D2DataEntryFormSchema;
         description: string;
         displayDescription: string;
@@ -9161,7 +9161,7 @@ export interface D2ProgramSchema {
         id: Id;
         ignoreOverdueEvents: boolean;
         incidentDateLabel: string;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         maxTeiCountToReturn: number;
         minAttributesRequiredToSearch: number;
@@ -9328,7 +9328,7 @@ export interface D2EventChartSchema {
         columnDimensions: string[];
         columns: any[];
         completedOnly: boolean;
-        created: Date;
+        created: string;
         cumulativeValues: boolean;
         dataDimensionItems: any[];
         dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
@@ -9340,7 +9340,7 @@ export interface D2EventChartSchema {
         displayName: string;
         displayShortName: string;
         domainAxisLabel: string;
-        endDate: Date;
+        endDate: string;
         eventStatus: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
         externalAccess: boolean;
         favorite: boolean;
@@ -9361,7 +9361,7 @@ export interface D2EventChartSchema {
         id: Id;
         interpretations: D2InterpretationSchema[];
         itemOrganisationUnitGroups: D2OrganisationUnitGroupSchema[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
         legendSet: D2LegendSetSchema;
@@ -9392,7 +9392,7 @@ export interface D2EventChartSchema {
         shortName: string;
         showData: boolean;
         sortOrder: number;
-        startDate: Date;
+        startDate: string;
         subscribed: boolean;
         subscribers: string[];
         subtitle: string;
@@ -9607,7 +9607,7 @@ export interface D2EventReportSchema {
         columnDimensions: string[];
         columns: any[];
         completedOnly: boolean;
-        created: Date;
+        created: string;
         dataDimensionItems: any[];
         dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
         dataElementGroupSetDimensions: D2DataElementGroupSetDimensionSchema[];
@@ -9619,7 +9619,7 @@ export interface D2EventReportSchema {
         displayDescription: string;
         displayName: string;
         displayShortName: string;
-        endDate: Date;
+        endDate: string;
         eventStatus: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
         externalAccess: boolean;
         favorite: boolean;
@@ -9635,7 +9635,7 @@ export interface D2EventReportSchema {
         id: Id;
         interpretations: D2InterpretationSchema[];
         itemOrganisationUnitGroups: D2OrganisationUnitGroupSchema[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         orgUnitField: string;
@@ -9659,7 +9659,7 @@ export interface D2EventReportSchema {
         showDimensionLabels: boolean;
         showHierarchy: boolean;
         sortOrder: number;
-        startDate: Date;
+        startDate: string;
         subscribed: boolean;
         subscribers: string[];
         subtitle: string;
@@ -9824,7 +9824,7 @@ export interface D2ProgramSectionSchema {
         attributeValues: D2AttributeValueSchema[];
         attributes: D2TrackedEntityAttributeSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -9833,7 +9833,7 @@ export interface D2ProgramSectionSchema {
         formName: string;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         program: D2ProgramSchema;
@@ -9911,7 +9911,7 @@ export interface D2ProgramIndicatorSchema {
         analyticsType: "EVENT" | "ENROLLMENT";
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         decimals: number;
         description: string;
         dimensionItem: string;
@@ -9943,7 +9943,7 @@ export interface D2ProgramIndicatorSchema {
         groups: D2ProgramIndicatorGroupSchema[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -10031,7 +10031,7 @@ export interface D2ProgramIndicatorGroupSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -10039,7 +10039,7 @@ export interface D2ProgramIndicatorGroupSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         members: D2ProgramIndicatorSchema[];
         name: string;
@@ -10097,7 +10097,7 @@ export interface D2RelationshipTypeSchema {
         attributeValues: D2AttributeValueSchema[];
         bidirectional: boolean;
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -10107,7 +10107,7 @@ export interface D2RelationshipTypeSchema {
         fromToName: string;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -10172,7 +10172,7 @@ export interface D2ProgramRuleVariableSchema {
         attribute: D2TrackedEntityAttributeSchema;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataElement: D2DataElementSchema;
         displayName: string;
         externalAccess: boolean;
@@ -10180,7 +10180,7 @@ export interface D2ProgramRuleVariableSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         program: D2ProgramSchema;
@@ -10244,7 +10244,7 @@ export interface D2ProgramRuleActionSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         content: string;
-        created: Date;
+        created: string;
         data: string;
         dataElement: D2DataElementSchema;
         displayName: string;
@@ -10253,7 +10253,7 @@ export interface D2ProgramRuleActionSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         location: string;
         name: string;
@@ -10344,7 +10344,7 @@ export interface D2ProgramRuleSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         condition: string;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -10352,7 +10352,7 @@ export interface D2ProgramRuleSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         priority: number;
@@ -10436,7 +10436,7 @@ export interface D2MapViewSchema {
         columns: any[];
         completedOnly: boolean;
         config: string;
-        created: Date;
+        created: string;
         dataDimensionItems: any[];
         dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
         dataElementGroupSetDimensions: D2DataElementGroupSetDimensionSchema[];
@@ -10445,7 +10445,7 @@ export interface D2MapViewSchema {
         displayDescription: string;
         displayName: string;
         displayShortName: string;
-        endDate: Date;
+        endDate: string;
         eventClustering: boolean;
         eventCoordinateField: string;
         eventPointColor: string;
@@ -10468,7 +10468,7 @@ export interface D2MapViewSchema {
         labelFontStyle: string;
         labelFontWeight: string;
         labels: boolean;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         layer: string;
         legendSet: D2LegendSetSchema;
@@ -10502,7 +10502,7 @@ export interface D2MapViewSchema {
         rows: any[];
         shortName: string;
         sortOrder: number;
-        startDate: Date;
+        startDate: string;
         styleDataItem: object;
         subscribed: boolean;
         subscribers: string[];
@@ -10658,7 +10658,7 @@ export interface D2ReportSchema {
             | "CACHE_TWO_WEEKS"
             | "RESPECT_SYSTEM_SETTING";
         code: Id;
-        created: Date;
+        created: string;
         designContent: string;
         displayName: string;
         externalAccess: boolean;
@@ -10666,7 +10666,7 @@ export interface D2ReportSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -10756,7 +10756,7 @@ export interface D2ReportTableSchema {
         columnDimensions: string[];
         columns: any[];
         completedOnly: boolean;
-        created: Date;
+        created: string;
         cumulative: boolean;
         dataDimensionItems: any[];
         dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
@@ -10767,7 +10767,7 @@ export interface D2ReportTableSchema {
         displayDescription: string;
         displayName: string;
         displayShortName: string;
-        endDate: Date;
+        endDate: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
@@ -10782,7 +10782,7 @@ export interface D2ReportTableSchema {
         id: Id;
         interpretations: D2InterpretationSchema[];
         itemOrganisationUnitGroups: D2OrganisationUnitGroupSchema[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
         legendDisplayStyle: "FILL" | "TEXT";
@@ -10810,7 +10810,7 @@ export interface D2ReportTableSchema {
         showHierarchy: boolean;
         skipRounding: boolean;
         sortOrder: number;
-        startDate: Date;
+        startDate: string;
         subscribed: boolean;
         subscribers: string[];
         subtitle: string;
@@ -10969,7 +10969,7 @@ export interface D2DocumentSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         contentType: string;
-        created: Date;
+        created: string;
         displayName: string;
         external: boolean;
         externalAccess: boolean;
@@ -10977,7 +10977,7 @@ export interface D2DocumentSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -11038,7 +11038,7 @@ export interface D2ValidationResultSchema {
     model: D2ValidationResult;
     fields: {
         attributeOptionCombo: D2CategoryOptionComboSchema;
-        created: Date;
+        created: string;
         dayInPeriod: number;
         id: string;
         leftsideValue: number;
@@ -11092,7 +11092,7 @@ export interface D2ChartSchema {
         colorSet: D2ColorSetSchema;
         columns: any[];
         completedOnly: boolean;
-        created: Date;
+        created: string;
         cumulativeValues: boolean;
         dataDimensionItems: any[];
         dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
@@ -11103,7 +11103,7 @@ export interface D2ChartSchema {
         displayName: string;
         displayShortName: string;
         domainAxisLabel: string;
-        endDate: Date;
+        endDate: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
@@ -11122,7 +11122,7 @@ export interface D2ChartSchema {
         id: Id;
         interpretations: D2InterpretationSchema[];
         itemOrganisationUnitGroups: D2OrganisationUnitGroupSchema[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
         legendSet: D2LegendSetSchema;
@@ -11150,7 +11150,7 @@ export interface D2ChartSchema {
         shortName: string;
         showData: boolean;
         sortOrder: number;
-        startDate: Date;
+        startDate: string;
         subscribed: boolean;
         subscribers: string[];
         subtitle: string;
@@ -11327,7 +11327,7 @@ export interface D2MapSchema {
         attributeValues: D2AttributeValueSchema[];
         basemap: string;
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayDescription: string;
         displayName: string;
@@ -11338,7 +11338,7 @@ export interface D2MapSchema {
         href: string;
         id: Id;
         interpretations: D2InterpretationSchema[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         latitude: number;
         longitude: number;
@@ -11418,7 +11418,7 @@ export interface D2ExternalMapLayerSchema {
         attributeValues: D2AttributeValueSchema[];
         attribution: string;
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -11426,7 +11426,7 @@ export interface D2ExternalMapLayerSchema {
         href: string;
         id: Id;
         imageFormat: "PNG" | "JPG";
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         layers: string;
         legendSet: D2LegendSetSchema;
@@ -11497,7 +11497,7 @@ export interface D2PredictorSchema {
         annualSampleCount: number;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayDescription: string;
         displayName: string;
@@ -11509,7 +11509,7 @@ export interface D2PredictorSchema {
         groups: D2PredictorGroupSchema[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         organisationUnitLevels: D2OrganisationUnitLevelSchema[];
@@ -11578,7 +11578,7 @@ export interface D2PredictorGroupSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -11586,7 +11586,7 @@ export interface D2PredictorGroupSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         members: D2PredictorSchema[];
         name: string;
@@ -11644,7 +11644,7 @@ export interface D2DashboardItemSchema {
         chart: D2ChartSchema;
         code: Id;
         contentCount: number;
-        created: Date;
+        created: string;
         displayName: string;
         eventChart: D2EventChartSchema;
         eventReport: D2EventReportSchema;
@@ -11656,7 +11656,7 @@ export interface D2DashboardItemSchema {
         id: Id;
         interpretationCount: number;
         interpretationLikeCount: number;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         map: D2MapSchema;
         messages: boolean;
@@ -11751,7 +11751,7 @@ export interface D2DashboardSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayDescription: string;
         displayName: string;
@@ -11763,7 +11763,7 @@ export interface D2DashboardSchema {
         id: Id;
         itemCount: number;
         items: D2DashboardItemSchema[];
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -11822,7 +11822,7 @@ export interface D2PushAnalysisSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dashboard: D2DashboardSchema;
         displayName: string;
         externalAccess: boolean;
@@ -11830,7 +11830,7 @@ export interface D2PushAnalysisSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         message: string;
         name: string;
@@ -11881,7 +11881,7 @@ export interface D2KeyJsonValueSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -11889,7 +11889,7 @@ export interface D2KeyJsonValueSchema {
         href: string;
         id: Id;
         key: string;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         namespace: string;
@@ -11955,7 +11955,7 @@ export interface D2UserCredentialsSchema {
         catDimensionConstraints: D2CategorySchema[];
         code: Id;
         cogsDimensionConstraints: D2CategoryOptionGroupSetSchema[];
-        created: Date;
+        created: string;
         disabled: boolean;
         displayName: string;
         externalAccess: boolean;
@@ -11965,14 +11965,14 @@ export interface D2UserCredentialsSchema {
         href: string;
         id: Id;
         invitation: boolean;
-        lastLogin: Date;
-        lastUpdated: Date;
+        lastLogin: string;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         ldapId: string;
         name: string;
         openId: string;
         password: string;
-        passwordLastUpdated: Date;
+        passwordLastUpdated: string;
         publicAccess: string;
         selfRegistered: boolean;
         translations: D2Translation[];
@@ -12059,7 +12059,7 @@ export interface D2ReportingRateSchema {
             | "DEFAULT";
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataSet: D2DataSetSchema;
         description: string;
         dimensionItem: string;
@@ -12086,7 +12086,7 @@ export interface D2ReportingRateSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -12113,13 +12113,25 @@ export interface D2ReportingRateSchema {
     };
 }
 
+export interface D2IconSchema {
+    model: D2Icon;
+    fields: {};
+    fieldPresets: {
+        $all: Preset<D2Icon, keyof D2Icon>;
+        $identifiable: Preset<D2Icon, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Icon, FieldPresets["nameable"]>;
+        $persisted: Preset<D2Icon, never>;
+        $owner: Preset<D2Icon, never>;
+    };
+}
+
 export interface D2TrackedEntityInstanceFilterSchema {
     model: D2TrackedEntityInstanceFilter;
     fields: {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         enrollmentCreatedPeriod: any;
@@ -12131,7 +12143,7 @@ export interface D2TrackedEntityInstanceFilterSchema {
         followup: boolean;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         program: D2ProgramSchema;
@@ -12236,14 +12248,14 @@ export interface D2InterpretationCommentSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         mentions: any[];
         name: string;
@@ -12276,7 +12288,7 @@ export interface D2MessageConversationSchema {
         assignee: D2UserSchema;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -12284,11 +12296,11 @@ export interface D2MessageConversationSchema {
         followUp: boolean;
         href: string;
         id: Id;
-        lastMessage: Date;
+        lastMessage: string;
         lastSender: D2UserSchema;
         lastSenderFirstname: string;
         lastSenderSurname: string;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         messageCount: number;
         messageType: "PRIVATE" | "SYSTEM" | "VALIDATION_RESULT" | "TICKET";
@@ -12380,7 +12392,7 @@ export interface D2LegendSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         color: string;
-        created: Date;
+        created: string;
         displayName: string;
         endValue: number;
         externalAccess: boolean;
@@ -12389,7 +12401,7 @@ export interface D2LegendSchema {
         href: string;
         id: Id;
         image: string;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -12436,7 +12448,7 @@ export interface D2LegendSchema {
 
 export interface D2DataInputPeriodSchema {
     model: D2DataInputPeriod;
-    fields: { closingDate: Date; openingDate: Date; period: any };
+    fields: { closingDate: string; openingDate: string; period: any };
     fieldPresets: {
         $all: Preset<D2DataInputPeriod, keyof D2DataInputPeriod>;
         $identifiable: Preset<D2DataInputPeriod, FieldPresets["identifiable"]>;
@@ -12453,12 +12465,12 @@ export interface D2ProgramInstanceSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         comments: any[];
-        created: Date;
-        createdAtClient: Date;
+        created: string;
+        createdAtClient: string;
         deleted: boolean;
         displayName: string;
-        endDate: Date;
-        enrollmentDate: Date;
+        endDate: string;
+        enrollmentDate: string;
         entityInstance: D2TrackedEntityInstanceSchema;
         externalAccess: boolean;
         favorite: boolean;
@@ -12466,9 +12478,9 @@ export interface D2ProgramInstanceSchema {
         followup: boolean;
         href: string;
         id: Id;
-        incidentDate: Date;
-        lastUpdated: Date;
-        lastUpdatedAtClient: Date;
+        incidentDate: string;
+        lastUpdated: string;
+        lastUpdatedAtClient: string;
         lastUpdatedBy: D2UserSchema;
         messageConversations: D2MessageConversationSchema[];
         name: string;
@@ -12543,7 +12555,7 @@ export interface D2FileResourceSchema {
         contentLength: string;
         contentMd5: string;
         contentType: string;
-        created: Date;
+        created: string;
         displayName: string;
         domain: "DATA_VALUE" | "PUSH_ANALYSIS" | "DOCUMENT" | "MESSAGE_ATTACHMENT" | "USER_AVATAR";
         externalAccess: boolean;
@@ -12551,7 +12563,7 @@ export interface D2FileResourceSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -12596,18 +12608,6 @@ export interface D2FileResourceSchema {
     };
 }
 
-export interface D2IconSchema {
-    model: D2Icon;
-    fields: {};
-    fieldPresets: {
-        $all: Preset<D2Icon, keyof D2Icon>;
-        $identifiable: Preset<D2Icon, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Icon, FieldPresets["nameable"]>;
-        $persisted: Preset<D2Icon, never>;
-        $owner: Preset<D2Icon, never>;
-    };
-}
-
 export interface D2OrganisationUnitGroupSetDimensionSchema {
     model: D2OrganisationUnitGroupSetDimension;
     fields: { dimension: D2OrganisationUnitGroupSetSchema; items: D2OrganisationUnitGroupSchema[] };
@@ -12644,7 +12644,7 @@ export interface D2ProgramTrackedEntityAttributeDimensionItemSchema {
         attribute: D2TrackedEntityAttributeSchema;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         dimensionItem: string;
         dimensionItemType:
@@ -12670,7 +12670,7 @@ export interface D2ProgramTrackedEntityAttributeDimensionItemSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -12707,7 +12707,7 @@ export interface D2ProgramStageDataElementSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         compulsory: boolean;
-        created: Date;
+        created: string;
         dataElement: D2DataElementSchema;
         displayInReports: boolean;
         displayName: string;
@@ -12716,7 +12716,7 @@ export interface D2ProgramStageDataElementSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         programStage: D2ProgramStageSchema;
@@ -12791,7 +12791,7 @@ export interface D2MetadataVersionSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -12799,8 +12799,8 @@ export interface D2MetadataVersionSchema {
         hashCode: string;
         href: string;
         id: Id;
-        importDate: Date;
-        lastUpdated: Date;
+        importDate: string;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -12848,14 +12848,14 @@ export interface D2ColorSchema {
         attributeValues: D2AttributeValueSchema[];
         code: Id;
         color: string;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -12911,8 +12911,8 @@ export interface D2TrackedEntityInstanceSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
-        createdAtClient: Date;
+        created: string;
+        createdAtClient: string;
         deleted: boolean;
         displayName: string;
         externalAccess: boolean;
@@ -12922,8 +12922,8 @@ export interface D2TrackedEntityInstanceSchema {
         href: string;
         id: Id;
         inactive: boolean;
-        lastUpdated: Date;
-        lastUpdatedAtClient: Date;
+        lastUpdated: string;
+        lastUpdatedAtClient: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         organisationUnit: D2OrganisationUnitSchema;
@@ -12946,8 +12946,8 @@ export interface D2TrackedEntityInstanceSchema {
             D2TrackedEntityInstance,
             | "programOwners"
             | "code"
-            | "programInstances"
             | "organisationUnit"
+            | "programInstances"
             | "createdAtClient"
             | "lastUpdated"
             | "inactive"
@@ -13017,7 +13017,7 @@ export interface D2DataElementOperandSchema {
         attributeValues: D2AttributeValueSchema[];
         categoryOptionCombo: D2CategoryOptionComboSchema;
         code: Id;
-        created: Date;
+        created: string;
         dataElement: D2DataElementSchema;
         description: string;
         dimensionItem: string;
@@ -13044,7 +13044,7 @@ export interface D2DataElementOperandSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -13085,7 +13085,7 @@ export interface D2ProgramTrackedEntityAttributeSchema {
         attribute: D2TrackedEntityAttributeSchema;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayInList: boolean;
         displayName: string;
         displayShortName: string;
@@ -13095,7 +13095,7 @@ export interface D2ProgramTrackedEntityAttributeSchema {
         groups: D2ProgramTrackedEntityAttributeGroupSchema[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         mandatory: boolean;
         name: string;
@@ -13191,14 +13191,14 @@ export interface D2AnalyticsPeriodBoundarySchema {
         attributeValues: D2AttributeValueSchema[];
         boundaryTarget: string;
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         offsetPeriodType: string;
@@ -13246,14 +13246,14 @@ export interface D2ProgramStageInstanceSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -13277,7 +13277,7 @@ export interface D2RelationshipSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         externalAccess: boolean;
@@ -13287,7 +13287,7 @@ export interface D2RelationshipSchema {
         from: any;
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
@@ -13342,7 +13342,7 @@ export interface D2InterpretationSchema {
         chart: D2ChartSchema;
         code: Id;
         comments: D2InterpretationCommentSchema[];
-        created: Date;
+        created: string;
         dataSet: D2DataSetSchema;
         displayName: string;
         eventChart: D2EventChartSchema;
@@ -13352,7 +13352,7 @@ export interface D2InterpretationSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         likedBy: D2UserSchema[];
         likes: number;
@@ -13455,7 +13455,7 @@ export interface D2ProgramDataElementDimensionItemSchema {
             | "DEFAULT";
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         dataElement: D2DataElementSchema;
         description: string;
         dimensionItem: string;
@@ -13482,7 +13482,7 @@ export interface D2ProgramDataElementDimensionItemSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
@@ -13536,7 +13536,7 @@ export interface D2ProgramStageInstanceFilterSchema {
         access: D2Access;
         attributeValues: D2AttributeValueSchema[];
         code: Id;
-        created: Date;
+        created: string;
         description: string;
         displayName: string;
         eventQueryCriteria: any;
@@ -13545,7 +13545,7 @@ export interface D2ProgramStageInstanceFilterSchema {
         favorites: string[];
         href: string;
         id: Id;
-        lastUpdated: Date;
+        lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         program: Id;
