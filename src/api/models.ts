@@ -3,7 +3,7 @@ import _ from "lodash";
 import { D2ModelSchemas } from "./../schemas/models";
 import { SelectedPick, GetFields } from "./inference";
 import { Ref } from "../schemas/base";
-import D2Api from "./d2-api";
+import { D2Api } from "./d2-api";
 import {
     GetOptionValue,
     processFieldsFilterParams,
@@ -30,10 +30,12 @@ export interface PaginatedObjects<T> extends NonPaginatedObjects<T> {
 
 export type GetOptions<ModelKey extends keyof D2ModelSchemas> = GetOptionValue<ModelKey> &
     Partial<{
+        page: number;
         pageSize: number;
         paging: boolean;
         order: string;
         rootJunction: "AND" | "OR";
+        cache: boolean;
     }>;
 
 export interface UpdateOptions {
@@ -65,7 +67,7 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
     }
 
     get<
-        Options extends GetOptions<ModelKey> & { paging?: true },
+        Options extends GetOptions<ModelKey> & { paging?: true | undefined },
         Object = GetObject<ModelKey, Options>
     >(options: Options): D2ApiResponse<PaginatedObjects<Object>>;
 
@@ -87,7 +89,7 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
 
         return mapD2ApiResponse(apiResponse, data => {
             return {
-                ...(options.paging ? { pager: data.pager } : {}),
+                ...(options.paging || options.paging === undefined ? { pager: data.pager } : {}),
                 objects: data[this.modelName] as Object[],
             };
         });

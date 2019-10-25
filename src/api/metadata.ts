@@ -8,7 +8,7 @@ import {
     mapD2ApiResponse,
     GetOptionValue,
 } from "./common";
-import D2Api from "./d2-api";
+import { D2Api } from "./d2-api";
 import { SelectedPick, GetFields } from "./inference";
 
 export interface PostOptions {

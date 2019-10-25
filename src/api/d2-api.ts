@@ -7,6 +7,7 @@ import D2ApiMetadata from "./metadata";
 import D2ApiModel from "./models";
 
 import { Params, D2ApiResponse } from "./common";
+import D2ApiCurrentUser from "./current-user";
 
 export { D2ApiResponse };
 
@@ -18,18 +19,20 @@ export interface D2ApiOptions {
 
 type Models = { [ModelName in keyof D2ModelSchemas]: D2ApiModel<ModelName> };
 
-export default class D2Api {
+export class D2ApiDefault {
     private apiPath: string;
 
     public connection: AxiosInstance;
     public metadata: D2ApiMetadata;
     public models: Models;
+    public currrentUser: D2ApiCurrentUser;
 
     public constructor(options?: D2ApiOptions) {
         const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         this.connection = prepareConnection(this.apiPath, auth);
         this.metadata = new D2ApiMetadata(this);
+        this.currrentUser = new D2ApiCurrentUser(this);
         this.models = _(Object.keys(D2ModelEnum))
             .map((modelName: keyof D2ModelSchemas) => [modelName, new D2ApiModel(this, modelName)])
             .fromPairs()
@@ -44,7 +47,12 @@ export default class D2Api {
             data: response_.data as T,
             headers: response_.headers,
         }));
-        return { cancel, response: apiResponse };
+
+        return {
+            cancel,
+            response: apiResponse,
+            getData: () => apiResponse.then(({ data }) => data),
+        };
     }
 
     public get<T>(url: string, params?: Params) {
@@ -63,3 +71,5 @@ export default class D2Api {
         return this.request<T>({ method: "delete", url, params });
     }
 }
+
+export type D2Api = D2ApiDefault;

@@ -76,6 +76,10 @@ export interface GetOptionGeneric {
     filter: Filter | Filter[];
 }
 
+function isEmptyFilterValue(val: any): boolean {
+    return val === undefined || val === null || val === "" || _.isEqual(val, []);
+}
+
 export function processFieldsFilterParams(
     modelOptions: GetOptionGeneric,
     modelName?: string
@@ -87,10 +91,14 @@ export function processFieldsFilterParams(
         [join("filter")]:
             modelOptions.filter &&
             _.map(modelOptions.filter || [], (filter: Filter, field) =>
-                _.map(filter, (value, op) =>
-                    op === "in" || op === "!in"
-                        ? `${field}:${op}:[${(value as string[]).join(",")}]`
-                        : `${field}:${op}:${value}`
+                _.compact(
+                    _.map(filter, (value, op) =>
+                        isEmptyFilterValue(value)
+                            ? null
+                            : op === "in" || op === "!in"
+                            ? `${field}:${op}:[${(value as string[]).join(",")}]`
+                            : `${field}:${op}:${value}`
+                    )
                 )
             ),
     });
@@ -102,21 +110,30 @@ export interface D2Response<Data> {
     headers: _.Dictionary<string>;
 }
 
-export interface D2ApiResponse<Data> {
+export interface D2ApiResponseBase<Data> {
     cancel: Canceler;
     response: Promise<D2Response<Data>>;
 }
 
-export function mapD2ApiResponse<R, T>(
-    apiResponse: D2ApiResponse<R>,
-    mapper: (apiResponse: R) => T
-): D2ApiResponse<T> {
+export interface D2ApiResponse<Data> extends D2ApiResponseBase<Data> {
+    getData: () => Promise<Data>;
+}
+
+export function mapD2ApiResponse<Data, MappedData>(
+    apiResponse: D2ApiResponse<Data>,
+    mapper: (apiResponse: Data) => MappedData
+): D2ApiResponse<MappedData> {
     const { cancel, response } = apiResponse;
     const mappedResponse = response.then(response_ => ({
         ...response_,
         data: mapper(response_.data),
     }));
-    return { cancel, response: mappedResponse };
+
+    return {
+        cancel,
+        getData: () => mappedResponse.then(({ data }) => data),
+        response: mappedResponse,
+    };
 }
 
 export type D2ApiRequestParamsValue = string | number | boolean | undefined;
