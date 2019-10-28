@@ -12,5 +12,5 @@ export default class D2ApiCurrentUser {
         return this.api.get("/me");
     }
 
-    get = cache("currentUser.get", this._get.bind(this));
+    get = cache<D2ApiResponse<D2User>>("currentUser.get", this._get.bind(this));
 }
