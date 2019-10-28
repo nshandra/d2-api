@@ -18,7 +18,7 @@ export interface FieldsSelector {
 
 export interface GetOptionValue<ModelKey extends keyof D2ModelSchemas> {
     fields: Selector<D2ModelSchemas[ModelKey]>;
-    filter?: Filter | Filter[];
+    filter?: Filter;
 }
 
 type FilterSingleOperator =
@@ -73,7 +73,7 @@ function getFieldsAsString(modelFields: FieldsSelector): string {
 
 export interface GetOptionGeneric {
     fields: FieldsSelector;
-    filter: Filter | Filter[];
+    filter: Filter;
 }
 
 function isEmptyFilterValue(val: any): boolean {
@@ -90,7 +90,7 @@ export function processFieldsFilterParams(
         [join("fields")]: modelOptions.fields && getFieldsAsString(modelOptions.fields),
         [join("filter")]:
             modelOptions.filter &&
-            _.map(modelOptions.filter || [], (filter: Filter, field) =>
+            _.flatMap(modelOptions.filter || {}, (filter: Filter, field) =>
                 _.compact(
                     _.map(filter, (value, op) =>
                         isEmptyFilterValue(value)
