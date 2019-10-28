@@ -10,7 +10,7 @@
     },
     "scripts": {
         "start": "NODE_ENV=development babel-watch src --extensions \".js,.jsx,.ts,.tsx\"",
-        "clean": "rimraf build/*",
+        "clean": "rimraf build",
         "build": "babel src --out-dir build --extensions \".js,.jsx,.ts,.tsx\" && tsc && cp package.json build/",
         "predist": "rimraf dist && yarn build",
         "dist": "ncc build build/ -m",

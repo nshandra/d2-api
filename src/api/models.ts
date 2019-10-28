@@ -35,7 +35,6 @@ export type GetOptions<ModelKey extends keyof D2ModelSchemas> = GetOptionValue<M
         paging: boolean;
         order: string;
         rootJunction: "AND" | "OR";
-        cache: boolean;
     }>;
 
 export interface UpdateOptions {

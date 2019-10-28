@@ -15,8 +15,7 @@
         "noUnusedLocals": true,
         "declaration": true,
         "outDir": "build",
-        "lib": ["dom", "dom.iterable", "esnext"],
-        "experimentalDecorators": true
+        "lib": ["dom", "dom.iterable", "esnext"]
     },
     "include": ["src"]
 }

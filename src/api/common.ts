@@ -110,12 +110,9 @@ export interface D2Response<Data> {
     headers: _.Dictionary<string>;
 }
 
-export interface D2ApiResponseBase<Data> {
+export interface D2ApiResponse<Data> {
     cancel: Canceler;
     response: Promise<D2Response<Data>>;
-}
-
-export interface D2ApiResponse<Data> extends D2ApiResponseBase<Data> {
     getData: () => Promise<Data>;
 }
 
