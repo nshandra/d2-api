@@ -2,7 +2,7 @@
 
 Typescript library for the DHIS2 API.
 
-## Generate schesmas
+## Generate schemas
 
 ```
 $ yarn generate-schemas https://admin:district@play.dhis2.org/2.30
@@ -133,4 +133,35 @@ const { cancel, response } = api.metadata.post({
 });
 
 console.log((await response).data)
+```
+
+## Testing
+
+```
+import { getMockApi, D2Api, D2User } from "d2-api";
+
+const currentUserMock = {
+    id: "xE7jOejl9FI",
+    displayName: "John Traore",
+};
+
+function getCurrentUser(api: D2Api): Promise<D2User> {
+    return api.currrentUser.get().getData();
+}
+
+const { api, mock } = getMockApi();
+
+describe("Project", () => {
+    beforeEach(() => {
+        mock.reset();
+    });
+
+    describe("getList", () => {
+        it("returns list of dataSets filtered", async () => {
+            mock.onGet("/me").reply(200, currentUserMock);
+            const currentUser = await getCurrentUser(api);
+            expect(currentUser.id).toEqual("xE7jOejl9FI");
+        });
+    });
+});
 ```
