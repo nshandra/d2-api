@@ -9,3 +9,4 @@ export {
 } from "./api/models";
 export { Id, Ref } from "./schemas/base";
 export { SelectedPick } from "./api/inference";
+export { getMockApi, D2ApiMock } from "./testing";
