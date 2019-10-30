@@ -8,6 +8,7 @@ import argparse from "argparse";
 
 interface SchemaProperty {
     name: string;
+    collectionName?: string;
     fieldName?: string;
     propertyType: string;
     itemPropertyType?: string;
@@ -134,7 +135,9 @@ function getInterface(schemas: Schemas, property: SchemaProperty, suffix?: strin
 function getModelProperties(schemas: Schemas, schema: Schema, suffix?: string): string {
     return _(schema.properties)
         .map(property => [
-            (property.fieldName === "uid" ? "id" : property.fieldName) || property.name,
+            property.fieldName === "uid"
+                ? "id"
+                : property.collectionName || property.fieldName || property.name,
             getType(schemas, property, suffix),
         ])
         .sortBy()
@@ -159,7 +162,7 @@ function getProperties(schema: Schema, predicate: (property: SchemaProperty) => 
     return (
         schema.properties
             .filter(predicate)
-            .map(property => quote(property.fieldName || property.name))
+            .map(property => quote(property.collectionName || property.fieldName || property.name))
             .join(" | ") || "never"
     );
 }
