@@ -68,6 +68,7 @@ function getFieldsAsString(modelFields: FieldsSelector): string {
             }
         })
         .compact()
+        .sortBy()
         .join(",");
 }
 
@@ -90,14 +91,16 @@ export function processFieldsFilterParams(
         [join("fields")]: modelOptions.fields && getFieldsAsString(modelOptions.fields),
         [join("filter")]:
             modelOptions.filter &&
-            _.flatMap(modelOptions.filter || {}, (filter: Filter, field) =>
-                _.compact(
-                    _.map(filter, (value, op) =>
-                        isEmptyFilterValue(value)
-                            ? null
-                            : op === "in" || op === "!in"
-                            ? `${field}:${op}:[${(value as string[]).join(",")}]`
-                            : `${field}:${op}:${value}`
+            _.sortBy(
+                _.flatMap(modelOptions.filter || {}, (filter: Filter, field) =>
+                    _.compact(
+                        _.map(filter, (value, op) =>
+                            isEmptyFilterValue(value)
+                                ? null
+                                : op === "in" || op === "!in"
+                                ? `${field}:${op}:[${(value as string[]).join(",")}]`
+                                : `${field}:${op}:${value}`
+                        )
                     )
                 )
             ),
