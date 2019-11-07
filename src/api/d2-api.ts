@@ -9,8 +9,6 @@ import D2ApiModel from "./models";
 import { Params, D2ApiResponse } from "./common";
 import D2ApiCurrentUser from "./current-user";
 
-export { D2ApiResponse };
-
 export interface D2ApiOptions {
     baseUrl?: string;
     apiVersion?: number;
@@ -20,8 +18,7 @@ export interface D2ApiOptions {
 type Models = { [ModelName in keyof D2ModelSchemas]: D2ApiModel<ModelName> };
 
 export class D2ApiDefault {
-    private apiPath: string;
-
+    public apiPath: string;
     public connection: AxiosInstance;
     public metadata: D2ApiMetadata;
     public models: Models;
