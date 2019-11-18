@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Canceler } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { D2ApiResponse } from "../api/common";
 
@@ -11,7 +11,7 @@ interface D2ApiDataHookState<Data> {
 }
 
 interface D2ApiDataHookResponse<Data> extends D2ApiDataHookState<Data> {
-    refetch(query: D2ApiDataHookQuery<Data>): void;
+    refetch(query: D2ApiDataHookQuery<Data>): Canceler;
 }
 
 export const useD2ApiData = <T>(apiQuery: D2ApiDataHookQuery<T>): D2ApiDataHookResponse<T> => {
@@ -38,6 +38,7 @@ export const useD2ApiData = <T>(apiQuery: D2ApiDataHookQuery<T>): D2ApiDataHookR
         (newQuery: D2ApiDataHookQuery<T>) => {
             setState((prevState: D2ApiDataHookState<T>) => ({ ...prevState, loading: true }));
             setQuery(newQuery);
+            return newQuery.cancel;
         },
         [setState, setQuery]
     );
