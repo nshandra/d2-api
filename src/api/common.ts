@@ -12,14 +12,12 @@ export interface ErrorReport {
     errorCode: string;
 }
 
-export interface FieldsSelector {
-    [property: string]: boolean | FieldsSelector;
-}
-
 export interface GetOptionValue<ModelKey extends keyof D2ModelSchemas> {
     fields: Selector<D2ModelSchemas[ModelKey]>;
     filter?: Filter;
 }
+
+type FieldsSelector = object;
 
 type FilterSingleOperator =
     | "eq"
@@ -58,10 +56,28 @@ export interface Filter {
         };
 }
 
+function applyFieldTransformers(key: string, value: any) {
+    if (value.hasOwnProperty("$fn")) {
+        switch (value["$fn"]["name"]) {
+            case "rename":
+                return {
+                    key: `${key}~rename(${value["$fn"]["to"]})`,
+                    value: _.omit(value, ["$fn"]),
+                };
+            default:
+                return { key, value };
+        }
+    } else {
+        return { key, value };
+    }
+}
+
 function getFieldsAsString(modelFields: FieldsSelector): string {
     return _(modelFields)
-        .map((value, key) => {
-            if (typeof value === "boolean") {
+        .map((value0, key0: string) => {
+            const { key, value } = applyFieldTransformers(key0, value0);
+
+            if (typeof value === "boolean" || _.isEqual(value, {})) {
                 return value ? key.replace(/^\$/, ":") : null;
             } else {
                 return key + "[" + getFieldsAsString(value) + "]";

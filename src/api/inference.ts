@@ -18,22 +18,12 @@ export type OmitNever<T> = OmitByValue<T, never>;
 
 // https://docs.dhis2.org/2.30/en/developer/html/dhis2_developer_manual_full.html#webapi_field_transformers
 
-/*
-type SelectorValue =
-    | boolean
-    | { fn: "size" }
-    | { fn: "isEmpty" }
-    | { fn: "isNotEmpty" }
-    | { fn: "rename"; name: string }
-    | { fn: "paging"; page: number; perPage: number }
-    | { fn: "pluck"; name: string };
-*/
-
 // https://docs.dhis2.org/2.30/en/developer/html/dhis2_developer_manual_full.html#webapi_metadata_field_filter
 
 export type Selector<ModelSchema extends ModelInfoBase> = {
     [Key in keyof ModelSchema["fields"]]?:
         | boolean
+        | {}
         | If<
               IsLiteral<ModelSchema["fields"][Key]>,
               boolean, // TODO: functions
@@ -81,24 +71,45 @@ export type SelectedPick<
 > = UnionToIntersection<Schema["fieldPresets"][keyof SchemaSelector & FieldPreset]> &
     SelectedPickFields<Schema, SchemaSelector>;
 
+//ModelSelector[Key] extends FunctionFieldSelector
+// {[K in Key]:
+
+type GetValues<T> = UnionToIntersection<T[keyof T]>;
+
+//type DefaultSelector<S> = S extends true ? true : keyof S extends never ? true : false;
+
+type SelectorKey<
+    Model extends ModelInfoBase,
+    ModelSelector,
+    K extends keyof ModelSelector & keyof Model["fields"]
+> = ModelSelector[K] extends object
+    ? Model["fields"][K] extends Array<infer T>
+        ? T extends ModelInfoBase
+            ? SelectedPickValidated<T, ModelSelector[K]>[]
+            : T
+        : (Model["fields"][K] extends ModelInfoBase
+              ? SelectedPickValidated<Model["fields"][K], ModelSelector[K]>
+              : Model["fields"][K])
+    : ModelSelector[K] extends true
+    ? (IsLiteral<Model["fields"][K]> extends true
+          ? Model["fields"][K]
+          : (Model["fields"] extends { id: string } ? { id: string } : never))
+    : never;
+
 export type SelectedPickFields<
     Model extends ModelInfoBase,
     ModelSelector extends Selector<Model>
-> = OmitNever<
+> = GetValues<
     {
-        [Key in keyof ModelSelector & keyof Model["fields"]]: ModelSelector[Key] extends object
-            ? Model["fields"][Key] extends Array<infer T>
-                ? T extends ModelInfoBase
-                    ? SelectedPickValidated<T, ModelSelector[Key]>[]
-                    : T
-                : (Model["fields"][Key] extends ModelInfoBase
-                      ? SelectedPickValidated<Model["fields"][Key], ModelSelector[Key]>
-                      : Model["fields"][Key])
-            : ModelSelector[Key] extends true
-            ? (IsLiteral<Model["fields"][Key]> extends true
-                  ? Model["fields"][Key]
-                  : (Model["fields"] extends { id: string } ? { id: string } : never))
-            : never;
+        [Key in keyof ModelSelector & keyof Model["fields"]]: ModelSelector[Key] extends {
+            $fn: { name: "rename"; to: string };
+        }
+            ? {
+                  [K in ModelSelector[Key]["$fn"]["to"]]: SelectorKey<Model, ModelSelector, Key>;
+              }
+            : {
+                  [K in Key]: SelectorKey<Model, ModelSelector, K>;
+              };
     }
 >;
 
