@@ -18,6 +18,7 @@ export interface D2ApiOptions {
 type Models = { [ModelName in keyof D2ModelSchemas]: D2ApiModel<ModelName> };
 
 export class D2ApiDefault {
+    public baseUrl: string;
     public apiPath: string;
     public connection: AxiosInstance;
     public metadata: D2ApiMetadata;
@@ -26,6 +27,7 @@ export class D2ApiDefault {
 
     public constructor(options?: D2ApiOptions) {
         const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
+        this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         this.connection = prepareConnection(this.apiPath, auth);
         this.metadata = new D2ApiMetadata(this);
