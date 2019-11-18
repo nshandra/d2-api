@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { D2ApiResponse } from "../api/common";
 
-type D2ApiDataHookQuery<Data> = Pick<D2ApiResponse<Data>, "cancel" | "getData">;
+export type D2ApiDataHookQuery<Data> = Pick<D2ApiResponse<Data>, "cancel" | "getData">;
 
 interface D2ApiDataHookState<Data> {
     loading: boolean;
