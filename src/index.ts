@@ -9,5 +9,6 @@ export {
 } from "./api/models";
 export { Id, Ref } from "./schemas/base";
 export { Selector, SelectedPick } from "./api/inference";
+export { MetadataPick } from "./api/metadata";
 export { getMockApi, D2ApiMock } from "./testing";
 export { D2ApiResponse } from "./api/common";
