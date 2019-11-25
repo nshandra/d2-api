@@ -1,4 +1,3 @@
-import { Filter } from "./common";
 import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
 import { Canceler } from "axios";
