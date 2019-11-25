@@ -1,4 +1,3 @@
-import { Filter } from "./common";
 import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
 import { Canceler } from "axios";
@@ -47,13 +46,12 @@ type FilterSingleOperator =
 
 type FilterCollectionOperator = "in" | "!in";
 
+type FilterValue =
+    | (Partial<Record<FilterSingleOperator, string> & Record<FilterCollectionOperator, string[]>>)
+    | undefined;
+
 export interface Filter {
-    [property: string]: {
-        [K in FilterSingleOperator]?: string;
-    } &
-        {
-            [K in FilterCollectionOperator]?: string[];
-        };
+    [property: string]: FilterValue;
 }
 
 function applyFieldTransformers(key: string, value: any) {
@@ -94,7 +92,7 @@ export interface GetOptionGeneric {
 }
 
 function isEmptyFilterValue(val: any): boolean {
-    return val === undefined || val === null || val === "" || _.isEqual(val, []);
+    return val === undefined || val === null || val === "";
 }
 
 export function processFieldsFilterParams(
@@ -108,7 +106,7 @@ export function processFieldsFilterParams(
         [join("filter")]:
             modelOptions.filter &&
             _.sortBy(
-                _.flatMap(modelOptions.filter || {}, (filter: Filter, field) =>
+                _.flatMap(modelOptions.filter || {}, (filter: FilterValue, field) =>
                     _.compact(
                         _.map(filter, (value, op) =>
                             isEmptyFilterValue(value)
