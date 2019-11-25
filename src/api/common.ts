@@ -76,7 +76,7 @@ export interface GetOptionGeneric {
 }
 
 function isEmptyFilterValue(val: any): boolean {
-    return val === undefined || val === null || val === "" || _.isEqual(val, []);
+    return val === undefined || val === null || val === "";
 }
 
 export function processFieldsFilterParams(
