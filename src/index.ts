@@ -14,6 +14,4 @@ export { getMockApi, D2ApiMock } from "./testing";
 export { ApiContext, useD2, useD2Api } from "./react/context";
 export { useD2ApiData, D2ApiDataHookQuery } from "./react/useD2ApiData";
 
-// @tokland We're not exposing some internal types that are handy in the application side
-// (but on the beta published on npmjs they're available)
 export { D2ApiResponse } from "./api/common";
