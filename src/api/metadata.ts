@@ -60,7 +60,7 @@ type RootSelector = {
     [ModelKey in keyof D2ModelSchemas]?: GetOptionValue<ModelKey>;
 };
 
-type RootPick<RootSelectorE extends RootSelector> = {
+export type MetadataPick<RootSelectorE extends RootSelector> = {
     [ModelKey in keyof RootSelectorE & keyof D2ModelSchemas]: Array<
         SelectedPick<D2ModelSchemas[ModelKey], GetFields<RootSelectorE[ModelKey]>>
     >;
@@ -73,7 +73,7 @@ export default class D2ApiMetadata {
         this.d2Api = d2Api;
     }
 
-    get<RootSelectorE extends RootSelector, Data = RootPick<RootSelectorE>>(
+    get<RootSelectorE extends RootSelector, Data = MetadataPick<RootSelectorE>>(
         selector: RootSelectorE
     ): D2ApiResponse<Data> {
         const metadataOptions = _(selector)

@@ -7,8 +7,10 @@ export {
     GetParams,
     UpdateOptions,
 } from "./api/models";
+
 export { Id, Ref } from "./schemas/base";
-export { SelectedPick } from "./api/inference";
+export { Selector, SelectedPick } from "./api/inference";
+export { MetadataPick } from "./api/metadata";
 export { getMockApi, D2ApiMock } from "./testing";
 
 export { ApiContext, useD2, useD2Api } from "./react/context";

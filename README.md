@@ -135,6 +135,33 @@ const { cancel, response } = api.metadata.post({
 console.log((await response).data)
 ```
 
+## Using type helpers
+
+d2-api exposes some type helpers that may be handy also in the app. Some examples:
+
+-   `SelectedPick`: Get model from a selector:
+
+```
+type PartialUser = SelectedPick<
+    D2UserSchema,
+    {
+        id: true;
+        favorite: true,
+    }
+>;
+// type PartialUser = {id: string, favorite: boolean}
+```
+
+-   `MetadataPick`: Get indexes models from a metadata selector.
+
+```
+type Metadata = MetadataPick<{
+    users: { fields: { id: true; favorite: true } };
+    categories: { fields: { id: true; code: true } };
+}>;
+// type Metadata = {users: {id: string, favorite: boolean}, categories: {id: string, code: string}}
+```
+
 ## Testing
 
 ```
