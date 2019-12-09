@@ -11,6 +11,7 @@ import {
     Params,
     mapD2ApiResponse,
     GenericResponse,
+    PartialModel,
 } from "./common";
 
 export interface Pager {
@@ -94,15 +95,15 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
         });
     }
 
-    post<Payload extends Partial<D2ModelSchemas[ModelKey]["model"]>>(
-        payload: Payload,
+    post(
+        payload: PartialModel<D2ModelSchemas[ModelKey]["model"]>,
         options?: UpdateOptions
     ): D2ApiResponse<GenericResponse> {
         return this.d2Api.post(this.modelName, (options || {}) as Params, payload);
     }
 
-    put<Payload extends Partial<D2ModelSchemas[ModelKey]["model"]>>(
-        payload: Payload,
+    put(
+        payload: Ref & PartialModel<D2ModelSchemas[ModelKey]["model"]>,
         options?: UpdateOptions
     ): D2ApiResponse<GenericResponse> {
         return this.d2Api.put(

@@ -168,3 +168,15 @@ export interface GenericResponse {
         errorReports?: ErrorReport[];
     };
 }
+
+export type PartialModel<T> = {
+    [P in keyof T]?: T[P] extends (infer U)[]
+        ? PartialModel<U>[]
+        : T[P] extends object
+        ? PartialModel<T[P]>
+        : T[P];
+};
+
+export type PartialMetadata = {
+    [K in keyof D2ModelSchemas]?: Array<PartialModel<D2ModelSchemas[K]["model"]>>;
+};
