@@ -10,7 +10,7 @@ export {
 
 export { Id, Ref } from "./schemas/base";
 export { Selector, SelectedPick } from "./api/inference";
-export { MetadataPick } from "./api/metadata";
+export { MetadataPick, MetadataResponse } from "./api/metadata";
 export { getMockApi, D2ApiMock } from "./testing";
 
 export { ApiContext, useD2, useD2Api } from "./react/context";
