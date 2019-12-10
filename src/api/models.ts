@@ -2,7 +2,6 @@ import _ from "lodash";
 
 import { D2ModelSchemas } from "./../schemas/models";
 import { SelectedPick, GetFields } from "./inference";
-import { Ref } from "../schemas/base";
 import { D2Api } from "./d2-api";
 import {
     GetOptionValue,
@@ -12,6 +11,7 @@ import {
     mapD2ApiResponse,
     GenericResponse,
     PartialModel,
+    PartialPersistedModel,
 } from "./common";
 
 export interface Pager {
@@ -103,7 +103,7 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
     }
 
     put(
-        payload: Ref & PartialModel<D2ModelSchemas[ModelKey]["model"]>,
+        payload: PartialPersistedModel<D2ModelSchemas[ModelKey]["model"]>,
         options?: UpdateOptions
     ): D2ApiResponse<GenericResponse> {
         return this.d2Api.put(
@@ -113,7 +113,9 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
         );
     }
 
-    delete<Object extends Ref>(payload: Object): D2ApiResponse<GenericResponse> {
+    delete(
+        payload: PartialPersistedModel<D2ModelSchemas[ModelKey]["model"]>
+    ): D2ApiResponse<GenericResponse> {
         return this.d2Api.delete(`/${this.modelName}/${payload.id}`);
     }
 }
