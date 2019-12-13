@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 import { D2ModelSchemas } from "./../schemas/models";
 import { SelectedPick, GetFields } from "./inference";
 import { Ref } from "../schemas/base";
@@ -67,29 +65,29 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
 
     get<
         Options extends GetOptions<ModelKey> & { paging?: true | undefined },
-        Object = GetObject<ModelKey, Options>
-    >(options: Options): D2ApiResponse<PaginatedObjects<Object>>;
+        Obj = GetObject<ModelKey, Options>
+    >(options: Options): D2ApiResponse<PaginatedObjects<Obj>>;
 
     get<
         Options extends GetOptions<ModelKey> & { paging?: false },
-        Object = GetObject<ModelKey, Options>
-    >(options: Options): D2ApiResponse<NonPaginatedObjects<Object>>;
+        Obj = GetObject<ModelKey, Options>
+    >(options: Options): D2ApiResponse<NonPaginatedObjects<Obj>>;
 
-    get<Options extends GetOptions<ModelKey>, Object = GetObject<ModelKey, Options>>(
+    get<Options extends GetOptions<ModelKey>, Obj = GetObject<ModelKey, Options>>(
         options: Options
-    ): D2ApiResponse<PaginatedObjects<Object>> | D2ApiResponse<NonPaginatedObjects<Object>> {
+    ): D2ApiResponse<PaginatedObjects<Obj>> | D2ApiResponse<NonPaginatedObjects<Obj>> {
         const paramsFieldsFilter = processFieldsFilterParams(options as any);
         const params = { ...options, ...paramsFieldsFilter } as any;
         const apiResponse = this.d2Api.get<
             {
-                [K in ModelKey]: Object[];
+                [K in ModelKey]: Obj[];
             } & { pager: Pager }
         >(this.modelName as string, params as Params);
 
         return apiResponse.map(({ data }) => {
             return {
                 ...(options.paging || options.paging === undefined ? { pager: data.pager } : {}),
-                objects: data[this.modelName] as Object[],
+                objects: data[this.modelName] as Obj[],
             };
         });
     }
@@ -112,7 +110,7 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
         );
     }
 
-    delete<Object extends Ref>(payload: Object): D2ApiResponse<GenericResponse> {
+    delete<Obj extends Ref>(payload: Obj): D2ApiResponse<GenericResponse> {
         return this.d2Api.delete(`/${this.modelName}/${payload.id}`);
     }
 }

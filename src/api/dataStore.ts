@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { D2ApiResponse } from "./common";
 import { D2Api } from "./d2-api";
 

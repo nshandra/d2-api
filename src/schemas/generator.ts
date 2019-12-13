@@ -81,7 +81,7 @@ const getType = (schemas: Schemas, property: SchemaProperty, suffix?: string): s
     switch (propertyType) {
         case "REFERENCE":
             return getInterface(schemas, property, suffix);
-        case "COLLECTION":
+        case "COLLECTION": {
             if (!itemPropertyType || !itemKlass) throw new Error("Missing item info");
 
             const innerType = getType(
@@ -94,6 +94,7 @@ const getType = (schemas: Schemas, property: SchemaProperty, suffix?: string): s
                 suffix
             );
             return `${innerType}[]`;
+        }
         case "TEXT":
         case "URL":
         case "PHONENUMBER":

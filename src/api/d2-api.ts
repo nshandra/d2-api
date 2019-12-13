@@ -1,4 +1,3 @@
-import { D2Api } from "./d2-api";
 import Axios, { AxiosInstance, AxiosBasicCredentials, AxiosRequestConfig } from "axios";
 import _ from "lodash";
 

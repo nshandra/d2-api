@@ -51,4 +51,6 @@ export class D2ApiResponse<Data> {
     }
 }
 
-const noop = () => {};
+const noop = () => {
+    return;
+};
