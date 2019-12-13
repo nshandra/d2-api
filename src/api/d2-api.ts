@@ -1,3 +1,4 @@
+import { D2Api } from "./d2-api";
 import Axios, { AxiosInstance, AxiosBasicCredentials, AxiosRequestConfig } from "axios";
 import _ from "lodash";
 
@@ -8,6 +9,7 @@ import D2ApiModel from "./models";
 
 import { Params, D2ApiResponse } from "./common";
 import D2ApiCurrentUser from "./current-user";
+import D2DataStore from "./dataStore";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -38,6 +40,10 @@ export class D2ApiDefault {
             .value() as Models;
     }
 
+    dataStore(namespace: string): D2DataStore {
+        return new D2DataStore(this, namespace);
+    }
+
     public request<T>(config: AxiosRequestConfig): D2ApiResponse<T> {
         const { token: cancelToken, cancel } = Axios.CancelToken.source();
         const axiosResponse = this.connection({ cancelToken, ...config });
@@ -47,11 +53,7 @@ export class D2ApiDefault {
             headers: response_.headers,
         }));
 
-        return {
-            cancel,
-            response: apiResponse,
-            getData: () => apiResponse.then(({ data }) => data),
-        };
+        return D2ApiResponse.build({ cancel, response: apiResponse });
     }
 
     public get<T>(url: string, params?: Params) {

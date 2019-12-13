@@ -9,7 +9,6 @@ import {
     processFieldsFilterParams,
     D2ApiResponse,
     Params,
-    mapD2ApiResponse,
     GenericResponse,
     PartialModel,
 } from "./common";
@@ -87,7 +86,7 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
             } & { pager: Pager }
         >(this.modelName as string, params as Params);
 
-        return mapD2ApiResponse(apiResponse, data => {
+        return apiResponse.map(({ data }) => {
             return {
                 ...(options.paging || options.paging === undefined ? { pager: data.pager } : {}),
                 objects: data[this.modelName] as Object[],
