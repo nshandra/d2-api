@@ -24,7 +24,7 @@ export class D2ApiDefault {
     public connection: AxiosInstance;
     public metadata: D2ApiMetadata;
     public models: Models;
-    public currrentUser: D2ApiCurrentUser;
+    public currentUser: D2ApiCurrentUser;
 
     public constructor(options?: D2ApiOptions) {
         const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
@@ -32,7 +32,7 @@ export class D2ApiDefault {
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         this.connection = prepareConnection(this.apiPath, auth);
         this.metadata = new D2ApiMetadata(this);
-        this.currrentUser = new D2ApiCurrentUser(this);
+        this.currentUser = new D2ApiCurrentUser(this);
         this.models = _(Object.keys(D2ModelEnum))
             .map((modelName: keyof D2ModelSchemas) => [modelName, new D2ApiModel(this, modelName)])
             .fromPairs()
