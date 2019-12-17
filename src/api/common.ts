@@ -1,3 +1,4 @@
+import { Ref } from "./../schemas/base";
 import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
 import { Canceler } from "axios";
@@ -168,3 +169,17 @@ export interface GenericResponse {
         errorReports?: ErrorReport[];
     };
 }
+
+export type PartialModel<T> = {
+    [P in keyof T]?: T[P] extends (infer U)[]
+        ? PartialModel<U>[]
+        : T[P] extends object
+        ? PartialModel<T[P]>
+        : T[P];
+};
+
+export type PartialPersistedModel<T> = PartialModel<T> & Ref;
+
+export type MetadataPayload = {
+    [K in keyof D2ModelSchemas]: Array<PartialModel<D2ModelSchemas[K]["model"]>>;
+};
