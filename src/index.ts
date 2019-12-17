@@ -16,4 +16,4 @@ export { getMockApi, D2ApiMock } from "./testing";
 export { ApiContext, useD2, useD2Api } from "./react/context";
 export { useD2ApiData, D2ApiDataHookQuery } from "./react/useD2ApiData";
 
-export { D2ApiResponse, PartialModel, PartialMetadata } from "./api/common";
+export { D2ApiResponse, PartialModel, MetadataPayload } from "./api/common";

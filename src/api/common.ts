@@ -1,3 +1,4 @@
+import { Ref } from "./../schemas/base";
 import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
 import { Selector } from "./inference";
@@ -155,6 +156,8 @@ export type PartialModel<T> = {
         : T[P];
 };
 
-export type PartialMetadata = {
-    [K in keyof D2ModelSchemas]?: Array<PartialModel<D2ModelSchemas[K]["model"]>>;
+export type PartialPersistedModel<T> = PartialModel<T> & Ref;
+
+export type MetadataPayload = {
+    [K in keyof D2ModelSchemas]: Array<PartialModel<D2ModelSchemas[K]["model"]>>;
 };
