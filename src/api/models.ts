@@ -1,6 +1,5 @@
 import { D2ModelSchemas } from "./../schemas/models";
 import { SelectedPick, GetFields } from "./inference";
-import { Ref } from "../schemas/base";
 import { D2Api } from "./d2-api";
 import {
     GetOptionValue,
