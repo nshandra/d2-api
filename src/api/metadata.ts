@@ -6,7 +6,7 @@ import {
     ErrorReport,
     D2ApiResponse,
     GetOptionValue,
-    PartialMetadata,
+    MetadataPayload,
 } from "./common";
 import { D2Api } from "./d2-api";
 import { SelectedPick, GetFields } from "./inference";
@@ -91,7 +91,7 @@ export default class D2ApiMetadata {
         });
     }
 
-    post(data: PartialMetadata, options?: PostOptions): D2ApiResponse<MetadataResponse> {
+    post(data: Partial<MetadataPayload>, options?: PostOptions): D2ApiResponse<MetadataResponse> {
         return this.d2Api.request({
             method: "post",
             url: "/metadata",
