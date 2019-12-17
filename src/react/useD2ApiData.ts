@@ -33,7 +33,7 @@ export const useD2ApiData = <T>(apiQuery?: D2ApiDataHookQuery<T>): D2ApiDataHook
                 });
 
             return cancel;
-        };
+        }
     }, [query, setState]);
 
     const refetch = useCallback(

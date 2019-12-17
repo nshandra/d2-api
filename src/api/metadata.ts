@@ -5,7 +5,6 @@ import {
     Params,
     ErrorReport,
     D2ApiResponse,
-    mapD2ApiResponse,
     GetOptionValue,
     MetadataPayload,
 } from "./common";
@@ -83,14 +82,13 @@ export default class D2ApiMetadata {
             )
             .reduce(_.merge, {});
         const apiResponse = this.d2Api.get<Data>("/metadata", metadataOptions);
-        function defaultToEmptyCollections(data: Data): Data {
+
+        return apiResponse.map(({ data }) => {
             return _(selector)
                 .mapValues(() => [])
                 .merge(data)
                 .value();
-        }
-
-        return mapD2ApiResponse(apiResponse, defaultToEmptyCollections);
+        });
     }
 
     post(data: Partial<MetadataPayload>, options?: PostOptions): D2ApiResponse<MetadataResponse> {

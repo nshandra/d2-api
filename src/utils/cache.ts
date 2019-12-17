@@ -1,4 +1,4 @@
-let cacheStore: { [key: string]: any } = {};
+const cacheStore: { [key: string]: any } = {};
 
 export function cache<S>(mainKey: string, fn: (...args: any[]) => S): (...args: any[]) => S {
     return function(...args: any) {

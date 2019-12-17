@@ -1,8 +1,9 @@
 import { Ref } from "./../schemas/base";
 import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
-import { Canceler } from "axios";
 import { Selector } from "./inference";
+
+export { D2ApiResponse } from "./api-response";
 
 export interface ErrorReport {
     message: string;
@@ -126,29 +127,6 @@ export interface D2Response<Data> {
     status: number;
     data: Data;
     headers: _.Dictionary<string>;
-}
-
-export interface D2ApiResponse<Data> {
-    cancel: Canceler;
-    response: Promise<D2Response<Data>>;
-    getData: () => Promise<Data>;
-}
-
-export function mapD2ApiResponse<Data, MappedData>(
-    apiResponse: D2ApiResponse<Data>,
-    mapper: (apiResponse: Data) => MappedData
-): D2ApiResponse<MappedData> {
-    const { cancel, response } = apiResponse;
-    const mappedResponse = response.then(response_ => ({
-        ...response_,
-        data: mapper(response_.data),
-    }));
-
-    return {
-        cancel,
-        getData: () => mappedResponse.then(({ data }) => data),
-        response: mappedResponse,
-    };
 }
 
 export type D2ApiRequestParamsValue = string | number | boolean | undefined;

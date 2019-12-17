@@ -135,6 +135,22 @@ const { cancel, response } = api.metadata.post({
 console.log((await response).data)
 ```
 
+### Data store
+
+#### Get
+
+```
+    const dataStore = api.dataStore("namespace1");
+    const value = await dataStore.get("key1").getData();
+```
+
+#### Save
+
+```
+    const dataStore = api.dataStore("namespace1");
+    dataStore.save("key1", {x: 1, y: 2});
+```
+
 ## Using type helpers
 
 d2-api exposes some type helpers that may be handy also in the app. Some examples:
