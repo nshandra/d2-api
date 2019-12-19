@@ -3,12 +3,12 @@ import _ from "lodash";
 
 import { D2ModelSchemas, D2ModelEnum } from "./../schemas/models";
 import { joinPath, prepareConnection } from "../utils/connection";
-import D2ApiMetadata from "./metadata";
-import D2ApiModel from "./models";
+import Metadata from "./metadata";
+import Models from "./models";
 
 import { Params, D2ApiResponse } from "./common";
-import D2ApiCurrentUser from "./current-user";
-import D2DataStore from "./dataStore";
+import CurrentUser from "./current-user";
+import DataStore from "./dataStore";
 import Analytics from "./analytics";
 
 export interface D2ApiOptions {
@@ -17,15 +17,15 @@ export interface D2ApiOptions {
     auth?: AxiosBasicCredentials;
 }
 
-type Models = { [ModelName in keyof D2ModelSchemas]: D2ApiModel<ModelName> };
+type IndexedModels = { [ModelName in keyof D2ModelSchemas]: Models<ModelName> };
 
 export class D2ApiDefault {
     public baseUrl: string;
     public apiPath: string;
     public connection: AxiosInstance;
-    public metadata: D2ApiMetadata;
-    public models: Models;
-    public currentUser: D2ApiCurrentUser;
+    public metadata: Metadata;
+    public models: IndexedModels;
+    public currentUser: CurrentUser;
     public analytics: Analytics;
 
     public constructor(options?: D2ApiOptions) {
@@ -33,17 +33,17 @@ export class D2ApiDefault {
         this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         this.connection = prepareConnection(this.apiPath, auth);
-        this.metadata = new D2ApiMetadata(this);
-        this.currentUser = new D2ApiCurrentUser(this);
+        this.metadata = new Metadata(this);
+        this.currentUser = new CurrentUser(this);
         this.analytics = new Analytics(this);
         this.models = _(Object.keys(D2ModelEnum))
-            .map((modelName: keyof D2ModelSchemas) => [modelName, new D2ApiModel(this, modelName)])
+            .map((modelName: keyof D2ModelSchemas) => [modelName, new Models(this, modelName)])
             .fromPairs()
-            .value() as Models;
+            .value() as IndexedModels;
     }
 
-    dataStore(namespace: string): D2DataStore {
-        return new D2DataStore(this, namespace);
+    dataStore(namespace: string): DataStore {
+        return new DataStore(this, namespace);
     }
 
     public request<T>(config: AxiosRequestConfig): D2ApiResponse<T> {
