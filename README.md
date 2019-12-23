@@ -135,25 +135,36 @@ const { cancel, response } = api.metadata.post({
 console.log((await response).data)
 ```
 
+### Analytics
+
+```
+const analyticsData = await api.analytics
+    .get({
+        dimension: ["dx:fbfJHSPpUQD;cYeuwXTCPkU"],
+        filter: ["pe:2014Q1;2014Q2", "ou:O6uvpzGd5pu;lc3eMKXaEfw"],
+    })
+    .getData();
+```
+
 ### Data store
 
 #### Get
 
 ```
-    const dataStore = api.dataStore("namespace1");
-    const value = await dataStore.get("key1").getData();
+const dataStore = api.dataStore("namespace1");
+const value = await dataStore.get("key1").getData();
 ```
 
 #### Save
 
 ```
-    const dataStore = api.dataStore("namespace1");
-    dataStore.save("key1", {x: 1, y: 2});
+const dataStore = api.dataStore("namespace1");
+dataStore.save("key1", {x: 1, y: 2});
 ```
 
 ## Using type helpers
 
-d2-api exposes some type helpers that may be handy also in the app. Some examples:
+_d2-api_ exposes some type helpers that you may need in your app. Some examples:
 
 -   `SelectedPick`: Get model from a selector:
 
@@ -188,10 +199,6 @@ const currentUserMock = {
     displayName: "John Traore",
 };
 
-function getCurrentUser(api: D2Api): Promise<D2User> {
-    return api.currrentUser.get().getData();
-}
-
 const { api, mock } = getMockApi();
 
 describe("Project", () => {
@@ -202,7 +209,7 @@ describe("Project", () => {
     describe("getList", () => {
         it("returns list of dataSets filtered", async () => {
             mock.onGet("/me").reply(200, currentUserMock);
-            const currentUser = await getCurrentUser(api);
+            const currentUser = await api.currrentUser.get().getData();
             expect(currentUser.id).toEqual("xE7jOejl9FI");
         });
     });
