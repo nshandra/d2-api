@@ -137,11 +137,44 @@ console.log((await response).data)
 
 ### Analytics
 
+#### Get
+
 ```
 const analyticsData = await api.analytics
     .get({
         dimension: ["dx:fbfJHSPpUQD;cYeuwXTCPkU"],
         filter: ["pe:2014Q1;2014Q2", "ou:O6uvpzGd5pu;lc3eMKXaEfw"],
+    })
+    .getData();
+```
+
+#### Run analytics
+
+```
+const analyticsRunResponse = await api.analytics.run().getData();
+```
+
+### Data values
+
+```
+const response = await api.dataValues
+    .postSet({
+        dataSet: "Gs69Uw2Mom1",
+        orgUnit: "qYIeuQe9OwF",
+        period: "202001",
+        attributeOptionCombo: "yi2bV1K4vl6",
+        dataValues: _[
+            {
+                dataElement: "a4bd432446",
+                categoryOptionCombo: "d1bd43245af",
+                value: "1.5",
+            },
+            {
+                dataElement: "1agd43f4q2",
+                categoryOptionCombo: "aFwdq324132",
+                value: "Some comment",
+            }
+        ],
     })
     .getData();
 ```
