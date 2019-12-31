@@ -1,4 +1,4 @@
-import { D2ApiResponse } from "./common";
+import { D2ApiResponse, HttpResponse } from "./common";
 import { D2Api } from "./d2-api";
 
 type Operator = "EQ" | "GT" | "GE" | "LT" | "LE";
@@ -60,10 +60,26 @@ export type AnalyticsResponse = {
     height: number;
 };
 
+export type RunAnalyticsResponse = HttpResponse<{
+    id: string;
+    created: string;
+    name: "inMemoryAnalyticsJob";
+    jobType: "ANALYTICS_TABLE";
+    jobStatus: "SCHEDULED";
+    jobParameters: {
+        skipResourceTables: boolean;
+    };
+    relativeNotifierEndpoint: string;
+}>;
+
 export default class Analytics {
     constructor(public d2Api: D2Api) {}
 
     get(options: AnalyticsOptions): D2ApiResponse<AnalyticsResponse> {
         return this.d2Api.get<AnalyticsResponse>("/analytics", options);
+    }
+
+    run(): D2ApiResponse<RunAnalyticsResponse> {
+        return this.d2Api.post<RunAnalyticsResponse>("/resourceTables/analytics");
     }
 }
