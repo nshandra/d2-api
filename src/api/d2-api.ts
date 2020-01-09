@@ -10,6 +10,7 @@ import { Params, D2ApiResponse } from "./common";
 import CurrentUser from "./current-user";
 import DataStore from "./dataStore";
 import Analytics from "./analytics";
+import DataValues from "./dataValues";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -27,6 +28,7 @@ export class D2ApiDefault {
     public models: IndexedModels;
     public currentUser: CurrentUser;
     public analytics: Analytics;
+    public dataValues: DataValues;
 
     public constructor(options?: D2ApiOptions) {
         const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
@@ -36,6 +38,7 @@ export class D2ApiDefault {
         this.metadata = new Metadata(this);
         this.currentUser = new CurrentUser(this);
         this.analytics = new Analytics(this);
+        this.dataValues = new DataValues(this);
         this.models = _(Object.keys(D2ModelEnum))
             .map((modelName: keyof D2ModelSchemas) => [modelName, new Models(this, modelName)])
             .fromPairs()

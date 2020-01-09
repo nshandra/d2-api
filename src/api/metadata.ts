@@ -91,7 +91,10 @@ export default class D2ApiMetadata {
         });
     }
 
-    post(data: Partial<MetadataPayload>, options?: PostOptions): D2ApiResponse<MetadataResponse> {
+    post(
+        data: Partial<MetadataPayload>,
+        options?: Partial<PostOptions>
+    ): D2ApiResponse<MetadataResponse> {
         return this.d2Api.request({
             method: "post",
             url: "/metadata",

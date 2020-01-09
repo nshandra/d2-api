@@ -6,10 +6,18 @@ import {
     processFieldsFilterParams,
     D2ApiResponse,
     Params,
-    GenericResponse,
+    HttpResponse,
     PartialModel,
     PartialPersistedModel,
+    ErrorReport,
 } from "./common";
+
+type ModelResponse = HttpResponse<{
+    responseType: "ObjectReport";
+    uid: string;
+    klass: string;
+    errorReports?: ErrorReport[];
+}>;
 
 export interface Pager {
     page: number;
@@ -95,14 +103,14 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
     post(
         payload: PartialModel<D2ModelSchemas[ModelKey]["model"]>,
         options?: UpdateOptions
-    ): D2ApiResponse<GenericResponse> {
+    ): D2ApiResponse<ModelResponse> {
         return this.d2Api.post(this.modelName, (options || {}) as Params, payload);
     }
 
     put(
         payload: PartialPersistedModel<D2ModelSchemas[ModelKey]["model"]>,
         options?: UpdateOptions
-    ): D2ApiResponse<GenericResponse> {
+    ): D2ApiResponse<ModelResponse> {
         return this.d2Api.put(
             [this.modelName, payload.id].join("/"),
             (options || {}) as Params,
@@ -112,7 +120,7 @@ export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
 
     delete(
         payload: PartialPersistedModel<D2ModelSchemas[ModelKey]["model"]>
-    ): D2ApiResponse<GenericResponse> {
+    ): D2ApiResponse<ModelResponse> {
         return this.d2Api.delete(`/${this.modelName}/${payload.id}`);
     }
 }

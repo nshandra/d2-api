@@ -5,14 +5,6 @@ import { Selector } from "./inference";
 
 export { D2ApiResponse } from "./api-response";
 
-export interface ErrorReport {
-    message: string;
-    mainKlass: string;
-    errorKlass: string;
-    errorProperty: string;
-    errorCode: string;
-}
-
 export interface GetOptionValue<ModelKey extends keyof D2ModelSchemas> {
     fields: Selector<D2ModelSchemas[ModelKey]>;
     filter?: Filter;
@@ -135,17 +127,20 @@ export interface Params {
     [key: string]: D2ApiRequestParamsValue | D2ApiRequestParamsValue[];
 }
 
-export interface GenericResponse {
+export interface ErrorReport {
+    message: string;
+    mainKlass: string;
+    errorKlass: string;
+    errorProperty: string;
+    errorCode: string;
+}
+
+export interface HttpResponse<Response> {
     httpStatus: "OK" | "Conflict";
     httpStatusCode: number;
     status: "OK" | "ERROR";
     message?: string;
-    response?: {
-        responseType: "ObjectReport";
-        uid: string;
-        klass: string;
-        errorReports?: ErrorReport[];
-    };
+    response: Response;
 }
 
 export type PartialModel<T> = {
