@@ -19,21 +19,19 @@ export const useD2ApiData = <T>(apiQuery?: D2ApiDataHookQuery<T>): D2ApiDataHook
     const [state, setState] = useState<D2ApiDataHookState<T>>({ loading: true });
 
     useEffect(() => {
-        if (query) {
-            const { cancel, getData } = query;
-            getData()
-                .then(data => {
-                    setState({ loading: false, data });
-                })
-                .catch(error => {
-                    if (!axios.isCancel(error)) {
-                        setState({ loading: false, error });
-                        console.error(error);
-                    }
-                });
-
-            return cancel;
-        }
+        if (!query) return;
+        query
+            .getData()
+            .then(data => {
+                setState({ loading: false, data });
+            })
+            .catch(error => {
+                if (!axios.isCancel(error)) {
+                    setState({ loading: false, error });
+                    console.error(error);
+                }
+            });
+        return query.cancel;
     }, [query, setState]);
 
     const refetch = useCallback(
