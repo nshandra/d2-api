@@ -40,12 +40,12 @@ type FilterSingleOperator =
 
 type FilterCollectionOperator = "in" | "!in";
 
-type FilterValue =
-    | (Partial<Record<FilterSingleOperator, string> & Record<FilterCollectionOperator, string[]>>)
-    | undefined;
+type FilterValue = Partial<
+    Record<FilterSingleOperator, string> & Record<FilterCollectionOperator, string[]>
+>;
 
 export interface Filter {
-    [property: string]: FilterValue;
+    [property: string]: undefined | FilterValue | FilterValue[];
 }
 
 function applyFieldTransformers(key: string, value: any) {
@@ -80,6 +80,28 @@ function getFieldsAsString(modelFields: FieldsSelector): string {
         .join(",");
 }
 
+function toArray<T>(itemOrItems: T | T[]): T[] {
+    return Array.isArray(itemOrItems) ? itemOrItems : [itemOrItems];
+}
+
+function getFilterAsString(filter: Filter): string[] {
+    return _.sortBy(
+        _.flatMap(filter, (filterOrFilters, field) =>
+            _.flatMap(toArray(filterOrFilters || []), filter =>
+                _.compact(
+                    _.map(filter, (value, op) =>
+                        isEmptyFilterValue(value)
+                            ? null
+                            : op === "in" || op === "!in"
+                            ? `${field}:${op}:[${(value as string[]).join(",")}]`
+                            : `${field}:${op}:${value}`
+                    )
+                )
+            )
+        )
+    );
+}
+
 export interface GetOptionGeneric {
     fields: FieldsSelector;
     filter: Filter;
@@ -97,21 +119,7 @@ export function processFieldsFilterParams(
 
     return _.pickBy({
         [join("fields")]: modelOptions.fields && getFieldsAsString(modelOptions.fields),
-        [join("filter")]:
-            modelOptions.filter &&
-            _.sortBy(
-                _.flatMap(modelOptions.filter || {}, (filter: FilterValue, field) =>
-                    _.compact(
-                        _.map(filter, (value, op) =>
-                            isEmptyFilterValue(value)
-                                ? null
-                                : op === "in" || op === "!in"
-                                ? `${field}:${op}:[${(value as string[]).join(",")}]`
-                                : `${field}:${op}:${value}`
-                        )
-                    )
-                )
-            ),
+        [join("filter")]: modelOptions.filter && getFilterAsString(modelOptions.filter),
     });
 }
 
