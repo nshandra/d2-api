@@ -45,7 +45,7 @@ type FilterValue = Partial<
 >;
 
 export interface Filter {
-    [property: string]: undefined | FilterValue | FilterValue[];
+    [property: string]: FilterValue | FilterValue[] | undefined;
 }
 
 function applyFieldTransformers(key: string, value: any) {
