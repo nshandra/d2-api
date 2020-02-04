@@ -24,6 +24,7 @@ export class D2ApiDefault {
     public baseUrl: string;
     public apiPath: string;
     public connection: AxiosInstance;
+    public baseConnection: AxiosInstance;
     public metadata: Metadata;
     public models: IndexedModels;
     public currentUser: CurrentUser;
@@ -35,6 +36,7 @@ export class D2ApiDefault {
         this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         this.connection = prepareConnection(this.apiPath, auth);
+        this.baseConnection = prepareConnection(baseUrl, auth);
         this.metadata = new Metadata(this);
         this.currentUser = new CurrentUser(this);
         this.analytics = new Analytics(this);
