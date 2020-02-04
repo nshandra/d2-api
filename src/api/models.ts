@@ -1,16 +1,23 @@
-import { D2Models } from "./../schemas/models";
-import { Pager } from "./models";
-import _ from "lodash";
-import { Ref } from "../schemas/models";
-import D2Api from "./d2-api";
+import { D2ModelSchemas } from "./../schemas/models";
+import { SelectedPick, GetFields } from "./inference";
+import { D2Api } from "./d2-api";
 import {
     GetOptionValue,
     processFieldsFilterParams,
     D2ApiResponse,
     Params,
-    mapD2ApiResponse,
-    GenericResponse,
+    HttpResponse,
+    PartialModel,
+    PartialPersistedModel,
+    ErrorReport,
 } from "./common";
+
+type ModelResponse = HttpResponse<{
+    responseType: "ObjectReport";
+    uid: string;
+    klass: string;
+    errorReports?: ErrorReport[];
+}>;
 
 export interface Pager {
     page: number;
@@ -19,13 +26,17 @@ export interface Pager {
     pageSize: number;
 }
 
-export interface PaginatedObjects<T> {
-    pager: Pager;
+export interface NonPaginatedObjects<T> {
     objects: T[];
 }
 
-export type GetOptions = GetOptionValue &
+export interface PaginatedObjects<T> extends NonPaginatedObjects<T> {
+    pager: Pager;
+}
+
+export type GetOptions<ModelKey extends keyof D2ModelSchemas> = GetOptionValue<ModelKey> &
     Partial<{
+        page: number;
         pageSize: number;
         paging: boolean;
         order: string;
@@ -46,41 +57,70 @@ export interface GetParams {
     order?: string;
 }
 
-export default class D2ApiModel<ModelName extends keyof D2Models> {
-    d2Api: D2Api;
-    modelName: ModelName;
+type GetObject<ModelKey extends keyof D2ModelSchemas, Options> = SelectedPick<
+    D2ModelSchemas[ModelKey],
+    GetFields<Options>
+>;
 
-    constructor(d2Api: D2Api, modelName: ModelName) {
+export default class D2ApiModel<ModelKey extends keyof D2ModelSchemas> {
+    d2Api: D2Api;
+    modelName: ModelKey;
+
+    constructor(d2Api: D2Api, modelName: ModelKey) {
         this.d2Api = d2Api;
         this.modelName = modelName;
     }
 
-    get(options: GetOptions): D2ApiResponse<PaginatedObjects<D2Models[ModelName]>> {
-        // TODO: use GetOptions to automatically infer paginated or paginated objects
-        const paramsFieldsFilter = processFieldsFilterParams(options);
-        const params = { ...options, ...paramsFieldsFilter } as GetParams;
+    get<
+        Options extends GetOptions<ModelKey> & { paging?: true | undefined },
+        Obj = GetObject<ModelKey, Options>
+    >(options: Options): D2ApiResponse<PaginatedObjects<Obj>>;
+
+    get<
+        Options extends GetOptions<ModelKey> & { paging?: false },
+        Obj = GetObject<ModelKey, Options>
+    >(options: Options): D2ApiResponse<NonPaginatedObjects<Obj>>;
+
+    get<Options extends GetOptions<ModelKey>, Obj = GetObject<ModelKey, Options>>(
+        options: Options
+    ): D2ApiResponse<PaginatedObjects<Obj>> | D2ApiResponse<NonPaginatedObjects<Obj>> {
+        const paramsFieldsFilter = processFieldsFilterParams(options as any);
+        const params = { ...options, ...paramsFieldsFilter } as any;
         const apiResponse = this.d2Api.get<
-            { [K in ModelName]: D2Models[ModelName][] } & { pager: Pager }
+            {
+                [K in ModelKey]: Obj[];
+            } & { pager: Pager }
         >(this.modelName as string, params as Params);
-        return mapD2ApiResponse(apiResponse, data => ({
-            pager: data.pager,
-            objects: data[this.modelName] as D2Models[ModelName][],
-        }));
+
+        return apiResponse.map(({ data }) => {
+            return {
+                ...(options.paging || options.paging === undefined ? { pager: data.pager } : {}),
+                objects: data[this.modelName] as Obj[],
+            };
+        });
     }
 
-    post(payload: object, options?: UpdateOptions): D2ApiResponse<GenericResponse> {
+    post(
+        payload: PartialModel<D2ModelSchemas[ModelKey]["model"]>,
+        options?: UpdateOptions
+    ): D2ApiResponse<ModelResponse> {
         return this.d2Api.post(this.modelName, (options || {}) as Params, payload);
     }
 
-    put<T extends Ref>(payload: T, options?: UpdateOptions): D2ApiResponse<GenericResponse> {
+    put(
+        payload: PartialPersistedModel<D2ModelSchemas[ModelKey]["model"]>,
+        options?: UpdateOptions
+    ): D2ApiResponse<ModelResponse> {
         return this.d2Api.put(
-            `/${this.modelName}/${payload.id}`,
+            [this.modelName, payload.id].join("/"),
             (options || {}) as Params,
             payload
         );
     }
 
-    delete<T extends Ref>(payload: T): D2ApiResponse<GenericResponse> {
+    delete(
+        payload: PartialPersistedModel<D2ModelSchemas[ModelKey]["model"]>
+    ): D2ApiResponse<ModelResponse> {
         return this.d2Api.delete(`/${this.modelName}/${payload.id}`);
     }
 }

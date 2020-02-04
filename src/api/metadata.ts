@@ -1,17 +1,15 @@
+import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
 import {
-    GetOptionValue,
     processFieldsFilterParams,
     Params,
     ErrorReport,
     D2ApiResponse,
-    mapD2ApiResponse,
+    GetOptionValue,
+    MetadataPayload,
 } from "./common";
-import D2Api from "./d2-api";
-
-interface GetOptions {
-    [model: string]: GetOptionValue;
-}
+import { D2Api } from "./d2-api";
+import { SelectedPick, GetFields } from "./inference";
 
 export interface PostOptions {
     importMode: "COMMIT" | "VALIDATE";
@@ -58,6 +56,16 @@ export interface TypeReport {
     objectReports: ObjectReport[];
 }
 
+type RootSelector = {
+    [ModelKey in keyof D2ModelSchemas]?: GetOptionValue<ModelKey>;
+};
+
+export type MetadataPick<RootSelectorE extends RootSelector> = {
+    [ModelKey in keyof RootSelectorE & keyof D2ModelSchemas]: Array<
+        SelectedPick<D2ModelSchemas[ModelKey], GetFields<RootSelectorE[ModelKey]>>
+    >;
+};
+
 export default class D2ApiMetadata {
     d2Api: D2Api;
 
@@ -65,23 +73,28 @@ export default class D2ApiMetadata {
         this.d2Api = d2Api;
     }
 
-    get<T>(options: GetOptions): D2ApiResponse<T> {
-        const metadataOptions = _(options)
-            .map((modelOptions, modelName) => processFieldsFilterParams(modelOptions, modelName))
+    get<RootSelectorE extends RootSelector, Data = MetadataPick<RootSelectorE>>(
+        selector: RootSelectorE
+    ): D2ApiResponse<Data> {
+        const metadataOptions = _(selector)
+            .map((modelOptions, modelName) =>
+                processFieldsFilterParams(modelOptions as any, modelName)
+            )
             .reduce(_.merge, {});
-        const apiResponse = this.d2Api.get<T>("/metadata", metadataOptions);
+        const apiResponse = this.d2Api.get<Data>("/metadata", metadataOptions);
 
-        function defaultToEmptyCollections(data: T): T {
-            return _(options)
+        return apiResponse.map(({ data }) => {
+            return _(selector)
                 .mapValues(() => [])
                 .merge(data)
                 .value();
-        }
-
-        return mapD2ApiResponse(apiResponse, defaultToEmptyCollections);
+        });
     }
 
-    post(data: object, options?: PostOptions): D2ApiResponse<MetadataResponse> {
+    post(
+        data: Partial<MetadataPayload>,
+        options?: Partial<PostOptions>
+    ): D2ApiResponse<MetadataResponse> {
         return this.d2Api.request({
             method: "post",
             url: "/metadata",

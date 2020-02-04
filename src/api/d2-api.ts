@@ -1,14 +1,16 @@
 import Axios, { AxiosInstance, AxiosBasicCredentials, AxiosRequestConfig } from "axios";
 import _ from "lodash";
 
-import { Model, D2Models } from "./../schemas/models";
+import { D2ModelSchemas, D2ModelEnum } from "./../schemas/models";
 import { joinPath, prepareConnection } from "../utils/connection";
-import D2ApiMetadata from "./metadata";
-import D2ApiModel from "./models";
+import Metadata from "./metadata";
+import Models from "./models";
 
 import { Params, D2ApiResponse } from "./common";
-
-export { D2ApiResponse };
+import CurrentUser from "./current-user";
+import DataStore from "./dataStore";
+import Analytics from "./analytics";
+import DataValues from "./dataValues";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -16,30 +18,49 @@ export interface D2ApiOptions {
     auth?: AxiosBasicCredentials;
 }
 
-type Models = { [ModelName in keyof D2Models]: D2ApiModel<ModelName> };
+type IndexedModels = { [ModelName in keyof D2ModelSchemas]: Models<ModelName> };
 
-export default class D2Api {
-    private apiPath: string;
-
+export class D2ApiDefault {
+    public baseUrl: string;
+    public apiPath: string;
     public connection: AxiosInstance;
-    public metadata: D2ApiMetadata;
-    public models: Models;
+    public baseConnection: AxiosInstance;
+    public metadata: Metadata;
+    public models: IndexedModels;
+    public currentUser: CurrentUser;
+    public analytics: Analytics;
+    public dataValues: DataValues;
 
     public constructor(options?: D2ApiOptions) {
         const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
+        this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         this.connection = prepareConnection(this.apiPath, auth);
-        this.metadata = new D2ApiMetadata(this);
-        this.models = _(Object.keys(Model))
-            .map((modelName: keyof D2Models) => [modelName, new D2ApiModel(this, modelName)])
+        this.baseConnection = prepareConnection(baseUrl, auth);
+        this.metadata = new Metadata(this);
+        this.currentUser = new CurrentUser(this);
+        this.analytics = new Analytics(this);
+        this.dataValues = new DataValues(this);
+        this.models = _(Object.keys(D2ModelEnum))
+            .map((modelName: keyof D2ModelSchemas) => [modelName, new Models(this, modelName)])
             .fromPairs()
-            .value() as Models;
+            .value() as IndexedModels;
+    }
+
+    dataStore(namespace: string): DataStore {
+        return new DataStore(this, namespace);
     }
 
     public request<T>(config: AxiosRequestConfig): D2ApiResponse<T> {
         const { token: cancelToken, cancel } = Axios.CancelToken.source();
-        const response = this.connection({ cancelToken, ...config });
-        return { cancel, response };
+        const axiosResponse = this.connection({ cancelToken, ...config });
+        const apiResponse = axiosResponse.then(response_ => ({
+            status: response_.status,
+            data: response_.data as T,
+            headers: response_.headers,
+        }));
+
+        return D2ApiResponse.build({ cancel, response: apiResponse });
     }
 
     public get<T>(url: string, params?: Params) {
@@ -58,3 +79,5 @@ export default class D2Api {
         return this.request<T>({ method: "delete", url, params });
     }
 }
+
+export type D2Api = D2ApiDefault;
