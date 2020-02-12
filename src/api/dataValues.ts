@@ -6,12 +6,15 @@ export interface DataValueSetsPostRequest {
     dataSet?: Id;
     completeDate?: string;
     period?: string;
-    orgUnit: Id;
+    orgUnit?: Id;
     attributeOptionCombo?: Id;
     dataValues: Array<{
         dataElement: Id;
-        categoryOptionCombo?: Id;
         value: string;
+        orgUnit?: Id;
+        period?: string;
+        attributeOptionCombo?: Id;
+        categoryOptionCombo?: Id;
         comment?: string;
     }>;
 }
