@@ -20,3 +20,5 @@ export { ApiContext, useD2, useD2Api } from "./react/context";
 export { useD2ApiData, D2ApiDataHookQuery } from "./react/useD2ApiData";
 
 export { D2ApiResponse, PartialModel, PartialPersistedModel, MetadataPayload } from "./api/common";
+
+export * from "./api/dataValues";
