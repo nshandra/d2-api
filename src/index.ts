@@ -6,7 +6,10 @@ export {
     NonPaginatedObjects,
     GetParams,
     UpdateOptions,
-} from "./api/models";
+} from "./api/model";
+
+import Model from "./api/model";
+export { Model };
 
 export { Id, Ref } from "./schemas/base";
 export { Selector, SelectedPick } from "./api/inference";

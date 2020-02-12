@@ -1,4 +1,4 @@
-import { FieldPreset } from "./../schemas/base";
+import { FieldPreset, Ref } from "./../schemas/base";
 
 /* Generic Helpers */
 
@@ -93,8 +93,14 @@ type SelectorKey<
     : ModelSelector[K] extends true
     ? (IsLiteral<Model["fields"][K]> extends true
           ? Model["fields"][K]
-          : (Model["fields"] extends { id: string } ? { id: string } : never))
+          : GetTrueSelectionOnNonLiteral<Model["fields"][K]>)
     : never;
+
+type GetTrueSelectionOnNonLiteral<SchemaValue> = SchemaValue extends Array<infer T>
+    ? (T extends { fieldPresets: any } ? Ref[] : T[])
+    : SchemaValue extends { fieldPresets: any }
+    ? Ref
+    : SchemaValue;
 
 export type SelectedPickFields<
     Model extends ModelInfoBase,
