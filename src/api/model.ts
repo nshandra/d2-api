@@ -62,7 +62,7 @@ type GetObject<ModelKey extends keyof D2ModelSchemas, Options> = SelectedPick<
     GetFields<Options>
 >;
 
-export default class Model<ModelKey extends keyof D2ModelSchemas> {
+export class Model<ModelKey extends keyof D2ModelSchemas> {
     d2Api: D2Api;
     modelName: ModelKey;
 

@@ -4,7 +4,7 @@ import _ from "lodash";
 import { D2ModelSchemas, D2ModelEnum } from "./../schemas/models";
 import { joinPath, prepareConnection } from "../utils/connection";
 import Metadata from "./metadata";
-import Model from "./model";
+import { Model } from "./model";
 
 import { Params, D2ApiResponse } from "./common";
 import CurrentUser from "./current-user";

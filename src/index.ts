@@ -8,8 +8,7 @@ export {
     UpdateOptions,
 } from "./api/model";
 
-import Model from "./api/model";
-export { Model };
+export { Model } from "./api/model";
 
 export { Id, Ref } from "./schemas/base";
 export { Selector, SelectedPick } from "./api/inference";
