@@ -34,6 +34,18 @@ export default class DataStore {
                 }
             });
     }
+
+    delete(key: string): D2ApiResponse<boolean> {
+        const { d2Api, namespace } = this;
+
+        return d2Api
+            .request({
+                method: "DELETE",
+                url: `/dataStore/${namespace}/${key}`,
+                validateStatus: validate404,
+            })
+            .map(response => (response.status === 404 ? false : true));
+    }
 }
 
 function validate404(status: number): boolean {

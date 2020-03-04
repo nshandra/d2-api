@@ -4,7 +4,7 @@ import _ from "lodash";
 import { D2ModelSchemas, D2ModelEnum } from "./../schemas/models";
 import { joinPath, prepareConnection } from "../utils/connection";
 import Metadata from "./metadata";
-import Models from "./models";
+import { Model } from "./model";
 
 import { Params, D2ApiResponse } from "./common";
 import CurrentUser from "./current-user";
@@ -18,7 +18,7 @@ export interface D2ApiOptions {
     auth?: AxiosBasicCredentials;
 }
 
-type IndexedModels = { [ModelName in keyof D2ModelSchemas]: Models<ModelName> };
+type IndexedModels = { [ModelName in keyof D2ModelSchemas]: Model<ModelName> };
 
 export class D2ApiDefault {
     public baseUrl: string;
@@ -42,7 +42,7 @@ export class D2ApiDefault {
         this.analytics = new Analytics(this);
         this.dataValues = new DataValues(this);
         this.models = _(Object.keys(D2ModelEnum))
-            .map((modelName: keyof D2ModelSchemas) => [modelName, new Models(this, modelName)])
+            .map((modelName: keyof D2ModelSchemas) => [modelName, new Model(this, modelName)])
             .fromPairs()
             .value() as IndexedModels;
     }
