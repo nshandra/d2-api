@@ -34,7 +34,7 @@ $ yarn publish [--tag beta] [--patch | --minor | --major]
 ### Create API instance
 
 ```
-const api = new D2Api({
+const api = new D2ApiDefault({
     baseUrl: "https://play.dhis2.org/2.30",
     auth: { username: "admin", password: "district" },
 });
