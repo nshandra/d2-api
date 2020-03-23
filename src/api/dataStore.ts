@@ -4,6 +4,18 @@ import { D2Api } from "./d2-api";
 export default class DataStore {
     constructor(public d2Api: D2Api, public namespace: string) {}
 
+    getKeys(): D2ApiResponse<string[]> {
+        const { d2Api, namespace } = this;
+
+        return d2Api
+            .request<string[]>({
+                method: "GET",
+                url: `/dataStore/${namespace}`,
+                validateStatus: validate404,
+            })
+            .map(response => (response.status === 404 ? [] : response.data));
+    }
+
     get<T>(key: string): D2ApiResponse<T | undefined> {
         const { d2Api, namespace } = this;
 
