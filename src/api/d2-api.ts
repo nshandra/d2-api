@@ -11,6 +11,7 @@ import CurrentUser from "./current-user";
 import DataStore from "./dataStore";
 import Analytics from "./analytics";
 import DataValues from "./dataValues";
+import System from "./system";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -30,6 +31,7 @@ export class D2ApiDefault {
     public currentUser: CurrentUser;
     public analytics: Analytics;
     public dataValues: DataValues;
+    public system: System;
 
     public constructor(options?: D2ApiOptions) {
         const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
@@ -41,6 +43,7 @@ export class D2ApiDefault {
         this.currentUser = new CurrentUser(this);
         this.analytics = new Analytics(this);
         this.dataValues = new DataValues(this);
+        this.system = new System(this);
         this.models = _(Object.keys(D2ModelEnum))
             .map((modelName: keyof D2ModelSchemas) => [modelName, new Model(this, modelName)])
             .fromPairs()
