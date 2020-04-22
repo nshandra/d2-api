@@ -14,12 +14,12 @@ export default class System {
     }
 
     get info(): D2ApiResponse<SystemInfo> {
-        return this.d2Api.request<SystemInfo>({ method: "GET", url: `/system/info` });
+        return this.d2Api.request({ method: "GET", url: `/system/info` });
     }
 
     ping(): D2ApiResponse<boolean> {
         return this.d2Api
-            .request<unknown>({
+            .request({
                 method: "GET",
                 url: `/system/info`,
                 validateStatus: (status: number) => [200, 302, 401].includes(status),
@@ -28,22 +28,22 @@ export default class System {
     }
 
     getTaskEntries(selector: TaskSelector): D2ApiResponse<TaskEntry[]> {
-        return this.d2Api.request<TaskEntry[]>({
+        return this.d2Api.request({
             method: "GET",
             url: _.compact(["/system/tasks", selector.category, selector.id]).join("/"),
         });
     }
 
     get tasks(): D2ApiResponse<Tasks> {
-        return this.d2Api.request<Tasks>({ method: "GET", url: `/system/tasks` });
+        return this.d2Api.request({ method: "GET", url: `/system/tasks` });
     }
 
     get flags(): D2ApiResponse<SystemItem[]> {
-        return this.d2Api.request<SystemItem[]>({ method: "GET", url: `/system/flags` });
+        return this.d2Api.request({ method: "GET", url: `/system/flags` });
     }
 
     get styles(): D2ApiResponse<SystemItem[]> {
-        return this.d2Api.request<SystemItem[]>({ method: "GET", url: `/system/styles` });
+        return this.d2Api.request({ method: "GET", url: `/system/styles` });
     }
 }
 
