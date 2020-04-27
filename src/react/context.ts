@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { D2Api } from "..";
+import { D2ApiBase } from "../api/d2Api";
 
 interface Context {
-    api?: D2Api;
+    api?: D2ApiBase;
     d2?: object;
 }
 

@@ -1,4 +1,3 @@
-import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
 import {
     processFieldsFilterParams,
@@ -6,9 +5,10 @@ import {
     ErrorReport,
     D2ApiResponse,
     GetOptionValue,
-    MetadataPayload,
+    MetadataPayloadBase,
+    D2ApiDefinitionBase,
 } from "./common";
-import { D2Api } from "./d2-api";
+import { D2ApiBase } from "./d2Api";
 import { SelectedPick, GetFields } from "./inference";
 
 export interface PostOptions {
@@ -56,26 +56,33 @@ export interface TypeReport {
     objectReports: ObjectReport[];
 }
 
-type RootSelector = {
-    [ModelKey in keyof D2ModelSchemas]?: GetOptionValue<ModelKey>;
-};
-
-export type MetadataPick<RootSelectorE extends RootSelector> = {
-    [ModelKey in keyof RootSelectorE & keyof D2ModelSchemas]: Array<
-        SelectedPick<D2ModelSchemas[ModelKey], GetFields<RootSelectorE[ModelKey]>>
+type RootSelector<D2ApiDefinition extends D2ApiDefinitionBase> = {
+    [ModelKey in keyof D2ApiDefinition["schemas"]]?: GetOptionValue<
+        D2ApiDefinition,
+        D2ApiDefinition["schemas"][ModelKey]
     >;
 };
 
-export default class D2ApiMetadata {
-    d2Api: D2Api;
+export type MetadataPickBase<
+    D2ApiDefinition extends D2ApiDefinitionBase,
+    RootSelectorE extends RootSelector<D2ApiDefinition> & any
+> = {
+    [ModelKey in keyof RootSelectorE & keyof D2ApiDefinition["schemas"]]: Array<
+        SelectedPick<D2ApiDefinition["schemas"][ModelKey], GetFields<RootSelectorE[ModelKey]>>
+    >;
+};
 
-    constructor(d2Api: D2Api) {
+export class Metadata<D2ApiDefinition extends D2ApiDefinitionBase> {
+    d2Api: D2ApiBase;
+
+    constructor(d2Api: D2ApiBase) {
         this.d2Api = d2Api;
     }
 
-    get<RootSelectorE extends RootSelector, Data = MetadataPick<RootSelectorE>>(
-        selector: RootSelectorE
-    ): D2ApiResponse<Data> {
+    get<
+        RootSelectorE extends RootSelector<D2ApiDefinition>,
+        Data = MetadataPickBase<D2ApiDefinition, RootSelectorE>
+    >(selector: RootSelectorE): D2ApiResponse<Data> {
         const metadataOptions = _(selector)
             .map((modelOptions, modelName) =>
                 processFieldsFilterParams(modelOptions as any, modelName)
@@ -92,7 +99,7 @@ export default class D2ApiMetadata {
     }
 
     post(
-        data: Partial<MetadataPayload>,
+        data: Partial<MetadataPayloadBase<D2ApiDefinition["schemas"]>>,
         options?: Partial<PostOptions>
     ): D2ApiResponse<MetadataResponse> {
         return this.d2Api.request({
@@ -104,3 +111,5 @@ export default class D2ApiMetadata {
         });
     }
 }
+
+export { MetadataPayloadBase };

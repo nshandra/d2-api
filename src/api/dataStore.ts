@@ -1,8 +1,8 @@
 import { D2ApiResponse } from "./common";
-import { D2Api } from "./d2-api";
+import { D2ApiBase } from "./d2Api";
 
-export default class DataStore {
-    constructor(public d2Api: D2Api, public namespace: string) {}
+export class DataStore {
+    constructor(public d2Api: D2ApiBase, public namespace: string) {}
 
     getKeys(): D2ApiResponse<string[]> {
         const { d2Api, namespace } = this;

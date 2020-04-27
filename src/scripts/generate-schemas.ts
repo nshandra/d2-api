@@ -1,10 +1,9 @@
-import { joinPath } from "./../utils/connection";
 import axios from "axios";
 import path from "path";
 import _ from "lodash";
 import prettier from "prettier";
 import fs from "fs";
-import argparse from "argparse";
+import { joinPath } from "../utils/connection";
 
 interface SchemaProperty {
     name: string;
@@ -33,6 +32,7 @@ interface Schemas {
 
 const interfaceFromClass: _.Dictionary<string> = {
     "org.hisp.dhis.security.acl.Access": "D2Access",
+    "org.hisp.dhis.translation.ObjectTranslation": "D2Translation",
     "org.hisp.dhis.translation.Translation": "D2Translation",
     "org.hisp.dhis.common.ObjectStyle": "D2Style",
     "org.hisp.dhis.common.DimensionalKeywords": "D2DimensionalKeywords",
@@ -40,6 +40,8 @@ const interfaceFromClass: _.Dictionary<string> = {
     "org.hisp.dhis.expression.Expression": "D2Expression",
     "org.hisp.dhis.period.PeriodType": "string",
     "org.hisp.dhis.chart.Series": "any",
+    "org.hisp.dhis.attribute.AttributeValue": "D2AttributeValueGeneric<D2Attribute>",
+    "org.hisp.dhis.eventdatavalue.EventDataValue": "any",
     "org.hisp.dhis.common.DataDimensionItem": "any",
     "org.hisp.dhis.common.DimensionalObject": "any",
     "org.hisp.dhis.interpretation.Mention": "any",
@@ -115,8 +117,10 @@ const getType = (schemas: Schemas, property: SchemaProperty, suffix?: string): s
             return "boolean";
         case "NUMBER":
             return "number";
+        case "GEOLOCATION":
+            return "string";
         default:
-            throw `Unsupported: ${propertyType}`;
+            throw `Unsupported property type: ${propertyType}`;
     }
 };
 
@@ -147,15 +151,6 @@ function getModelProperties(schemas: Schemas, schema: Schema, suffix?: string): 
         .join(";");
 }
 
-function getArgsParser() {
-    const parser = new argparse.ArgumentParser();
-    parser.addArgument("url", {
-        help: "DHIS2 instance URL: http://username:password@server:port",
-    });
-
-    return parser.parseArgs();
-}
-
 function quote(s: string): string {
     return '"' + s + '"';
 }
@@ -169,31 +164,37 @@ function getProperties(schema: Schema, predicate: (property: SchemaProperty) => 
     );
 }
 
-/*
-const presets = {
-    identifiable: ["id", "name", "code", "created", "lastUpdated"],
-    nameable: ["id", "name", "shortName", "code", "description", "created", "lastUpdated"],
-};
-
-*/
-
 function joinStr(xs: string[]): string {
     return xs.map(quote).join(" | ");
 }
 
-const start = async () => {
-    const args = getArgsParser();
-    const schemaUrl = joinPath(args.url, "/api/schemas.json?fields=:all,metadata");
-    const { schemas } = (await axios.get(schemaUrl)).data as { schemas: Schema[] };
+const instances = {
+    baseUrl: "https://admin:district@play.dhis2.org/",
+    versions: ["2.30", "2.31", "2.32", "2.33"],
+};
+
+async function generateSchema(version: string) {
+    const url = instances.baseUrl + version;
+
+    const schemaUrl = joinPath(url, "/api/schemas.json?fields=:all,metadata");
+    console.debug(`GET ${schemaUrl}`);
+    const { schemas } = (await axios.get(schemaUrl, {
+        validateStatus: (status: number) => status >= 200 && status < 300,
+    })).data as { schemas: Schema[] };
+
     const models = _(schemas)
         .filter(schema => schema.metadata)
         .value();
     const schemasByClassName = _.keyBy(schemas, schema => _.last(schema.klass.split(".")) || "");
 
     const modelsDeclaration = `
-        import { Id, Preset, FieldPresets,
-                 D2Access, D2Translation, D2Geometry,  D2Style,
-                 D2DimensionalKeywords, D2Expression } from './base';
+        /* eslint-disable */
+
+        import {
+            Id, Preset, FieldPresets,
+            D2Access, D2Translation, D2Geometry,  D2Style,
+            D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression
+        } from "../schemas/base";
 
         ${schemas
             .map(
@@ -212,8 +213,9 @@ const start = async () => {
 
                 return `
                     export interface ${schemaName} {
+                        name: "${modelName}";
                         model: ${modelName};
-                        fields: { ${getModelProperties(schemasByClassName, schema, "Schema")} }
+                        fields: { ${getModelProperties(schemasByClassName, schema, "Schema")} };
                         fieldPresets: {
                             $all:
                                 Preset<${modelName}, keyof ${modelName}>
@@ -225,7 +227,7 @@ const start = async () => {
                                 Preset<${modelName}, ${getProperties(schema, p => p.persisted)}>
                             $owner:
                                 Preset<${modelName}, ${getProperties(schema, p => p.owner)}>
-                        }
+                        };
                     }
                 `;
             })
@@ -234,9 +236,8 @@ const start = async () => {
         export type D2Model =
             ${models.map(model => getModelName(model.klass)).join(" | ")}
 
-        export enum D2ModelEnum {
-            ${models.map(model => `${model.plural} = "${model.plural}"`).join(",\n")}
-        }
+        export const modelKeys: Array<keyof D2ModelSchemas> =
+            ${JSON.stringify(models.map(model => model.plural))}
 
         export type D2ModelSchemas = {
             ${models
@@ -249,20 +250,29 @@ const start = async () => {
     const prettierConfigFile = await prettier.resolveConfigFile();
     if (!prettierConfigFile) throw new Error("Cannot find prettier config file");
 
-    /*
     const prettierConfig = await prettier.resolveConfig(prettierConfigFile);
-    const data = prettier.format(parts.join("\n\n"), {
-        parser: "babel",
+    const data = prettier.format(parts.join("\n"), {
+        parser: "typescript",
         ...prettierConfig,
     });
-    */
-    const data = parts.join("\n\n");
 
-    const tsPath = path.join(__dirname, "models.ts");
-    fs.writeFile(tsPath, data, err => {
-        if (err) console.error(err);
-        else console.log(`Written: ${tsPath}`);
-    });
-};
+    const parentPath = path.join(__dirname, "..", version);
+    fs.mkdirSync(parentPath, { recursive: true });
+    const schemasPath = path.join(parentPath, "schemas.ts");
+    fs.writeFileSync(schemasPath, data);
+    console.log(`Written: ${schemasPath}`);
+}
 
-start();
+async function generateSchemas() {
+    for (const version of instances.versions) {
+        console.log(`Get schemas for ${version}`);
+        await generateSchema(version);
+    }
+}
+
+function logErrorAndExit(err: any) {
+    console.error(err); // eslint-disable-line no-console2
+    process.exit(1);
+}
+
+generateSchemas().catch(logErrorAndExit);

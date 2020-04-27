@@ -1,6 +1,5 @@
-import { D2ModelSchemas } from "./../schemas/models";
-import { SelectedPick, GetFields } from "./inference";
-import { D2Api } from "./d2-api";
+import { SelectedPick, GetFields, D2ModelSchemaBase } from "./inference";
+import { D2ApiBase } from "./d2Api";
 import {
     GetOptionValue,
     processFieldsFilterParams,
@@ -10,6 +9,7 @@ import {
     PartialModel,
     PartialPersistedModel,
     ErrorReport,
+    D2ApiDefinitionBase,
 } from "./common";
 
 type ModelResponse = HttpResponse<{
@@ -34,7 +34,10 @@ export interface PaginatedObjects<T> extends NonPaginatedObjects<T> {
     pager: Pager;
 }
 
-export type GetOptions<ModelKey extends keyof D2ModelSchemas> = GetOptionValue<ModelKey> &
+export type GetOptions<
+    D2ApiDefinition extends D2ApiDefinitionBase,
+    D2ModelSchema extends D2ModelSchemaBase
+> = GetOptionValue<D2ApiDefinition, D2ModelSchema> &
     Partial<{
         page: number;
         pageSize: number;
@@ -57,38 +60,38 @@ export interface GetParams {
     order?: string;
 }
 
-type GetObject<ModelKey extends keyof D2ModelSchemas, Options> = SelectedPick<
-    D2ModelSchemas[ModelKey],
+type GetObject<D2ModelSchema extends D2ModelSchemaBase, Options> = SelectedPick<
+    D2ModelSchema,
     GetFields<Options>
 >;
 
-export class Model<ModelKey extends keyof D2ModelSchemas> {
-    d2Api: D2Api;
-    modelName: ModelKey;
-
-    constructor(d2Api: D2Api, modelName: ModelKey) {
-        this.d2Api = d2Api;
-        this.modelName = modelName;
-    }
+export class Model<
+    D2ApiDefinition extends D2ApiDefinitionBase,
+    D2ModelSchema extends D2ModelSchemaBase
+> {
+    constructor(private d2Api: D2ApiBase, private modelName: D2ModelSchema["name"]) {}
 
     get<
-        Options extends GetOptions<ModelKey> & { paging?: true | undefined },
-        Obj = GetObject<ModelKey, Options>
+        Options extends GetOptions<D2ApiDefinition, D2ModelSchema> & { paging?: true | undefined },
+        Obj = GetObject<D2ModelSchema, Options>
     >(options: Options): D2ApiResponse<PaginatedObjects<Obj>>;
 
     get<
-        Options extends GetOptions<ModelKey> & { paging?: false },
-        Obj = GetObject<ModelKey, Options>
+        Options extends GetOptions<D2ApiDefinition, D2ModelSchema> & { paging?: false },
+        Obj = GetObject<D2ModelSchema, Options>
     >(options: Options): D2ApiResponse<NonPaginatedObjects<Obj>>;
 
-    get<Options extends GetOptions<ModelKey>, Obj = GetObject<ModelKey, Options>>(
+    get<
+        Options extends GetOptions<D2ApiDefinition, D2ModelSchema>,
+        Obj = GetObject<D2ModelSchema, Options>
+    >(
         options: Options
     ): D2ApiResponse<PaginatedObjects<Obj>> | D2ApiResponse<NonPaginatedObjects<Obj>> {
         const paramsFieldsFilter = processFieldsFilterParams(options as any);
         const params = { ...options, ...paramsFieldsFilter } as any;
         const apiResponse = this.d2Api.get<
             {
-                [K in ModelKey]: Obj[];
+                [K in D2ModelSchema["name"]]: Obj[];
             } & { pager: Pager }
         >(this.modelName as string, params as Params);
 
@@ -101,14 +104,14 @@ export class Model<ModelKey extends keyof D2ModelSchemas> {
     }
 
     post(
-        payload: PartialModel<D2ModelSchemas[ModelKey]["model"]>,
+        payload: PartialModel<D2ModelSchema["model"]>,
         options?: UpdateOptions
     ): D2ApiResponse<ModelResponse> {
         return this.d2Api.post(this.modelName, (options || {}) as Params, payload);
     }
 
     put(
-        payload: PartialPersistedModel<D2ModelSchemas[ModelKey]["model"]>,
+        payload: PartialPersistedModel<D2ModelSchema["model"]>,
         options?: UpdateOptions
     ): D2ApiResponse<ModelResponse> {
         return this.d2Api.put(
@@ -118,9 +121,7 @@ export class Model<ModelKey extends keyof D2ModelSchemas> {
         );
     }
 
-    delete(
-        payload: PartialPersistedModel<D2ModelSchemas[ModelKey]["model"]>
-    ): D2ApiResponse<ModelResponse> {
+    delete(payload: PartialPersistedModel<D2ModelSchema["model"]>): D2ApiResponse<ModelResponse> {
         return this.d2Api.delete(`/${this.modelName}/${payload.id}`);
     }
 }
