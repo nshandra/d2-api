@@ -16,6 +16,6 @@ export * from "./schemas";
 
 export class D2Api extends D2ApiDefault<D2ApiDefinition> {
     public constructor(options?: D2ApiOptions) {
-        super(modelKeys, options);
+        super(options, modelKeys);
     }
 }

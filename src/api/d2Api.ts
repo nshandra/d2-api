@@ -66,6 +66,11 @@ export class D2ApiBase {
     public delete<T>(url: string, params?: Params) {
         return this.request<T>({ method: "delete", url, params });
     }
+
+    async getVersion(): Promise<string> {
+        const info = await this.get<{ version: string }>("/system/info").getData();
+        return info.version;
+    }
 }
 
 export class D2ApiDefault<D2ApiDefinition extends D2ApiDefinitionBase> extends D2ApiBase {
@@ -90,14 +95,17 @@ export class D2ApiDefault<D2ApiDefinition extends D2ApiDefinitionBase> extends D
         return new DataStore(this, namespace);
     }
 
-    public constructor(modelKeys: Array<keyof D2ApiDefinition["schemas"]>, options?: D2ApiOptions) {
+    public constructor(
+        options?: D2ApiOptions,
+        modelKeys?: Array<keyof D2ApiDefinition["schemas"]>
+    ) {
         super(options);
         // TODO: all these properties should be initialized on-demand
         this.metadata = new Metadata(this);
         this.currentUser = new CurrentUser(this);
         this.analytics = new Analytics(this);
         this.dataValues = new DataValues(this);
-        this.models = this.getIndexedModels(Model, modelKeys);
+        this.models = this.getIndexedModels(Model, modelKeys || []);
         this.system = new System(this);
     }
 }
