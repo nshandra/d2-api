@@ -10,6 +10,7 @@ import { CurrentUser } from "./currentUser";
 import { Analytics } from "./analytics";
 import { DataValues } from "./dataValues";
 import { DataStore } from "./dataStore";
+import { System } from "./system";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -73,6 +74,7 @@ export class D2ApiDefault<D2ApiDefinition extends D2ApiDefinitionBase> extends D
     public currentUser: CurrentUser<D2ApiDefinition>;
     public analytics: Analytics;
     public dataValues: DataValues;
+    public system: System;
 
     getIndexedModels(
         modelClass: any,
@@ -96,5 +98,6 @@ export class D2ApiDefault<D2ApiDefinition extends D2ApiDefinitionBase> extends D
         this.analytics = new Analytics(this);
         this.dataValues = new DataValues(this);
         this.models = this.getIndexedModels(Model, modelKeys);
+        this.system = new System(this);
     }
 }
