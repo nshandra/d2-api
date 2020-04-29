@@ -90,17 +90,22 @@ export class D2ApiDefault<D2ApiDefinition extends D2ApiDefinitionBase> extends D
         return new DataStore(this, namespace);
     }
 
-    constructor(options?: D2ApiOptions, public modelKeys?: (keyof D2ApiDefinition["schemas"])[]) {
+    constructor(options?: D2ApiOptions, private modelKeys?: (keyof D2ApiDefinition["schemas"])[]) {
         super(options);
     }
 
     @cached
-    get metadata() {
+    get metadata(): Metadata<D2ApiDefinition> {
         return new Metadata(this);
     }
 
     @cached
-    get currentUser() {
+    get models(): IndexedModels<D2ApiDefinition> {
+        return this.getIndexedModels(Model, this.modelKeys || []);
+    }
+
+    @cached
+    get currentUser(): CurrentUser<D2ApiDefinition> {
         return new CurrentUser(this);
     }
 
@@ -112,11 +117,6 @@ export class D2ApiDefault<D2ApiDefinition extends D2ApiDefinitionBase> extends D
     @cached
     get dataValues() {
         return new DataValues(this);
-    }
-
-    @cached
-    get models() {
-        return this.getIndexedModels(Model, this.modelKeys || []);
     }
 
     @cached
