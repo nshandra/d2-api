@@ -11,6 +11,7 @@ import { Analytics } from "./analytics";
 import { DataValues } from "./dataValues";
 import { DataStore } from "./dataStore";
 import { System } from "./system";
+import { defineLazyCachedProperty, cached } from "../utils/cache";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -74,38 +75,52 @@ export class D2ApiBase {
 }
 
 export class D2ApiDefault<D2ApiDefinition extends D2ApiDefinitionBase> extends D2ApiBase {
-    public metadata: Metadata<D2ApiDefinition>;
-    public models: IndexedModels<D2ApiDefinition>;
-    public currentUser: CurrentUser<D2ApiDefinition>;
-    public analytics: Analytics;
-    public dataValues: DataValues;
-    public system: System;
-
     getIndexedModels(
         modelClass: any,
         modelKeys: Array<keyof D2ApiDefinition["schemas"]>
     ): IndexedModels<D2ApiDefinition> {
-        return _(modelKeys)
-            .map(modelKey => [modelKey, new modelClass(this, modelKey)])
-            .fromPairs()
-            .value() as IndexedModels<D2ApiDefinition>;
+        let indexedModels: Partial<IndexedModels<D2ApiDefinition>> = {};
+        modelKeys.forEach(key => {
+            defineLazyCachedProperty(indexedModels, key, () => new modelClass(this, key));
+        });
+        return indexedModels as IndexedModels<D2ApiDefinition>;
     }
 
     dataStore(namespace: string): DataStore {
         return new DataStore(this, namespace);
     }
 
-    public constructor(
-        options?: D2ApiOptions,
-        modelKeys?: Array<keyof D2ApiDefinition["schemas"]>
-    ) {
+    constructor(options?: D2ApiOptions, public modelKeys?: (keyof D2ApiDefinition["schemas"])[]) {
         super(options);
-        // TODO: all these properties should be initialized on-demand
-        this.metadata = new Metadata(this);
-        this.currentUser = new CurrentUser(this);
-        this.analytics = new Analytics(this);
-        this.dataValues = new DataValues(this);
-        this.models = this.getIndexedModels(Model, modelKeys || []);
-        this.system = new System(this);
+    }
+
+    @cached
+    get metadata() {
+        return new Metadata(this);
+    }
+
+    @cached
+    get currentUser() {
+        return new CurrentUser(this);
+    }
+
+    @cached
+    get analytics() {
+        return new Analytics(this);
+    }
+
+    @cached
+    get dataValues() {
+        return new DataValues(this);
+    }
+
+    @cached
+    get models() {
+        return this.getIndexedModels(Model, this.modelKeys || []);
+    }
+
+    @cached
+    get system() {
+        return new System(this);
     }
 }

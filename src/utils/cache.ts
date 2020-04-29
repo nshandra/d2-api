@@ -1,15 +1,29 @@
-const cacheStore: { [key: string]: any } = {};
+/* Cache a lazy class-property getter */
+export function cached<Res>(_target: any, _key: any, descriptor: TypedPropertyDescriptor<Res>) {
+    let cachedValue: Res | undefined = undefined;
+    const originalGetter = descriptor.get;
+    if (!originalGetter) throw "This decorator can only be applied on class properties";
 
-export function cache<S>(mainKey: string, fn: (...args: any[]) => S): (...args: any[]) => S {
-    return function(...args: any) {
-        const cacheKey = mainKey + "-" + JSON.stringify(args);
-
-        if (cacheStore[cacheKey]) {
-            return cacheStore[cacheKey];
-        } else {
-            const value = fn(...args);
-            cacheStore[cacheKey] = value;
-            return value;
-        }
+    descriptor.get = function() {
+        if (!cachedValue) cachedValue = originalGetter.bind(this)();
+        return cachedValue;
     };
+}
+
+/* Define a lazy cached property of an object */
+export function defineLazyCachedProperty<Obj extends object, Key extends keyof Obj, Res>(
+    object: Obj,
+    name: Key,
+    get: () => Res
+): void {
+    let cachedValue: Res | undefined = undefined;
+
+    Object.defineProperty(object, name, {
+        get: () => {
+            if (!cachedValue) cachedValue = get();
+            return cachedValue;
+        },
+        enumerable: true,
+        configurable: true,
+    });
 }
