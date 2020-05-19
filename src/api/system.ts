@@ -1,11 +1,11 @@
 import _ from "lodash";
 
 import { D2ApiResponse } from "./common";
-import { D2ApiBase } from "./d2Api";
+import { D2ApiGeneric } from "./d2Api";
 import { Id } from "../schemas";
 
 export class System {
-    constructor(public d2Api: D2ApiBase) {}
+    constructor(public d2Api: D2ApiGeneric) {}
 
     getIds(options: { limit?: number }): D2ApiResponse<Id[]> {
         return this.d2Api

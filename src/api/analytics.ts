@@ -1,5 +1,5 @@
 import { D2ApiResponse, HttpResponse } from "./common";
-import { D2ApiBase } from "./d2Api";
+import { D2ApiGeneric } from "./d2Api";
 
 type Operator = "EQ" | "GT" | "GE" | "LT" | "LE";
 
@@ -73,7 +73,7 @@ export type RunAnalyticsResponse = HttpResponse<{
 }>;
 
 export class Analytics {
-    constructor(public d2Api: D2ApiBase) {}
+    constructor(public d2Api: D2ApiGeneric) {}
 
     get(options: AnalyticsOptions): D2ApiResponse<AnalyticsResponse> {
         return this.d2Api.get<AnalyticsResponse>("/analytics", options);

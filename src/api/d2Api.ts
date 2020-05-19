@@ -26,7 +26,7 @@ export type IndexedModels<D2ApiDefinition extends D2ApiDefinitionBase> = {
     >;
 };
 
-export class D2ApiBase {
+export class D2ApiGeneric {
     public baseUrl: string;
     public apiPath: string;
     public connection: AxiosInstance;
@@ -74,7 +74,9 @@ export class D2ApiBase {
     }
 }
 
-export class D2ApiDefault<D2ApiDefinition extends D2ApiDefinitionBase> extends D2ApiBase {
+export abstract class D2ApiVersioned<
+    D2ApiDefinition extends D2ApiDefinitionBase
+> extends D2ApiGeneric {
     getIndexedModels(
         modelClass: any,
         modelKeys: Array<keyof D2ApiDefinition["schemas"]>

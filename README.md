@@ -13,6 +13,7 @@ $ yarn generate-schemas
 ## Development
 
 ```
+$ yarn install
 $ yarn build
 $ cd build
 $ yarn link

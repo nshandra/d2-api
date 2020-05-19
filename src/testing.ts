@@ -1,9 +1,9 @@
-import { D2ApiBase } from "./api/d2Api";
+import { D2ApiGeneric } from "./api/d2Api";
 import MockAdapter from "axios-mock-adapter";
 
 export type D2ApiMock = MockAdapter;
 
-export function getMockApiFromClass<D2Api extends D2ApiBase>(apiClass: {
+export function getMockApiFromClass<D2Api extends D2ApiGeneric>(apiClass: {
     new (): D2Api;
 }): () => { api: D2Api; mock: MockAdapter } {
     return () => {

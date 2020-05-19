@@ -1,5 +1,5 @@
 import { SelectedPick, GetFields, D2ModelSchemaBase } from "./inference";
-import { D2ApiBase } from "./d2Api";
+import { D2ApiGeneric } from "./d2Api";
 import {
     GetOptionValue,
     processFieldsFilterParams,
@@ -69,7 +69,7 @@ export class Model<
     D2ApiDefinition extends D2ApiDefinitionBase,
     D2ModelSchema extends D2ModelSchemaBase
 > {
-    constructor(private d2Api: D2ApiBase, private modelName: D2ModelSchema["name"]) {}
+    constructor(private d2Api: D2ApiGeneric, private modelName: D2ModelSchema["name"]) {}
 
     get<
         Options extends GetOptions<D2ApiDefinition, D2ModelSchema> & { paging?: true | undefined },

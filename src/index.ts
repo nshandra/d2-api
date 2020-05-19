@@ -1,4 +1,4 @@
-export { D2ApiDefault, D2ApiBase as D2Api } from "./api/d2Api";
+export { D2ApiVersioned, D2ApiGeneric } from "./api/d2Api";
 export { Id, Ref } from "./schemas/base";
 export { D2ApiMock, getMockApiFromClass } from "./testing";
 

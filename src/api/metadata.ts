@@ -8,7 +8,7 @@ import {
     MetadataPayloadBase,
     D2ApiDefinitionBase,
 } from "./common";
-import { D2ApiBase } from "./d2Api";
+import { D2ApiGeneric } from "./d2Api";
 import { SelectedPick, GetFields } from "./inference";
 
 export interface PostOptions {
@@ -73,9 +73,9 @@ export type MetadataPickBase<
 };
 
 export class Metadata<D2ApiDefinition extends D2ApiDefinitionBase> {
-    d2Api: D2ApiBase;
+    d2Api: D2ApiGeneric;
 
-    constructor(d2Api: D2ApiBase) {
+    constructor(d2Api: D2ApiGeneric) {
         this.d2Api = d2Api;
     }
 

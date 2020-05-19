@@ -5,7 +5,7 @@ import {
     D2ModelSchemasBase,
     D2ApiDefinitionBase,
 } from "./common";
-import { D2ApiBase } from "./d2Api";
+import { D2ApiGeneric } from "./d2Api";
 import { Selector } from "./inference";
 
 interface Schemas {
@@ -59,7 +59,7 @@ export class CurrentUser<
     D2ApiDefinition extends D2ApiDefinitionBase,
     SchemasE extends Schemas = SchemasBase<D2ApiDefinition["schemas"]>
 > {
-    constructor(private api: D2ApiBase) {
+    constructor(private api: D2ApiGeneric) {
         this.api = api;
     }
 
