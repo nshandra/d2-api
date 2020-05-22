@@ -138,9 +138,9 @@ function getInterface(schemas: Schemas, property: SchemaProperty, suffix?: strin
 }
 
 function getPropertyName(property: SchemaProperty): string {
-    return property.fieldName === "uid"
-        ? "id"
-        : property.collectionName || property.fieldName || property.name;
+    const value = property.collectionName || property.name || property.fieldName;
+    if (!value) throw new Error(`No name found for property: ${property}`);
+    else return value;
 }
 
 function getModelProperties(schemas: Schemas, schema: Schema, suffix?: string): string {
@@ -184,6 +184,7 @@ async function generateSchema(version: string) {
 
     const models = _(schemas)
         .filter(schema => schema.metadata)
+        .sortBy(schema => schema.name)
         .value();
     const schemasByClassName = _.keyBy(schemas, schema => _.last(schema.klass.split(".")) || "");
 
