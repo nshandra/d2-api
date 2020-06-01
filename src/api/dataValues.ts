@@ -115,6 +115,7 @@ export interface DataValueSetsDataValue {
     categoryOptionCombo: Id;
     attributeOptionCombo: Id;
     value: string;
+    comment: string;
     storedBy: string;
     created: string;
     lastUpdated: string;
