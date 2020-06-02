@@ -2,7 +2,7 @@
 export function cached<Res>(_target: any, _key: any, descriptor: TypedPropertyDescriptor<Res>) {
     let cachedValue: Res | undefined = undefined;
     const originalGetter = descriptor.get;
-    if (!originalGetter) throw "This decorator can only be applied on class properties";
+    if (!originalGetter) throw new Error("This decorator can only be applied on class properties");
 
     descriptor.get = function() {
         if (!cachedValue) cachedValue = originalGetter.bind(this)();
