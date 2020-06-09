@@ -12,36 +12,42 @@ export interface GetOptionValue<ModelKey extends keyof D2ModelSchemas> {
 
 type FieldsSelector = object;
 
-type FilterSingleOperator =
-    | "eq"
-    | "!eq"
-    | "ne"
-    | "like"
-    | "!like"
-    | "$like"
-    | "!$like"
-    | "like$"
-    | "!like$"
-    | "ilike"
-    | "ilike"
-    | "$ilike"
-    | "!$ilike"
-    | "ilike$"
-    | "!ilike$"
-    | "gt"
-    | "ge"
-    | "lt"
-    | "le"
-    | "null"
-    | "!null"
-    | "empty"
-    | "token"
-    | "!token";
+const arrayOperators = ["in", "!in"] as const;
+const unaryOperators = ["null", "!null", "empty"] as const;
+const valueOperators = [
+    "eq",
+    "!eq",
+    "ne",
+    "like",
+    "!like",
+    "$like",
+    "!$like",
+    "like$",
+    "!like$",
+    "ilike",
+    "ilike",
+    "$ilike",
+    "!$ilike",
+    "ilike$",
+    "!ilike$",
+    "gt",
+    "ge",
+    "lt",
+    "le",
+    "token",
+    "!token",
+] as const;
 
-type FilterCollectionOperator = "in" | "!in";
+export type FilterValueOperator = (typeof valueOperators)[number];
 
-type FilterValue = Partial<
-    Record<FilterSingleOperator, string> & Record<FilterCollectionOperator, string[]>
+export type FilterArrayOperator = (typeof arrayOperators)[number];
+
+export type FilterUnaryOperator = (typeof unaryOperators)[number];
+
+export type FilterValue = Partial<
+    Record<FilterValueOperator, string> &
+        Record<FilterArrayOperator, string[]> &
+        Record<FilterUnaryOperator, null | true>
 >;
 
 export interface Filter {
@@ -89,13 +95,17 @@ function getFilterAsString(filter: Filter): string[] {
         _.flatMap(filter, (filterOrFilters, field) =>
             _.flatMap(toArray(filterOrFilters || []), filter =>
                 _.compact(
-                    _.map(filter, (value, op) =>
-                        isEmptyFilterValue(value)
-                            ? null
-                            : op === "in" || op === "!in"
-                            ? `${field}:${op}:[${(value as string[]).join(",")}]`
-                            : `${field}:${op}:${value}`
-                    )
+                    _.map(filter, (value, op) => {
+                        if (_.includes(arrayOperators, op) && value) {
+                            return `${field}:${op}:[${(value as string[]).join(",")}]`;
+                        } else if (_.includes(unaryOperators, op)) {
+                            return `${field}:${op}`;
+                        } else if (_.includes(valueOperators, op) && !isEmptyFilterValue(value)) {
+                            return `${field}:${op}:${value}`;
+                        } else {
+                            return null;
+                        }
+                    })
                 )
             )
         )
