@@ -25,6 +25,7 @@ interface Schema {
     name: string;
     plural: string;
     metadata: boolean;
+    href: string;
 }
 
 interface Schemas {
@@ -186,7 +187,7 @@ const start = async () => {
     const schemaUrl = joinPath(args.url, "/api/schemas.json?fields=:all,metadata");
     const { schemas } = (await axios.get(schemaUrl)).data as { schemas: Schema[] };
     const models = _(schemas)
-        .filter(schema => schema.metadata)
+        .filter(schema => !!schema.href)
         .value();
     const schemasByClassName = _.keyBy(schemas, schema => _.last(schema.klass.split(".")) || "");
 
