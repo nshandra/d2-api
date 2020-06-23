@@ -102,7 +102,7 @@ export type DataValueSetsGetRequest = {
 
 export interface DataValueSetsGetResponse {
     dataSet: Id;
-    completeDate: string;
+    completeDate?: string;
     period: string;
     orgUnit: Id;
     dataValues: Array<DataValueSetsDataValue>;
@@ -126,7 +126,9 @@ export default class DataValues {
     constructor(public d2Api: D2Api) {}
 
     getSet(params: DataValueSetsGetRequest): D2ApiResponse<DataValueSetsGetResponse> {
-        return this.d2Api.get<DataValueSetsGetResponse>("/dataValueSets", params);
+        return this.d2Api
+            .get<DataValueSetsGetResponse>("/dataValueSets", params)
+            .map(res => ({ dataValues: [], ...res.data }));
     }
 
     postSet(
