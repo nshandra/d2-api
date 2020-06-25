@@ -1,17 +1,14 @@
-import _ from "lodash";
-import Axios, { AxiosInstance, AxiosBasicCredentials, AxiosRequestConfig } from "axios";
-
+import Axios, { AxiosBasicCredentials, AxiosInstance, AxiosRequestConfig } from "axios";
+import { cache, defineLazyCachedProperty } from "../utils/cache";
 import { joinPath, prepareConnection } from "../utils/connection";
-import { Params, D2ApiResponse, D2ApiDefinitionBase } from "./common";
-
+import { Analytics } from "./analytics";
+import { D2ApiDefinitionBase, D2ApiResponse, Params } from "./common";
+import { CurrentUser } from "./currentUser";
+import { DataStore } from "./dataStore";
+import { DataValues } from "./dataValues";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
-import { CurrentUser } from "./currentUser";
-import { Analytics } from "./analytics";
-import { DataValues } from "./dataValues";
-import { DataStore } from "./dataStore";
 import { System } from "./system";
-import { defineLazyCachedProperty, cached } from "../utils/cache";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -96,32 +93,32 @@ export abstract class D2ApiVersioned<
         super(options);
     }
 
-    @cached
+    @cache()
     get metadata(): Metadata<D2ApiDefinition> {
         return new Metadata(this);
     }
 
-    @cached
+    @cache()
     get models(): IndexedModels<D2ApiDefinition> {
         return this.getIndexedModels(Model, this.modelKeys || []);
     }
 
-    @cached
+    @cache()
     get currentUser(): CurrentUser<D2ApiDefinition> {
         return new CurrentUser(this);
     }
 
-    @cached
+    @cache()
     get analytics() {
         return new Analytics(this);
     }
 
-    @cached
+    @cache()
     get dataValues() {
         return new DataValues(this);
     }
 
-    @cached
+    @cache()
     get system() {
         return new System(this);
     }
