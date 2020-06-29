@@ -10,7 +10,7 @@ export interface PostMessage {
     organisationUnits?: Ref[];
 }
 
-export default class MessageConversations {
+export class MessageConversations {
     constructor(public d2Api: D2ApiGeneric) {}
 
     post(message: PostMessage): D2ApiResponse<void> {
