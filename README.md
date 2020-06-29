@@ -195,6 +195,33 @@ const dataStore = api.dataStore("namespace1");
 dataStore.save("key1", {x: 1, y: 2});
 ```
 
+#### Emails
+
+Send a test email:
+
+```
+await api.email.sendTestMessage().getData();
+```
+
+Send a system notification:
+
+```
+await api.email.sendSystemNotification({
+    subject: "My subject",
+    text: "My message",
+}).getData();
+```
+
+Send a message:
+
+```
+await api.email.sendMessage({
+    recipients: ["user@server.org"],
+    subject: "My subject",
+    text: "My message",
+}).getData();
+```
+
 ## Using type helpers
 
 _d2-api_ exposes some type helpers that you may need in your app. Some examples:

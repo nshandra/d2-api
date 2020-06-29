@@ -6,7 +6,7 @@ import { D2ApiResponse } from "./api-response";
 export default class Email {
     constructor(public d2Api: D2Api) {}
 
-    sendNotification(message: NotificationMessage): D2ApiResponse<void> {
+    sendSystemNotification(message: NotificationMessage): D2ApiResponse<void> {
         return this.d2Api.post("/email/notification", {}, message);
     }
 
@@ -20,7 +20,7 @@ export default class Email {
         return this.d2Api.post("/email/notification", params);
     }
 
-    sendTest(): D2ApiResponse<void> {
+    sendTestMessage(): D2ApiResponse<void> {
         return this.d2Api.post("/email/test");
     }
 }
