@@ -212,7 +212,7 @@ await api.email.sendSystemNotification({
 }).getData();
 ```
 
-Send a message:
+Send a message (requires role `ALL` or `F_SEND_EMAIL`):
 
 ```
 await api.email.sendMessage({
