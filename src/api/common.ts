@@ -1,14 +1,20 @@
 import { Ref } from "./../schemas/base";
-import { D2ModelSchemas } from "./../schemas/models";
 import _ from "lodash";
-import { Selector } from "./inference";
+import { Selector, D2ModelSchemaBase } from "./inference";
 
 export { D2ApiResponse } from "./api-response";
 
-export interface GetOptionValue<ModelKey extends keyof D2ModelSchemas> {
-    fields: Selector<D2ModelSchemas[ModelKey]>;
-    filter?: Filter;
+export interface GetOptionValue<
+    D2ApiDefinition extends D2ApiDefinitionBase,
+    D2ModelSchema extends D2ModelSchemaBase
+> {
+    fields: Selector<D2ModelSchema>;
+    filter?: D2ApiDefinition["filter"];
 }
+
+export type MetadataPayloadBase<D2ModelSchemas extends D2ModelSchemasBase> = {
+    [K in keyof D2ModelSchemas]: Array<PartialModel<D2ModelSchemas[K]["model"]>>;
+};
 
 type FieldsSelector = object;
 
@@ -50,7 +56,7 @@ export type FilterValue = Partial<
         Record<FilterUnaryOperator, null | true>
 >;
 
-export interface Filter {
+export interface FilterBase {
     [property: string]: FilterValue | FilterValue[] | undefined;
 }
 
@@ -90,7 +96,7 @@ function toArray<T>(itemOrItems: T | T[]): T[] {
     return Array.isArray(itemOrItems) ? itemOrItems : [itemOrItems];
 }
 
-function getFilterAsString(filter: Filter): string[] {
+function getFilterAsString(filter: FilterBase): string[] {
     return _.sortBy(
         _.flatMap(filter, (filterOrFilters, field) =>
             _.flatMap(toArray(filterOrFilters || []), filter =>
@@ -114,7 +120,7 @@ function getFilterAsString(filter: Filter): string[] {
 
 export interface GetOptionGeneric {
     fields: FieldsSelector;
-    filter: Filter;
+    filter: FilterBase;
 }
 
 function isEmptyFilterValue(val: any): boolean {
@@ -171,6 +177,9 @@ export type PartialModel<T> = {
 
 export type PartialPersistedModel<T> = PartialModel<T> & Ref;
 
-export type MetadataPayload = {
-    [K in keyof D2ModelSchemas]: Array<PartialModel<D2ModelSchemas[K]["model"]>>;
-};
+export type D2ModelSchemasBase = Record<string, D2ModelSchemaBase>;
+
+export interface D2ApiDefinitionBase {
+    schemas: D2ModelSchemasBase;
+    filter: Record<string, any>;
+}

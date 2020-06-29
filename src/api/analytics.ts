@@ -1,5 +1,5 @@
 import { D2ApiResponse, HttpResponse } from "./common";
-import { D2Api } from "./d2-api";
+import { D2ApiGeneric } from "./d2Api";
 
 type Operator = "EQ" | "GT" | "GE" | "LT" | "LE";
 
@@ -72,8 +72,8 @@ export type RunAnalyticsResponse = HttpResponse<{
     relativeNotifierEndpoint: string;
 }>;
 
-export default class Analytics {
-    constructor(public d2Api: D2Api) {}
+export class Analytics {
+    constructor(public d2Api: D2ApiGeneric) {}
 
     get(options: AnalyticsOptions): D2ApiResponse<AnalyticsResponse> {
         return this.d2Api.get<AnalyticsResponse>("/analytics", options);
