@@ -1,6 +1,6 @@
-import { D2Api } from "./d2-api";
 import { Ref } from "../schemas";
 import { D2ApiResponse } from "./api-response";
+import { D2ApiGeneric } from "./d2Api";
 
 export interface PostMessage {
     subject: string;
@@ -11,7 +11,7 @@ export interface PostMessage {
 }
 
 export default class MessageConversations {
-    constructor(public d2Api: D2Api) {}
+    constructor(public d2Api: D2ApiGeneric) {}
 
     post(message: PostMessage): D2ApiResponse<void> {
         return this.d2Api.post<void>("/messageConversations", {}, message);
