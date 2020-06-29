@@ -4,13 +4,16 @@ Typescript library for the DHIS2 API.
 
 ## Generate schemas
 
+This task generate the schemas for active API versions from play.dhis2.org instances.
+
 ```
-$ yarn generate-schemas https://admin:district@play.dhis2.org/2.30
+$ yarn generate-schemas
 ```
 
 ## Development
 
 ```
+$ yarn install
 $ yarn build
 $ cd build
 $ yarn link
@@ -31,10 +34,14 @@ $ yarn publish [--tag beta] [--patch | --minor | --major]
 
 ## Usage
 
-### Create API instance
+### Create an API instance
+
+An example for 2.32:
 
 ```
-const api = new D2ApiDefault({
+import { D2Api } from "d2-api/2.32"
+
+const api = new D2Api({
     baseUrl: "https://play.dhis2.org/2.30",
     auth: { username: "admin", password: "district" },
 });
@@ -252,14 +259,15 @@ type Metadata = MetadataPick<{
 ## Testing
 
 ```
-import { getMockApi, D2Api, D2User } from "d2-api";
+import { D2Api } from "d2-api/2.32";
+import { getMockApiFromClass } from "d2-api"
 
 const currentUserMock = {
     id: "xE7jOejl9FI",
     displayName: "John Traore",
 };
 
-const { api, mock } = getMockApi();
+const { api, mock } = getMockApiFromClass(D2Api);
 
 describe("Project", () => {
     beforeEach(() => {

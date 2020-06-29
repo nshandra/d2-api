@@ -96,6 +96,14 @@ export interface Message extends MessageDestination {
     text?: string;
 }
 
+// 2.33 has removed attributeValue from the schema (why?), so we need to provide it
+export type D2AttributeValueGeneric<D2Attribute> = {
+    attribute: D2Attribute;
+    created: string;
+    lastUpdated: string;
+    value: string;
+};
+
 export type FieldPreset = "$all" | "$identifiable" | "$nameable" | "$persisted" | "$owner";
 
 export interface FieldPresets {
