@@ -1,10 +1,10 @@
-import { D2Api } from "./d2-api";
 import { D2ApiResponse } from "./api-response";
+import { D2ApiGeneric } from "./d2Api";
 
 /* https://docs.dhis2.org/master/en/developer/html/webapi_email.html */
 
 export default class Email {
-    constructor(public d2Api: D2Api) {}
+    constructor(public d2Api: D2ApiGeneric) {}
 
     sendSystemNotification(message: NotificationMessage): D2ApiResponse<void> {
         return this.d2Api.post("/email/notification", {}, message);
