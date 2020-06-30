@@ -9,6 +9,7 @@ import { DataValues } from "./dataValues";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
 import { System } from "./system";
+import { MessageConversations } from "./messageConversations";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -121,5 +122,10 @@ export abstract class D2ApiVersioned<
     @cache()
     get system() {
         return new System(this);
+    }
+
+    @cache()
+    get messageConversations() {
+        return new MessageConversations(this);
     }
 }
