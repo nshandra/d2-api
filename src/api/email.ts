@@ -3,7 +3,7 @@ import { D2ApiGeneric } from "./d2Api";
 
 /* https://docs.dhis2.org/master/en/developer/html/webapi_email.html */
 
-export default class Email {
+export class Email {
     constructor(public d2Api: D2ApiGeneric) {}
 
     sendSystemNotification(message: NotificationMessage): D2ApiResponse<void> {
