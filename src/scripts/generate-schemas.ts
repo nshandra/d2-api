@@ -24,6 +24,7 @@ interface Schema {
     name: string;
     plural: string;
     metadata: boolean;
+    href: string;
 }
 
 interface Schemas {
@@ -183,7 +184,7 @@ async function generateSchema(version: string) {
     })).data as { schemas: Schema[] };
 
     const models = _(schemas)
-        .filter(schema => schema.metadata)
+        .filter(schema => !!schema.href)
         .sortBy(schema => schema.name)
         .value();
     const schemasByClassName = _.keyBy(schemas, schema => _.last(schema.klass.split(".")) || "");
