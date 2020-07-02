@@ -1,5 +1,5 @@
 import { D2ApiResponse } from "./common";
-import { D2Api } from "./d2-api";
+import { D2ApiGeneric } from "./d2Api";
 import { Id } from "../schemas";
 
 export interface DataValueSetsPostRequest {
@@ -102,7 +102,7 @@ export type DataValueSetsGetRequest = {
 
 export interface DataValueSetsGetResponse {
     dataSet: Id;
-    completeDate: string;
+    completeDate?: string;
     period: string;
     orgUnit: Id;
     dataValues: Array<DataValueSetsDataValue>;
@@ -122,11 +122,13 @@ export interface DataValueSetsDataValue {
     followup: boolean;
 }
 
-export default class DataValues {
-    constructor(public d2Api: D2Api) {}
+export class DataValues {
+    constructor(public d2Api: D2ApiGeneric) {}
 
     getSet(params: DataValueSetsGetRequest): D2ApiResponse<DataValueSetsGetResponse> {
-        return this.d2Api.get<DataValueSetsGetResponse>("/dataValueSets", params);
+        return this.d2Api
+            .get<DataValueSetsGetResponse>("/dataValueSets", params)
+            .map(res => ({ dataValues: [], ...res.data }));
     }
 
     postSet(

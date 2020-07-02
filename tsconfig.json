@@ -12,9 +12,10 @@
         "isolatedModules": false,
         "jsx": "preserve",
         "noUnusedParameters": true,
-        "noUnusedLocals": true,
+        "noUnusedLocals": false,
         "declaration": true,
         "outDir": "build",
+        "experimentalDecorators": true,
         "lib": ["dom", "dom.iterable", "esnext"]
     },
     "include": ["src"]
