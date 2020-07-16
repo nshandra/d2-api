@@ -120,3 +120,20 @@ export type Preset<Model, Properties> = OmitNever<
             : Model[K];
     }
 >;
+
+export interface D2SchemaProperties {
+    klass: string;
+    name: string;
+    plural: string;
+    metadata: boolean;
+    displayName: string;
+    shareable: boolean;
+    relativeApiEndpoint?: string;
+    collectionName: string;
+    nameableObject: boolean;
+    translatable: boolean;
+    identifiableObject: boolean;
+    dataShareable: boolean;
+    persisted: boolean;
+    embeddedObject: boolean;
+}

@@ -1,16 +1,17 @@
-import { SelectedPick, GetFields, D2ModelSchemaBase } from "./inference";
-import { D2ApiGeneric } from "./d2Api";
+import { D2SchemaProperties } from "../schemas";
 import {
-    GetOptionValue,
-    processFieldsFilterParams,
+    D2ApiDefinitionBase,
     D2ApiResponse,
-    Params,
+    ErrorReport,
+    GetOptionValue,
     HttpResponse,
+    Params,
     PartialModel,
     PartialPersistedModel,
-    ErrorReport,
-    D2ApiDefinitionBase,
+    processFieldsFilterParams,
 } from "./common";
+import { D2ApiGeneric } from "./d2Api";
+import { D2ModelSchemaBase, GetFields, SelectedPick } from "./inference";
 
 type ModelResponse = HttpResponse<{
     responseType: "ObjectReport";
@@ -69,7 +70,11 @@ export class Model<
     D2ApiDefinition extends D2ApiDefinitionBase,
     D2ModelSchema extends D2ModelSchemaBase
 > {
-    constructor(private d2Api: D2ApiGeneric, public modelName: D2ModelSchema["name"]) {}
+    constructor(private d2Api: D2ApiGeneric, public schema: D2SchemaProperties) {}
+
+    get modelName(): string {
+        return this.schema.plural;
+    }
 
     get<
         Options extends GetOptions<D2ApiDefinition, D2ModelSchema> & { paging?: true | undefined },
