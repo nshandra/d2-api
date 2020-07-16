@@ -252,9 +252,6 @@ async function generateSchema(version: string) {
         export type D2Model =
             ${models.map(model => getModelName(model.klass)).join(" | ")}
 
-        export const modelKeys: Array<keyof D2ModelSchemas> =
-            ${JSON.stringify(models.map(model => model.plural))}
-
         export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> =
             ${JSON.stringify(
                 _.keyBy(models.map(model => _.pick(model, schemaProperties)), "plural")
