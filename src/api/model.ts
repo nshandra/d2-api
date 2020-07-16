@@ -72,7 +72,7 @@ export class Model<
 > {
     constructor(private d2Api: D2ApiGeneric, public schema: D2SchemaProperties) {}
 
-    get modelName(): string {
+    get modelName(): D2ModelSchema["name"] {
         return this.schema.plural;
     }
 
