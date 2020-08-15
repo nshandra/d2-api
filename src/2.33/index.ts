@@ -1,4 +1,4 @@
-import { D2ModelSchemas, modelKeys } from "./schemas";
+import { D2ModelSchemas, models } from "./schemas";
 import { MetadataPickBase, MetadataPayloadBase } from "../api/metadata";
 import { D2ApiDefinitionBase, FilterBase } from "../api/common";
 import { D2ApiVersioned, D2ApiOptions } from "../api/d2Api";
@@ -16,6 +16,6 @@ export type MetadataPayload = MetadataPayloadBase<D2ModelSchemas>;
 
 export class D2Api extends D2ApiVersioned<D2ApiDefinition> {
     public constructor(options?: D2ApiOptions) {
-        super(options, modelKeys);
+        super(models, options);
     }
 }

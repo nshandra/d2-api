@@ -1,4 +1,5 @@
 import Axios, { AxiosBasicCredentials, AxiosInstance, AxiosRequestConfig } from "axios";
+import { D2SchemaProperties } from "../schemas";
 import { cache, defineLazyCachedProperty } from "../utils/cache";
 import { joinPath, prepareConnection } from "../utils/connection";
 import { Analytics } from "./analytics";
@@ -6,11 +7,11 @@ import { D2ApiDefinitionBase, D2ApiResponse, Params } from "./common";
 import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
 import { DataValues } from "./dataValues";
+import { Email } from "./email";
+import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
 import { System } from "./system";
-import { Email } from "./email";
-import { MessageConversations } from "./messageConversations";
 
 export interface D2ApiOptions {
     baseUrl?: string;
@@ -82,7 +83,11 @@ export abstract class D2ApiVersioned<
     ): IndexedModels<D2ApiDefinition> {
         let indexedModels: Partial<IndexedModels<D2ApiDefinition>> = {};
         modelKeys.forEach(key => {
-            defineLazyCachedProperty(indexedModels, key, () => new modelClass(this, key));
+            defineLazyCachedProperty(
+                indexedModels,
+                key,
+                () => new modelClass(this, this.schemaModels[key])
+            );
         });
         return indexedModels as IndexedModels<D2ApiDefinition>;
     }
@@ -91,8 +96,15 @@ export abstract class D2ApiVersioned<
         return new DataStore(this, namespace);
     }
 
-    constructor(options?: D2ApiOptions, private modelKeys?: (keyof D2ApiDefinition["schemas"])[]) {
+    constructor(
+        private schemaModels: Record<keyof D2ApiDefinition["schemas"], D2SchemaProperties>,
+        options?: D2ApiOptions
+    ) {
         super(options);
+    }
+
+    get modelKeys(): Array<keyof D2ApiDefinition["schemas"]> | undefined {
+        return this.schemaModels ? Object.keys(this.schemaModels) : undefined;
     }
 
     @cache()

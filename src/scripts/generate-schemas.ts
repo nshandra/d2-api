@@ -1,8 +1,9 @@
 import axios from "axios";
-import path from "path";
-import _ from "lodash";
-import prettier from "prettier";
 import fs from "fs";
+import _ from "lodash";
+import path from "path";
+import prettier from "prettier";
+import { D2SchemaProperties } from "../schemas";
 import { joinPath } from "../utils/connection";
 
 interface SchemaProperty {
@@ -18,18 +19,31 @@ interface SchemaProperty {
     owner: boolean;
 }
 
-interface Schema {
-    klass: string;
+interface Schema extends D2SchemaProperties {
     properties: SchemaProperty[];
-    name: string;
-    plural: string;
-    metadata: boolean;
     href: string;
 }
 
 interface Schemas {
     [className: string]: Schema;
 }
+
+const schemaProperties: Array<keyof D2SchemaProperties> = [
+    "klass",
+    "shareable",
+    "metadata",
+    "relativeApiEndpoint",
+    "plural",
+    "displayName",
+    "collectionName",
+    "nameableObject",
+    "translatable",
+    "identifiableObject",
+    "dataShareable",
+    "name",
+    "persisted",
+    "embeddedObject",
+];
 
 const interfaceFromClass: _.Dictionary<string> = {
     "org.hisp.dhis.security.acl.Access": "D2Access",
@@ -193,7 +207,7 @@ async function generateSchema(version: string) {
         /* eslint-disable */
 
         import {
-            Id, Preset, FieldPresets,
+            Id, Preset, FieldPresets, D2SchemaProperties,
             D2Access, D2Translation, D2Geometry,  D2Style,
             D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression
         } from "../schemas/base";
@@ -238,8 +252,10 @@ async function generateSchema(version: string) {
         export type D2Model =
             ${models.map(model => getModelName(model.klass)).join(" | ")}
 
-        export const modelKeys: Array<keyof D2ModelSchemas> =
-            ${JSON.stringify(models.map(model => model.plural))}
+        export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> =
+            ${JSON.stringify(
+                _.keyBy(models.map(model => _.pick(model, schemaProperties)), "plural")
+            )}
 
         export type D2ModelSchemas = {
             ${models
