@@ -3,24 +3,10 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 import prettier from "prettier";
-import { D2SchemaProperties } from "../schemas";
+import { D2SchemaFieldProperties, D2SchemaProperties, SchemaProperty } from "../schemas";
 import { joinPath } from "../utils/connection";
 
-interface SchemaProperty {
-    name: string;
-    collectionName?: string;
-    fieldName?: string;
-    propertyType: string;
-    itemPropertyType?: string;
-    constants?: string[];
-    klass: string;
-    itemKlass?: string;
-    persisted: boolean;
-    owner: boolean;
-}
-
 interface Schema extends D2SchemaProperties {
-    properties: SchemaProperty[];
     href: string;
 }
 
@@ -43,6 +29,22 @@ const schemaProperties: Array<keyof D2SchemaProperties> = [
     "name",
     "persisted",
     "embeddedObject",
+];
+
+const schemaFieldProperties: Array<keyof D2SchemaFieldProperties> = [
+    "propertyType",
+    "attribute",
+    "simple",
+    "owner",
+    "readable",
+    "identifiableObject",
+    "embeddedObject",
+    "collection",
+    "klass",
+    "itemKlass",
+    "collectionWrapping",
+    "itemPropertyType",
+    "cascade",
 ];
 
 const interfaceFromClass: _.Dictionary<string> = {
@@ -254,7 +256,17 @@ async function generateSchema(version: string) {
 
         export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> =
             ${JSON.stringify(
-                _.keyBy(models.map(model => _.pick(model, schemaProperties)), "plural")
+                _.keyBy(
+                    models.map(model => {
+                        const schema = _.pick(model, schemaProperties);
+                        const properties = model.properties.map(props =>
+                            _.pick(props, schemaFieldProperties)
+                        );
+
+                        return { ...schema, properties };
+                    }),
+                    "plural"
+                )
             )}
 
         export type D2ModelSchemas = {
