@@ -151,7 +151,9 @@ export interface SchemaProperty {
     owner: boolean;
 }
 
-export interface D2SchemaFieldProperties extends SchemaProperty {
+export interface D2SchemaFieldProperties extends Partial<SchemaProperty> {
+    propertyType: D2SchemaTypes | "COLLECTION";
+    owner: boolean;
     attribute: boolean;
     simple: boolean;
     readable: boolean;
@@ -159,7 +161,7 @@ export interface D2SchemaFieldProperties extends SchemaProperty {
     embeddedObject: boolean;
     collection: boolean;
     collectionWrapping?: true;
-    cascade?: "none" | "all" | "all-delete-orphan";
+    cascade?: string;
 }
 
 export interface D2SchemaProperties {
