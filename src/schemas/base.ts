@@ -151,9 +151,7 @@ export interface SchemaProperty {
     owner: boolean;
 }
 
-export interface D2SchemaFieldProperties extends Partial<SchemaProperty> {
-    propertyType: D2SchemaTypes | "COLLECTION";
-    owner: boolean;
+export interface D2SchemaFieldProperties extends SchemaProperty {
     attribute: boolean;
     simple: boolean;
     readable: boolean;
