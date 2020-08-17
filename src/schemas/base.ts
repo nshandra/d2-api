@@ -121,6 +121,34 @@ export type Preset<Model, Properties> = OmitNever<
     }
 >;
 
+export type D2SchemaTypes =
+    | "COLLECTION"
+    | "REFERENCE"
+    | "BOOLEAN"
+    | "TEXT"
+    | "DATE"
+    | "IDENTIFIER"
+    | "URL"
+    | "CONSTANT"
+    | "INTEGER"
+    | "COMPLEX";
+
+export interface D2SchemaFieldProperties {
+    propertyType: D2SchemaTypes;
+    attribute: boolean;
+    simple: boolean;
+    owner: boolean;
+    readable: boolean;
+    identifiableObject: boolean;
+    embeddedObject: boolean;
+    collection: boolean;
+    klass: string;
+    itemKlass?: string;
+    collectionWrapping?: true;
+    itemPropertyType?: Omit<D2SchemaTypes, "COLLECTION">;
+    cascade?: "none" | "all" | "all-delete-orphan";
+}
+
 export interface D2SchemaProperties {
     klass: string;
     name: string;
@@ -136,4 +164,5 @@ export interface D2SchemaProperties {
     dataShareable: boolean;
     persisted: boolean;
     embeddedObject: boolean;
+    properties: D2SchemaFieldProperties[];
 }
