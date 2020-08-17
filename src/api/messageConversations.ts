@@ -6,7 +6,7 @@ export interface PostMessage {
     subject: string;
     text: string;
     users: Ref[];
-    userGrousp?: Ref[];
+    userGroups?: Ref[];
     organisationUnits?: Ref[];
 }
 
