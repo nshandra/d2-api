@@ -32,6 +32,11 @@ const schemaProperties: Array<keyof D2SchemaProperties> = [
 ];
 
 const schemaFieldProperties: Array<keyof D2SchemaFieldProperties> = [
+    "collectionName",
+    "name",
+    "persisted",
+    "fieldName",
+    "constants",
     "propertyType",
     "attribute",
     "simple",
