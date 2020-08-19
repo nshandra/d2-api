@@ -185,7 +185,7 @@ function joinStr(xs: string[]): string {
 
 const instances = {
     baseUrl: "https://admin:district@play.dhis2.org/",
-    versions: ["2.30", "2.31", "2.32", "2.33"],
+    versions: ["2.30", "2.31", "2.32", "2.33", "2.34"],
 };
 
 async function generateSchema(version: string) {
