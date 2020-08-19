@@ -198,6 +198,7 @@ const instances: Instance[] = [
     { version: "2.31", url: "http://admin:district@localhost:8031", isDeprecated: true },
     { version: "2.32", url: "https://admin:district@play.dhis2.org/2.32" },
     { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33" },
+    { version: "2.34", url: "https://admin:district@play.dhis2.org/2.34" },
 ];
 
 async function generateSchema(instance: Instance) {
