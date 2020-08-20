@@ -1,7 +1,7 @@
 {
     "name": "d2-api",
     "description": "Typed wrapper over DHIS2 API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "license": "GPL-3.0",
     "author": "EyeSeeTea team",
     "repository": {
@@ -27,7 +27,7 @@
         "@types/prettier": "^1.18.3",
         "@types/qs": "^6.5.3",
         "argparse": "^1.0.10",
-        "axios": "^0.19.0",
+        "axios": "0.19.2",
         "axios-debug-log": "^0.6.2",
         "axios-mock-adapter": "^1.17.0",
         "btoa": "^1.2.1",
