@@ -151,15 +151,13 @@ export interface SchemaProperty {
     owner: boolean;
 }
 
-export interface D2SchemaFieldProperties extends SchemaProperty {
-    attribute: boolean;
-    simple: boolean;
-    readable: boolean;
-    identifiableObject: boolean;
-    embeddedObject: boolean;
-    collection: boolean;
-    collectionWrapping?: true;
-    cascade?: string;
+export interface D2SchemaFieldProperties {
+    name: string;
+    fieldName?: string;
+    propertyType: D2SchemaTypes | "COLLECTION";
+    itemPropertyType?: D2SchemaTypes;
+    klass: string;
+    itemKlass?: string;
 }
 
 export interface D2SchemaProperties {

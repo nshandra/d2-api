@@ -8,6 +8,18 @@ import { joinPath } from "../utils/connection";
 
 interface Schema extends D2SchemaProperties {
     href: string;
+    properties: SchemaFieldProperties[];
+}
+
+export interface SchemaFieldProperties extends SchemaProperty {
+    attribute: boolean;
+    simple: boolean;
+    readable: boolean;
+    identifiableObject: boolean;
+    embeddedObject: boolean;
+    collection: boolean;
+    collectionWrapping?: true;
+    cascade?: string;
 }
 
 interface Schemas {
@@ -32,24 +44,12 @@ const schemaProperties: Array<keyof D2SchemaProperties> = [
 ];
 
 const schemaFieldProperties: Array<keyof D2SchemaFieldProperties> = [
-    "collectionName",
     "name",
-    "persisted",
     "fieldName",
-    "constants",
     "propertyType",
-    "attribute",
-    "simple",
-    "owner",
-    "readable",
-    "identifiableObject",
-    "embeddedObject",
-    "collection",
+    "itemPropertyType",
     "klass",
     "itemKlass",
-    "collectionWrapping",
-    "itemPropertyType",
-    "cascade",
 ];
 
 const interfaceFromClass: _.Dictionary<string> = {
