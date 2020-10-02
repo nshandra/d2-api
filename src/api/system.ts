@@ -9,18 +9,18 @@ export class System {
 
     getIds(options: { limit?: number }): D2ApiResponse<Id[]> {
         return this.d2Api
-            .request<{ codes: Id[] }>({ method: "GET", url: `/system/id`, params: options })
+            .request<{ codes: Id[] }>({ method: "get", url: `/system/id`, params: options })
             .map(res => (res.data && res.data.codes) || []);
     }
 
     get info(): D2ApiResponse<SystemInfo> {
-        return this.d2Api.request({ method: "GET", url: `/system/info` });
+        return this.d2Api.request({ method: "get", url: `/system/info` });
     }
 
     ping(): D2ApiResponse<boolean> {
         return this.d2Api
             .request({
-                method: "GET",
+                method: "get",
                 url: `/system/info`,
                 validateStatus: (status: number) => [200, 302, 401].includes(status),
             })
@@ -29,21 +29,21 @@ export class System {
 
     getTaskEntries(selector: TaskSelector): D2ApiResponse<TaskEntry[]> {
         return this.d2Api.request({
-            method: "GET",
+            method: "get",
             url: _.compact(["/system/tasks", selector.category, selector.id]).join("/"),
         });
     }
 
     get tasks(): D2ApiResponse<Tasks> {
-        return this.d2Api.request({ method: "GET", url: `/system/tasks` });
+        return this.d2Api.request({ method: "get", url: `/system/tasks` });
     }
 
     get flags(): D2ApiResponse<SystemItem[]> {
-        return this.d2Api.request({ method: "GET", url: `/system/flags` });
+        return this.d2Api.request({ method: "get", url: `/system/flags` });
     }
 
     get styles(): D2ApiResponse<SystemItem[]> {
-        return this.d2Api.request({ method: "GET", url: `/system/styles` });
+        return this.d2Api.request({ method: "get", url: `/system/styles` });
     }
 }
 

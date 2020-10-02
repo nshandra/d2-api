@@ -1,5 +1,5 @@
-import { D2ApiResponse } from "./api-response";
 import { D2ApiGeneric } from "./d2Api";
+import { D2ApiResponse } from "./common";
 
 /* https://docs.dhis2.org/master/en/developer/html/webapi_email.html */
 

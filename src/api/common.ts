@@ -1,8 +1,8 @@
 import { Ref } from "./../schemas/base";
 import _ from "lodash";
 import { Selector, D2ModelSchemaBase } from "./inference";
-
-export { D2ApiResponse } from "./api-response";
+import { NetworkResponse } from "../repositories/NetworkRepository";
+import { CancelableResponse } from "../repositories/NetworkResponse";
 
 export interface GetOptionValue<
     D2ApiDefinition extends D2ApiDefinitionBase,
@@ -129,11 +129,7 @@ export function processFieldsFilterParams(
     });
 }
 
-export interface D2Response<Data> {
-    status: number;
-    data: Data;
-    headers: _.Dictionary<string>;
-}
+export type D2Response<Data> = NetworkResponse<Data>;
 
 export type D2ApiRequestParamsValue = string | number | boolean | undefined;
 
@@ -173,3 +169,7 @@ export interface D2ApiDefinitionBase {
     schemas: D2ModelSchemasBase;
     filter: Record<string, any>;
 }
+
+export type D2ApiResponse<Data> = CancelableResponse<Data>;
+
+export const D2ApiResponse = CancelableResponse;

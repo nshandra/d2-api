@@ -1,9 +1,8 @@
-import Axios, { AxiosBasicCredentials, AxiosInstance, AxiosRequestConfig } from "axios";
 import { D2SchemaProperties } from "../schemas";
 import { cache, defineLazyCachedProperty } from "../utils/cache";
-import { joinPath, prepareConnection } from "../utils/connection";
+import { joinPath } from "../utils/connection";
 import { Analytics } from "./analytics";
-import { D2ApiDefinitionBase, D2ApiResponse, Params } from "./common";
+import { D2ApiDefinitionBase, Params } from "./common";
 import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
 import { DataValues } from "./dataValues";
@@ -12,44 +11,39 @@ import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
 import { System } from "./system";
+import { D2ApiOptions as D2ApiOptions_, IndexedModels, D2ApiRequest } from "./types";
+import { AxiosNetworkRepository } from "../data/AxiosNetworkRepository";
+import { FetchNetworkRepository } from "../data/FetchNetworkRepository";
+import { CancelableResponse } from "../repositories/NetworkResponse";
+import { NetworkRepository } from "../repositories/NetworkRepository";
 
-export interface D2ApiOptions {
-    baseUrl?: string;
-    apiVersion?: number;
-    auth?: AxiosBasicCredentials;
-}
-
-export type IndexedModels<D2ApiDefinition extends D2ApiDefinitionBase> = {
-    [ModelKey in keyof D2ApiDefinition["schemas"]]: Model<
-        D2ApiDefinition,
-        D2ApiDefinition["schemas"][ModelKey]
-    >;
-};
+export type D2ApiOptions = D2ApiOptions_;
 
 export class D2ApiGeneric {
     public baseUrl: string;
     public apiPath: string;
-    public connection: AxiosInstance;
-    public baseConnection: AxiosInstance;
+    apiConnection: NetworkRepository;
+    baseConnection: NetworkRepository;
 
     public constructor(options?: D2ApiOptions) {
-        const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
+        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend } = options || {};
         this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
-        this.connection = prepareConnection(this.apiPath, auth);
-        this.baseConnection = prepareConnection(baseUrl, auth);
+        const NetworkRepositoryImpl =
+            backend === "fetch" ? FetchNetworkRepository : AxiosNetworkRepository;
+        console.log({ backend, NetworkRepositoryImpl });
+        this.apiConnection = new NetworkRepositoryImpl(this.apiPath, auth);
+        this.baseConnection = new NetworkRepositoryImpl(baseUrl, auth);
     }
 
-    public request<T>(config: AxiosRequestConfig): D2ApiResponse<T> {
-        const { token: cancelToken, cancel } = Axios.CancelToken.source();
-        const axiosResponse = this.connection({ cancelToken, ...config });
-        const apiResponse = axiosResponse.then(response_ => ({
-            status: response_.status,
-            data: response_.data as T,
-            headers: response_.headers,
-        }));
+    public getMockAdapter() {
+        return this.apiConnection.getMockAdapter();
+    }
 
-        return D2ApiResponse.build({ cancel, response: apiResponse });
+    public request<T>(options: D2ApiRequest): CancelableResponse<T> {
+        const { skipApiPrefix = false, ...networkOptions } = options;
+        const connection = skipApiPrefix ? this.baseConnection : this.apiConnection;
+        return connection.request(networkOptions);
     }
 
     public get<T>(url: string, params?: Params) {
@@ -81,7 +75,7 @@ export abstract class D2ApiVersioned<
         modelClass: any,
         modelKeys: Array<keyof D2ApiDefinition["schemas"]>
     ): IndexedModels<D2ApiDefinition> {
-        let indexedModels: Partial<IndexedModels<D2ApiDefinition>> = {};
+        const indexedModels: Partial<IndexedModels<D2ApiDefinition>> = {};
         modelKeys.forEach(key => {
             defineLazyCachedProperty(
                 indexedModels,
