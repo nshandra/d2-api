@@ -12,9 +12,11 @@ import { cache } from "../utils/cache";
 
 export class AxiosNetworkRepository implements NetworkRepository {
     private instance: AxiosInstance;
+    private mockAdapter: MockAdapter;
 
     constructor(baseUrl: string, auth?: NetworkCredentials) {
         this.instance = this.getAxiosInstance(baseUrl, auth);
+        this.mockAdapter = new MockAdapter(this.instance);
     }
 
     request<Data>(options: NetworkRequest): CancelableResponse<Data> {
@@ -29,9 +31,8 @@ export class AxiosNetworkRepository implements NetworkRepository {
         return CancelableResponse.build({ cancel, response: response });
     }
 
-    @cache()
     getMockAdapter(): MockAdapter {
-        return new MockAdapter(this.instance);
+        return this.mockAdapter;
     }
 
     private getAxiosInstance(baseUrl: string, auth?: NetworkCredentials) {

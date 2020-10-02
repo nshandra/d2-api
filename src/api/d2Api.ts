@@ -21,18 +21,17 @@ export type D2ApiOptions = D2ApiOptions_;
 
 export class D2ApiGeneric {
     public baseUrl: string;
-    public apiPath: string;
     apiConnection: NetworkRepository;
     baseConnection: NetworkRepository;
 
     public constructor(options?: D2ApiOptions) {
-        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend } = options || {};
+        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "axios" } =
+            options || {};
         this.baseUrl = baseUrl;
-        this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
+        const apiUrl = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         const NetworkRepositoryImpl =
             backend === "fetch" ? FetchNetworkRepository : AxiosNetworkRepository;
-        console.log({ backend, NetworkRepositoryImpl });
-        this.apiConnection = new NetworkRepositoryImpl(this.apiPath, auth);
+        this.apiConnection = new NetworkRepositoryImpl(apiUrl, auth);
         this.baseConnection = new NetworkRepositoryImpl(baseUrl, auth);
     }
 
