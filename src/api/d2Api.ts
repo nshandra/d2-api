@@ -21,6 +21,7 @@ export type D2ApiOptions = D2ApiOptions_;
 
 export class D2ApiGeneric {
     public baseUrl: string;
+    public apiPath: string;
     apiConnection: NetworkRepository;
     baseConnection: NetworkRepository;
 
@@ -28,10 +29,10 @@ export class D2ApiGeneric {
         const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "axios" } =
             options || {};
         this.baseUrl = baseUrl;
-        const apiUrl = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
+        this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         const NetworkRepositoryImpl =
             backend === "fetch" ? FetchNetworkRepository : AxiosNetworkRepository;
-        this.apiConnection = new NetworkRepositoryImpl(apiUrl, auth);
+        this.apiConnection = new NetworkRepositoryImpl(this.apiPath, auth);
         this.baseConnection = new NetworkRepositoryImpl(baseUrl, auth);
     }
 
