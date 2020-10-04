@@ -22,8 +22,8 @@ export type D2ApiOptions = D2ApiOptions_;
 export class D2ApiGeneric {
     public baseUrl: string;
     public apiPath: string;
-    apiConnection: HttpClientRepository;
     baseConnection: HttpClientRepository;
+    apiConnection: HttpClientRepository;
 
     public constructor(options?: D2ApiOptions) {
         const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "xhr" } =
@@ -32,10 +32,11 @@ export class D2ApiGeneric {
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         const HttpClientRepositoryImpl =
             backend === "fetch" ? FetchHttpClientRepository : AxiosHttpClientRepository;
-        this.apiConnection = new HttpClientRepositoryImpl(this.apiPath, auth);
-        this.baseConnection = new HttpClientRepositoryImpl(baseUrl, auth);
+        this.baseConnection = new HttpClientRepositoryImpl({ baseUrl, auth });
+        this.apiConnection = new HttpClientRepositoryImpl({ baseUrl: this.apiPath, auth });
     }
 
+    @cache()
     public getMockAdapter() {
         return this.apiConnection.getMockAdapter();
     }

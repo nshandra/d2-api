@@ -30,7 +30,12 @@ export interface Credentials {
     password: string;
 }
 
-export interface HttpErrorOptions {
+export interface ConstructorOptions {
+    baseUrl?: string;
+    auth?: Credentials;
+}
+
+interface HttpErrorOptions {
     request: HttpRequest;
     response: HttpResponse<unknown>;
 }

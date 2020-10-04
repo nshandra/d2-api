@@ -5,42 +5,41 @@ import {
     Credentials,
     HttpRequest,
     HttpResponse,
+    ConstructorOptions,
 } from "../repositories/HttpClientRepository";
 import qs from "qs";
 import { CancelableResponse } from "../repositories/CancelableResponse";
-import { cache } from "../utils/cache";
 
 export class AxiosHttpClientRepository implements HttpClientRepository {
     private instance: AxiosInstance;
 
-    constructor(baseUrl: string, auth?: Credentials) {
-        this.instance = this.getAxiosInstance(baseUrl, auth);
+    constructor(options: ConstructorOptions) {
+        this.instance = this.getAxiosInstance(options);
     }
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {
         const { token: cancelToken, cancel } = axios.CancelToken.source();
         const axiosResponse = this.instance({ cancelToken, ...options });
-        const response: Promise<HttpResponse<Data>> = axiosResponse.then(response_ => ({
-            status: response_.status,
-            data: response_.data as Data,
-            headers: response_.headers,
+        const response: Promise<HttpResponse<Data>> = axiosResponse.then(res => ({
+            status: res.status,
+            data: res.data as Data,
+            headers: res.headers,
         }));
 
         return CancelableResponse.build({ cancel, response: response });
     }
 
-    @cache()
     getMockAdapter(): MockAdapter {
         return new MockAdapter(this.instance);
     }
 
-    private getAxiosInstance(baseUrl: string, auth?: Credentials) {
+    private getAxiosInstance(options: ConstructorOptions) {
         return axios.create({
-            baseURL: baseUrl,
-            auth,
-            withCredentials: !auth,
+            baseURL: options.baseUrl,
+            auth: options.auth,
+            withCredentials: !options.auth,
             paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
-            validateStatus: status => status >= 200 && status < 300, // default
+            validateStatus: status => status >= 200 && status < 300,
         });
     }
 }

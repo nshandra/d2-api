@@ -1,7 +1,6 @@
 import { Ref } from "./../schemas/base";
 import _ from "lodash";
 import { Selector, D2ModelSchemaBase } from "./inference";
-import { HttpResponse } from "../repositories/HttpClientRepository";
 import { CancelableResponse } from "../repositories/CancelableResponse";
 
 export interface GetOptionValue<
@@ -128,8 +127,6 @@ export function processFieldsFilterParams(
         [join("filter")]: modelOptions.filter && getFilterAsString(modelOptions.filter),
     });
 }
-
-export type D2Response<Data> = HttpResponse<Data>;
 
 export type D2ApiRequestParamsValue = string | number | boolean | undefined;
 

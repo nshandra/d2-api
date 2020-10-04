@@ -9,13 +9,19 @@ import {
     HttpRequest,
     HttpResponse,
     HttpError,
-    HttpErrorOptions,
+    ConstructorOptions,
 } from "../repositories/HttpClientRepository";
 import { CancelableResponse } from "../repositories/CancelableResponse";
 import { joinPath } from "../utils/connection";
 
 export class FetchHttpClientRepository implements HttpClientRepository {
-    constructor(private baseUrl: string, private auth?: Credentials) {}
+    private baseUrl?: string;
+    private auth?: Credentials;
+
+    constructor(options: ConstructorOptions) {
+        this.baseUrl = options.baseUrl || "";
+        this.auth = options.auth;
+    }
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {
         const controller = new AbortController();
@@ -50,10 +56,7 @@ export class FetchHttpClientRepository implements HttpClientRepository {
             return { status: res.status, data: data, headers: getHeadersRecord(res.headers) };
         });
 
-        return CancelableResponse.build({
-            cancel: () => controller.abort(),
-            response: response,
-        });
+        return CancelableResponse.build({ response, cancel: () => controller.abort() });
     }
 
     getMockAdapter(): MockAdapter {
@@ -76,16 +79,14 @@ function validateStatus2xx(status: number) {
 }
 
 function raiseHttpError(request: HttpRequest, response: Response, body: unknown): Promise<void> {
-    const options: HttpErrorOptions = {
+    throw new HttpError(response.statusText, {
         request: request,
         response: {
             status: response.status,
             headers: getHeadersRecord(response.headers),
             data: body,
         },
-    };
-
-    throw new HttpError(response.statusText, options);
+    });
 }
 
 function getHeadersRecord(headers: Headers) {
