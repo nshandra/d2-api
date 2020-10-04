@@ -1,12 +1,12 @@
 import { Canceler } from "axios";
-import { NetworkResponse } from "./NetworkRepository";
+import { HttpResponse } from "./HttpClientRepository";
 
 export class CancelableResponse<Data> {
-    constructor(public cancel: Canceler, public response: Promise<NetworkResponse<Data>>) {}
+    constructor(public cancel: Canceler, public response: Promise<HttpResponse<Data>>) {}
 
     static build<BuildData>(options: {
         cancel?: Canceler;
-        response: Promise<NetworkResponse<BuildData>>;
+        response: Promise<HttpResponse<BuildData>>;
     }): CancelableResponse<BuildData> {
         const { cancel, response } = options;
         return new CancelableResponse(cancel || noop, response);
@@ -17,11 +17,11 @@ export class CancelableResponse<Data> {
     }
 
     map<MappedData>(
-        mapper: (response: NetworkResponse<Data>) => MappedData
+        mapper: (response: HttpResponse<Data>) => MappedData
     ): CancelableResponse<MappedData> {
         const { cancel, response } = this;
         const mappedResponse = response.then(
-            (response_: NetworkResponse<Data>): NetworkResponse<MappedData> => ({
+            (response_: HttpResponse<Data>): HttpResponse<MappedData> => ({
                 ...response_,
                 data: mapper(response_),
             })
@@ -31,7 +31,7 @@ export class CancelableResponse<Data> {
     }
 
     flatMap<MappedData>(
-        mapper: (response: NetworkResponse<Data>) => CancelableResponse<MappedData>
+        mapper: (response: HttpResponse<Data>) => CancelableResponse<MappedData>
     ): CancelableResponse<MappedData> {
         const { cancel, response } = this;
         let cancel2: Canceler | undefined;

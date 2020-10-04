@@ -12,28 +12,28 @@ import { Metadata } from "./metadata";
 import { Model } from "./model";
 import { System } from "./system";
 import { D2ApiOptions as D2ApiOptions_, IndexedModels, D2ApiRequest } from "./types";
-import { AxiosNetworkRepository } from "../data/AxiosNetworkRepository";
-import { FetchNetworkRepository } from "../data/FetchNetworkRepository";
-import { CancelableResponse } from "../repositories/NetworkResponse";
-import { NetworkRepository } from "../repositories/NetworkRepository";
+import { AxiosHttpClientRepository } from "../data/AxiosHttpClientRepository";
+import { FetchHttpClientRepository } from "../data/FetchHttpClientRepository";
+import { CancelableResponse } from "../repositories/CancelableResponse";
+import { HttpClientRepository } from "../repositories/HttpClientRepository";
 
 export type D2ApiOptions = D2ApiOptions_;
 
 export class D2ApiGeneric {
     public baseUrl: string;
     public apiPath: string;
-    apiConnection: NetworkRepository;
-    baseConnection: NetworkRepository;
+    apiConnection: HttpClientRepository;
+    baseConnection: HttpClientRepository;
 
     public constructor(options?: D2ApiOptions) {
-        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "axios" } =
+        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "xhr" } =
             options || {};
         this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
-        const NetworkRepositoryImpl =
-            backend === "fetch" ? FetchNetworkRepository : AxiosNetworkRepository;
-        this.apiConnection = new NetworkRepositoryImpl(this.apiPath, auth);
-        this.baseConnection = new NetworkRepositoryImpl(baseUrl, auth);
+        const HttpClientRepositoryImpl =
+            backend === "fetch" ? FetchHttpClientRepository : AxiosHttpClientRepository;
+        this.apiConnection = new HttpClientRepositoryImpl(this.apiPath, auth);
+        this.baseConnection = new HttpClientRepositoryImpl(baseUrl, auth);
     }
 
     public getMockAdapter() {
@@ -41,9 +41,9 @@ export class D2ApiGeneric {
     }
 
     public request<T>(options: D2ApiRequest): CancelableResponse<T> {
-        const { skipApiPrefix = false, ...networkOptions } = options;
+        const { skipApiPrefix = false, ...requestOptions } = options;
         const connection = skipApiPrefix ? this.baseConnection : this.apiConnection;
-        return connection.request(networkOptions);
+        return connection.request(requestOptions);
     }
 
     public get<T>(url: string, params?: Params) {

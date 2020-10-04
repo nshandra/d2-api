@@ -1,6 +1,6 @@
 import axios, { Canceler } from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { CancelableResponse } from "../repositories/NetworkResponse";
+import { CancelableResponse } from "../repositories/CancelableResponse";
 
 export type D2ApiDataHookQuery<Data> = Pick<CancelableResponse<Data>, "cancel" | "getData">;
 

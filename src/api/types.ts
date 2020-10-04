@@ -1,4 +1,4 @@
-import { NetworkRequest } from "./../repositories/NetworkRepository";
+import { HttpRequest } from "../repositories/HttpClientRepository";
 import { D2ApiDefinitionBase } from "./common";
 import { Model } from ".";
 
@@ -6,7 +6,7 @@ export interface D2ApiOptions {
     baseUrl?: string;
     apiVersion?: number;
     auth?: { username: string; password: string };
-    backend?: "axios" | "fetch";
+    backend?: "xhr" | "fetch";
 }
 
 export type IndexedModels<D2ApiDefinition extends D2ApiDefinitionBase> = {
@@ -16,6 +16,6 @@ export type IndexedModels<D2ApiDefinition extends D2ApiDefinitionBase> = {
     >;
 };
 
-export interface D2ApiRequest extends NetworkRequest {
+export interface D2ApiRequest extends HttpRequest {
     skipApiPrefix?: boolean;
 }

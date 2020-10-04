@@ -4,4 +4,4 @@ export { D2ApiMock, getMockApiFromClass } from "./testing";
 
 export { ApiContext, useD2, useD2Api } from "./react/context";
 export { useD2ApiData, D2ApiDataHookQuery } from "./react/useD2ApiData";
-export { NetworkError } from "./repositories/NetworkRepository";
+export { HttpError } from "./repositories/HttpClientRepository";
