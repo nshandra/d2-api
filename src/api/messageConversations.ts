@@ -1,7 +1,7 @@
 import { Ref } from "../schemas";
 import { RequireAtLeastOne } from "../utils/types";
 import { D2ApiGeneric } from "./d2Api";
-import { D2ApiResponse } from "../2.30";
+import { D2ApiResponse } from "./common";
 
 interface Message {
     subject: string;
