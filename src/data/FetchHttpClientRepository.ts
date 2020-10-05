@@ -1,17 +1,17 @@
 import MockAdapter from "axios-mock-adapter";
 import btoa from "btoa";
+import "isomorphic-fetch";
 import _ from "lodash";
 import qs from "qs";
-
+import { CancelableResponse } from "../repositories/CancelableResponse";
 import {
-    HttpClientRepository,
+    ConstructorOptions,
     Credentials,
+    HttpClientRepository,
+    HttpError,
     HttpRequest,
     HttpResponse,
-    HttpError,
-    ConstructorOptions,
 } from "../repositories/HttpClientRepository";
-import { CancelableResponse } from "../repositories/CancelableResponse";
 import { joinPath } from "../utils/connection";
 
 export class FetchHttpClientRepository implements HttpClientRepository {
