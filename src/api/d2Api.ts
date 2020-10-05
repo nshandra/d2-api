@@ -1,8 +1,11 @@
+import { AxiosHttpClientRepository } from "../data/AxiosHttpClientRepository";
+import { FetchHttpClientRepository } from "../data/FetchHttpClientRepository";
+import { HttpClientRepository } from "../repositories/HttpClientRepository";
 import { D2SchemaProperties } from "../schemas";
 import { cache, defineLazyCachedProperty } from "../utils/cache";
 import { joinPath } from "../utils/connection";
 import { Analytics } from "./analytics";
-import { D2ApiDefinitionBase, Params } from "./common";
+import { D2ApiDefinitionBase, D2ApiResponse, Params } from "./common";
 import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
 import { DataValues } from "./dataValues";
@@ -11,13 +14,7 @@ import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
 import { System } from "./system";
-import { D2ApiOptions as D2ApiOptions_, IndexedModels, D2ApiRequest } from "./types";
-import { AxiosHttpClientRepository } from "../data/AxiosHttpClientRepository";
-import { FetchHttpClientRepository } from "../data/FetchHttpClientRepository";
-import { CancelableResponse } from "../repositories/CancelableResponse";
-import { HttpClientRepository } from "../repositories/HttpClientRepository";
-
-export type D2ApiOptions = D2ApiOptions_;
+import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
 
 export class D2ApiGeneric {
     public baseUrl: string;
@@ -41,7 +38,7 @@ export class D2ApiGeneric {
         return this.apiConnection.getMockAdapter();
     }
 
-    public request<T>(options: D2ApiRequest): CancelableResponse<T> {
+    public request<T>(options: D2ApiRequest): D2ApiResponse<T> {
         const { skipApiPrefix = false, ...requestOptions } = options;
         const connection = skipApiPrefix ? this.baseConnection : this.apiConnection;
         return connection.request(requestOptions);
@@ -142,3 +139,5 @@ export abstract class D2ApiVersioned<
         return new Email(this);
     }
 }
+
+export { D2ApiOptions };

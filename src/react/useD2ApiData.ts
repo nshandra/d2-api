@@ -1,8 +1,8 @@
 import axios, { Canceler } from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { CancelableResponse } from "../repositories/CancelableResponse";
+import { D2ApiResponse } from "../api/common";
 
-export type D2ApiDataHookQuery<Data> = Pick<CancelableResponse<Data>, "cancel" | "getData">;
+export type D2ApiDataHookQuery<Data> = Pick<D2ApiResponse<Data>, "cancel" | "getData">;
 
 interface D2ApiDataHookState<Data> {
     loading: boolean;

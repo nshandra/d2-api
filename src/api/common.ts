@@ -1,7 +1,6 @@
-import { Ref } from "./../schemas/base";
 import _ from "lodash";
-import { Selector, D2ModelSchemaBase } from "./inference";
-import { CancelableResponse } from "../repositories/CancelableResponse";
+import { Ref } from "./../schemas/base";
+import { D2ModelSchemaBase, Selector } from "./inference";
 
 export interface GetOptionValue<
     D2ApiDefinition extends D2ApiDefinitionBase,
@@ -167,6 +166,4 @@ export interface D2ApiDefinitionBase {
     filter: Record<string, any>;
 }
 
-export type D2ApiResponse<Data> = CancelableResponse<Data>;
-
-export const D2ApiResponse = CancelableResponse;
+export { CancelableResponse as D2ApiResponse } from "../repositories/CancelableResponse";
