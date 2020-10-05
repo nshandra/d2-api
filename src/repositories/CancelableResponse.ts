@@ -1,4 +1,4 @@
-import { Canceler } from "axios";
+import Axios from "axios";
 import { HttpResponse } from "./HttpClientRepository";
 
 export class CancelableResponse<Data> {
@@ -54,3 +54,9 @@ export class CancelableResponse<Data> {
 const noop = () => {
     return;
 };
+
+export type Canceler = (message?: string) => void;
+
+export function isCancel(error: any) {
+    return Axios.isCancel(error) || (error && error.name === "AbortError");
+}
