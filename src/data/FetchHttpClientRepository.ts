@@ -50,12 +50,16 @@ export class FetchHttpClientRepository implements HttpClientRepository {
 
         const fetchResponse = fetch(fullUrl, fetchOptions);
 
-        const response: Promise<HttpResponse<Data>> = fetchResponse.then(async res => {
-            const dataIsJson = (res.headers.get("content-type") || "").includes("json");
-            const data = (await (dataIsJson ? res.json() : res.text())) as Data;
-            if (!validateStatus(res.status)) raiseHttpError(options, res, data);
-            return { status: res.status, data: data, headers: getHeadersRecord(res.headers) };
-        });
+        const response: Promise<HttpResponse<Data>> = fetchResponse
+            .then(async res => {
+                const dataIsJson = (res.headers.get("content-type") || "").includes("json");
+                const data = (await (dataIsJson ? res.json() : res.text())) as Data;
+                if (!validateStatus(res.status)) raiseHttpError(options, res, data);
+                return { status: res.status, data: data, headers: getHeadersRecord(res.headers) };
+            })
+            .catch(error => {
+                throw new HttpError(error.toString(), { request: options });
+            });
 
         return CancelableResponse.build({ response, cancel: () => controller.abort() });
     }

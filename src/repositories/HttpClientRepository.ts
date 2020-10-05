@@ -37,12 +37,12 @@ export interface ConstructorOptions {
 
 interface HttpErrorOptions {
     request: HttpRequest;
-    response: HttpResponse<unknown>;
+    response?: HttpResponse<unknown>;
 }
 
 export class HttpError extends Error implements HttpErrorOptions {
     request: HttpRequest;
-    response: HttpResponse<unknown>;
+    response?: HttpResponse<unknown>;
 
     constructor(message: string, obj: HttpErrorOptions) {
         super(message);
