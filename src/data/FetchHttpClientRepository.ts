@@ -58,6 +58,7 @@ export class FetchHttpClientRepository implements HttpClientRepository {
                 return { status: res.status, data: data, headers: getHeadersRecord(res.headers) };
             })
             .catch(error => {
+                if (error.request) throw error;
                 throw new HttpError(error.toString(), { request: options });
             });
 
@@ -85,7 +86,7 @@ function validateStatus2xx(status: number) {
 
 function raiseHttpError(request: HttpRequest, response: Response, body: unknown): Promise<void> {
     throw new HttpError(response.statusText, {
-        request: request,
+        request,
         response: {
             status: response.status,
             headers: getHeadersRecord(response.headers),
