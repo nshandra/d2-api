@@ -8,7 +8,7 @@ export function getMockApiFromClass<D2Api extends D2ApiGeneric>(apiClass: {
 }): () => { api: D2Api; mock: MockAdapter } {
     return () => {
         const api = new apiClass();
-        const mock = new MockAdapter(api.connection);
+        const mock = api.getMockAdapter();
         return { api, mock };
     };
 }

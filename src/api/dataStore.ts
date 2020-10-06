@@ -9,7 +9,7 @@ export class DataStore {
 
         return d2Api
             .request<string[]>({
-                method: "GET",
+                method: "get",
                 url: `/dataStore/${namespace}`,
                 validateStatus: validate404,
             })
@@ -21,7 +21,7 @@ export class DataStore {
 
         return d2Api
             .request<T>({
-                method: "GET",
+                method: "get",
                 url: `/dataStore/${namespace}/${key}`,
                 validateStatus: validate404,
             })
@@ -34,13 +34,13 @@ export class DataStore {
 
         return d2Api
             .request<void>({
-                method: "PUT",
+                method: "put",
                 ...config,
                 validateStatus: validate404,
             })
             .flatMap(response => {
                 if (response.status === 404) {
-                    return d2Api.request({ method: "POST", ...config });
+                    return d2Api.request({ method: "post", ...config });
                 } else {
                     return D2ApiResponse.build({ response: Promise.resolve(response) });
                 }
@@ -52,7 +52,7 @@ export class DataStore {
 
         return d2Api
             .request({
-                method: "DELETE",
+                method: "delete",
                 url: `/dataStore/${namespace}/${key}`,
                 validateStatus: validate404,
             })
