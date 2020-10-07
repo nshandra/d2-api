@@ -44,6 +44,7 @@ import { D2Api } from "d2-api/2.32"
 const api = new D2Api({
     baseUrl: "https://play.dhis2.org/2.30",
     auth: { username: "admin", password: "district" },
+    timeout: 60 * 1000,
 });
 ```
 

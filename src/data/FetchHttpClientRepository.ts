@@ -4,6 +4,7 @@ import btoa from "btoa";
 import "isomorphic-fetch";
 import _ from "lodash";
 import qs from "qs";
+
 import { CancelableResponse } from "../repositories/CancelableResponse";
 import {
     ConstructorOptions,
@@ -16,17 +17,12 @@ import {
 import { joinPath } from "../utils/connection";
 
 export class FetchHttpClientRepository implements HttpClientRepository {
-    private baseUrl?: string;
-    private auth?: Credentials;
-
-    constructor(options: ConstructorOptions) {
-        this.baseUrl = options.baseUrl || "";
-        this.auth = options.auth;
-    }
+    constructor(public options: ConstructorOptions) {}
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {
         const controller = new AbortController();
-        const { baseUrl, auth } = this;
+        const { baseUrl = "", auth } = this.options;
+        const timeout = options.timeout || this.options.timeout;
         const { method, url, params, data, validateStatus = validateStatus2xx } = options;
 
         const baseHeaders: Record<string, string> = {
@@ -48,6 +44,8 @@ export class FetchHttpClientRepository implements HttpClientRepository {
 
         const fullUrl = joinPath(baseUrl, url) + getQueryStrings(params);
 
+        // Fetch API has no timeout mechanism, implement with a setTimeout + controller.abort
+        const timeoutId = timeout ? setTimeout(() => controller.abort(), timeout) : null;
         const fetchResponse = fetch(fullUrl, fetchOptions);
 
         const response: Promise<HttpResponse<Data>> = fetchResponse
@@ -60,7 +58,8 @@ export class FetchHttpClientRepository implements HttpClientRepository {
             .catch(error => {
                 if (error.request) throw error;
                 throw new HttpError(error.toString(), { request: options });
-            });
+            })
+            .finally(() => (timeoutId !== null ? clearTimeout(timeoutId) : null));
 
         return CancelableResponse.build({ response, cancel: () => controller.abort() });
     }
