@@ -7,6 +7,7 @@ export interface D2ApiOptions {
     apiVersion?: number;
     auth?: { username: string; password: string };
     backend?: "xhr" | "fetch";
+    timeout?: number;
 }
 
 export type IndexedModels<D2ApiDefinition extends D2ApiDefinitionBase> = {

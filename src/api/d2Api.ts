@@ -23,14 +23,14 @@ export class D2ApiGeneric {
     apiConnection: HttpClientRepository;
 
     public constructor(options?: D2ApiOptions) {
-        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "xhr" } =
+        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "xhr", timeout } =
             options || {};
         this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
         const HttpClientRepositoryImpl =
             backend === "fetch" ? FetchHttpClientRepository : AxiosHttpClientRepository;
-        this.baseConnection = new HttpClientRepositoryImpl({ baseUrl, auth });
-        this.apiConnection = new HttpClientRepositoryImpl({ baseUrl: this.apiPath, auth });
+        this.baseConnection = new HttpClientRepositoryImpl({ baseUrl, auth, timeout });
+        this.apiConnection = new HttpClientRepositoryImpl({ baseUrl: this.apiPath, auth, timeout });
     }
 
     @cache()

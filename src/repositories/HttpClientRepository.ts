@@ -1,4 +1,3 @@
-import { HttpRequest } from "./HttpClientRepository";
 import MockAdapter from "axios-mock-adapter";
 import { CancelableResponse } from "./CancelableResponse";
 
@@ -17,6 +16,7 @@ export interface HttpRequest {
     params?: Record<string, ParamValue | ParamValue[]>;
     data?: unknown;
     validateStatus?(status: number): boolean;
+    timeout?: number;
 }
 
 export interface HttpResponse<Data> {
@@ -33,6 +33,7 @@ export interface Credentials {
 export interface ConstructorOptions {
     baseUrl?: string;
     auth?: Credentials;
+    timeout?: number;
 }
 
 interface HttpErrorOptions {

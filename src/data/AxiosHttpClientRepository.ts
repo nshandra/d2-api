@@ -1,13 +1,13 @@
 import MockAdapter from "axios-mock-adapter";
 import axios, { AxiosInstance } from "axios";
+import qs from "qs";
+
 import {
     HttpClientRepository,
-    Credentials,
     HttpRequest,
     HttpResponse,
     ConstructorOptions,
 } from "../repositories/HttpClientRepository";
-import qs from "qs";
 import { CancelableResponse } from "../repositories/CancelableResponse";
 
 export class AxiosHttpClientRepository implements HttpClientRepository {
@@ -40,6 +40,7 @@ export class AxiosHttpClientRepository implements HttpClientRepository {
             withCredentials: !options.auth,
             paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
             validateStatus: status => status >= 200 && status < 300,
+            timeout: options.timeout,
         });
     }
 }
