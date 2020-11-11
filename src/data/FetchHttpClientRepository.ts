@@ -110,5 +110,5 @@ function getCharset(headers: _.Dictionary<string>): string {
     if (!contentType) return "utf-8";
 
     const contentTypes = _.fromPairs(contentType.split(";").map(type => type.split("=")));
-    return contentTypes["charset"] || "uft-8";
+    return contentTypes["charset"] || "utf-8";
 }
