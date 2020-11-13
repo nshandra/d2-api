@@ -195,7 +195,7 @@ type Instance = { version: string; url: string };
 const instances: Instance[] = [
     { version: "2.30", url: "http://admin:district@localhost:8030" },
     { version: "2.31", url: "http://admin:district@localhost:8031" },
-    { version: "2.32", url: "https://admin:district@play.dhis2.org/android-previous2" },
+    { version: "2.32", url: "https://admin:district@play.dhis2.org/2.32" },
     { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33" },
 ];
 
