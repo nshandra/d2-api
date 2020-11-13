@@ -72,7 +72,7 @@ const interfaceFromClass: _.Dictionary<string> = {
     "org.hisp.dhis.period.Period": "any",
     "org.hisp.dhis.period.RelativePeriods": "any",
     "org.hisp.dhis.programstagefilter.EventQueryCriteria": "any",
-    "org.hisp.dhis.relationship.RelationshipConstraint": "any",
+    "org.hisp.dhis.relationship.RelationshipConstraint": "D2RelationshipConstraint",
     "org.hisp.dhis.relationship.RelationshipItem": "any",
     "org.hisp.dhis.render.DeviceRenderTypeMap": "any",
     "org.hisp.dhis.reporttable.ReportParams": "any",
@@ -220,7 +220,8 @@ async function generateSchema(instance: Instance) {
         import {
             Id, Preset, FieldPresets, D2SchemaProperties,
             D2Access, D2Translation, D2Geometry,  D2Style,
-            D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression
+            D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression,
+            D2RelationshipConstraint
         } from "../schemas/base";
 
         ${schemas
