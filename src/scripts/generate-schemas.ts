@@ -190,16 +190,20 @@ function joinStr(xs: string[]): string {
     return xs.map(quote).join(" | ");
 }
 
-const instances = {
-    baseUrl: "https://admin:district@play.dhis2.org/",
-    versions: ["2.30", "2.31", "2.32", "2.33"],
-};
+type Instance = { version: string; url: string };
 
-async function generateSchema(version: string) {
-    const url = instances.baseUrl + version;
+const instances: Instance[] = [
+    { version: "2.30", url: "http://admin:district@localhost:8030" },
+    { version: "2.31", url: "http://admin:district@localhost:8031" },
+    { version: "2.32", url: "https://admin:district@play.dhis2.org/android-previous2" },
+    { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33" },
+];
 
+async function generateSchema(instance: Instance) {
+    const { version, url } = instance;
     const schemaUrl = joinPath(url, "/api/schemas.json?fields=:all,metadata");
     console.debug(`GET ${schemaUrl}`);
+
     const { schemas } = (await axios.get(schemaUrl, {
         validateStatus: (status: number) => status >= 200 && status < 300,
     })).data as { schemas: Schema[] };
@@ -299,9 +303,9 @@ async function generateSchema(version: string) {
 }
 
 async function generateSchemas() {
-    for (const version of instances.versions) {
-        console.log(`Get schemas for ${version}`);
-        await generateSchema(version);
+    for (const instance of instances) {
+        console.log(`Get schemas for ${instance.version}`);
+        await generateSchema(instance);
     }
 }
 
