@@ -5,6 +5,7 @@ import path from "path";
 import prettier from "prettier";
 import { D2SchemaFieldProperties, D2SchemaProperties, SchemaProperty } from "../schemas";
 import { joinPath } from "../utils/connection";
+import { ArgumentParser } from "argparse";
 
 interface Schema extends D2SchemaProperties {
     href: string;
@@ -190,11 +191,11 @@ function joinStr(xs: string[]): string {
     return xs.map(quote).join(" | ");
 }
 
-type Instance = { version: string; url: string };
+type Instance = { version: string; url: string; isDeprecated?: boolean };
 
 const instances: Instance[] = [
-    { version: "2.30", url: "http://admin:district@localhost:8030" },
-    { version: "2.31", url: "http://admin:district@localhost:8031" },
+    { version: "2.30", url: "http://admin:district@localhost:8030", isDeprecated: true },
+    { version: "2.31", url: "http://admin:district@localhost:8031", isDeprecated: true },
     { version: "2.32", url: "https://admin:district@play.dhis2.org/2.32" },
     { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33" },
 ];
@@ -303,10 +304,12 @@ async function generateSchema(instance: Instance) {
     console.log(`Written: ${schemasPath}`);
 }
 
-async function generateSchemas() {
+async function generateSchemas(options: { includeDeprecated: boolean }) {
     for (const instance of instances) {
-        console.log(`Get schemas for ${instance.version}`);
-        await generateSchema(instance);
+        if (!instance.isDeprecated || options.includeDeprecated) {
+            console.log(`Get schemas for ${instance.version}`);
+            await generateSchema(instance);
+        }
     }
 }
 
@@ -315,4 +318,14 @@ function logErrorAndExit(err: any) {
     process.exit(1);
 }
 
-generateSchemas().catch(logErrorAndExit);
+const parser = new ArgumentParser({
+    description: "Generate schemas from running DHIS2 instances",
+});
+
+parser.add_argument("--deprecated", {
+    help: "Generate also deprecated versions",
+    action: "store_true",
+});
+
+const args = parser.parse_args();
+generateSchemas({ includeDeprecated: args.deprecated }).catch(logErrorAndExit);
