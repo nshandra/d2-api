@@ -2,7 +2,11 @@ import { D2ApiResponse } from "./common";
 import { D2ApiGeneric } from "./d2Api";
 
 export class DataStore {
-    constructor(public d2Api: D2ApiGeneric, public namespace: string) {}
+    private endpoint: string;
+
+    constructor(public d2Api: D2ApiGeneric, type: DataStoreType, public namespace: string) {
+        this.endpoint = type === "user" ? "userDataStore" : "dataStore";
+    }
 
     getKeys(): D2ApiResponse<string[]> {
         const { d2Api, namespace } = this;
@@ -10,7 +14,7 @@ export class DataStore {
         return d2Api
             .request<string[]>({
                 method: "get",
-                url: `/dataStore/${namespace}`,
+                url: `/${this.endpoint}/${namespace}`,
                 validateStatus: validate404,
             })
             .map(response => (response.status === 404 ? [] : response.data));
@@ -22,7 +26,7 @@ export class DataStore {
         return d2Api
             .request<T>({
                 method: "get",
-                url: `/dataStore/${namespace}/${key}`,
+                url: `/${this.endpoint}/${namespace}/${key}`,
                 validateStatus: validate404,
             })
             .map(response => (response.status === 404 ? undefined : response.data));
@@ -30,7 +34,7 @@ export class DataStore {
 
     save(key: string, value: object): D2ApiResponse<void> {
         const { d2Api, namespace } = this;
-        const config = { url: `/dataStore/${namespace}/${key}`, data: value };
+        const config = { url: `/${this.endpoint}/${namespace}/${key}`, data: value };
 
         return d2Api
             .request<void>({
@@ -53,7 +57,7 @@ export class DataStore {
         return d2Api
             .request({
                 method: "delete",
-                url: `/dataStore/${namespace}/${key}`,
+                url: `/${this.endpoint}/${namespace}/${key}`,
                 validateStatus: validate404,
             })
             .map(response => (response.status === 404 ? false : true));
@@ -63,3 +67,5 @@ export class DataStore {
 function validate404(status: number): boolean {
     return (status >= 200 && status < 300) || status === 404;
 }
+
+export type DataStoreType = "global" | "user";
