@@ -1,14 +1,13 @@
 import AbortController from "abort-controller";
 import MockAdapter from "axios-mock-adapter";
 import btoa from "btoa";
+import iconv from "iconv-lite";
 import "isomorphic-fetch";
 import _ from "lodash";
 import qs from "qs";
-
 import { CancelableResponse } from "../repositories/CancelableResponse";
 import {
     ConstructorOptions,
-    Credentials,
     HttpClientRepository,
     HttpError,
     HttpRequest,
@@ -54,9 +53,8 @@ export class FetchHttpClientRepository implements HttpClientRepository {
                 const encoding = getCharset(headers);
                 const dataIsJson = (headers["content-type"] || "").includes("json");
 
-                const decoder = new TextDecoder(encoding);
                 const arrayBuffer = await res.arrayBuffer();
-                const content = decoder.decode(arrayBuffer);
+                const content = iconv.decode(Buffer.from(arrayBuffer), encoding);
 
                 const data = (dataIsJson ? JSON.parse(content) : content) as Data;
                 if (!validateStatus(res.status)) raiseHttpError(options, res, data);
