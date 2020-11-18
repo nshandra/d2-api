@@ -5,6 +5,7 @@ import path from "path";
 import prettier from "prettier";
 import { D2SchemaFieldProperties, D2SchemaProperties, SchemaProperty } from "../schemas";
 import { joinPath } from "../utils/connection";
+import { ArgumentParser } from "argparse";
 
 interface Schema extends D2SchemaProperties {
     href: string;
@@ -72,7 +73,7 @@ const interfaceFromClass: _.Dictionary<string> = {
     "org.hisp.dhis.period.Period": "any",
     "org.hisp.dhis.period.RelativePeriods": "any",
     "org.hisp.dhis.programstagefilter.EventQueryCriteria": "any",
-    "org.hisp.dhis.relationship.RelationshipConstraint": "any",
+    "org.hisp.dhis.relationship.RelationshipConstraint": "D2RelationshipConstraint",
     "org.hisp.dhis.relationship.RelationshipItem": "any",
     "org.hisp.dhis.render.DeviceRenderTypeMap": "any",
     "org.hisp.dhis.reporttable.ReportParams": "any",
@@ -190,16 +191,20 @@ function joinStr(xs: string[]): string {
     return xs.map(quote).join(" | ");
 }
 
-const instances = {
-    baseUrl: "https://admin:district@play.dhis2.org/",
-    versions: ["2.30", "2.31", "2.32", "2.33"],
-};
+type Instance = { version: string; url: string; isDeprecated?: boolean };
 
-async function generateSchema(version: string) {
-    const url = instances.baseUrl + version;
+const instances: Instance[] = [
+    { version: "2.30", url: "http://admin:district@localhost:8030", isDeprecated: true },
+    { version: "2.31", url: "http://admin:district@localhost:8031", isDeprecated: true },
+    { version: "2.32", url: "https://admin:district@play.dhis2.org/2.32" },
+    { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33" },
+];
 
+async function generateSchema(instance: Instance) {
+    const { version, url } = instance;
     const schemaUrl = joinPath(url, "/api/schemas.json?fields=:all,metadata");
     console.debug(`GET ${schemaUrl}`);
+
     const { schemas } = (await axios.get(schemaUrl, {
         validateStatus: (status: number) => status >= 200 && status < 300,
     })).data as { schemas: Schema[] };
@@ -216,7 +221,8 @@ async function generateSchema(version: string) {
         import {
             Id, Preset, FieldPresets, D2SchemaProperties,
             D2Access, D2Translation, D2Geometry,  D2Style,
-            D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression
+            D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression,
+            D2RelationshipConstraint
         } from "../schemas/base";
 
         ${schemas
@@ -298,10 +304,12 @@ async function generateSchema(version: string) {
     console.log(`Written: ${schemasPath}`);
 }
 
-async function generateSchemas() {
-    for (const version of instances.versions) {
-        console.log(`Get schemas for ${version}`);
-        await generateSchema(version);
+async function generateSchemas(options: { includeDeprecated: boolean }) {
+    for (const instance of instances) {
+        if (!instance.isDeprecated || options.includeDeprecated) {
+            console.log(`Get schemas for ${instance.version}`);
+            await generateSchema(instance);
+        }
     }
 }
 
@@ -310,4 +318,14 @@ function logErrorAndExit(err: any) {
     process.exit(1);
 }
 
-generateSchemas().catch(logErrorAndExit);
+const parser = new ArgumentParser({
+    description: "Generate schemas from running DHIS2 instances",
+});
+
+parser.add_argument("--deprecated", {
+    help: "Generate also deprecated versions",
+    action: "store_true",
+});
+
+const args = parser.parse_args();
+generateSchemas({ includeDeprecated: args.deprecated }).catch(logErrorAndExit);
