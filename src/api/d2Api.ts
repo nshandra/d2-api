@@ -85,7 +85,11 @@ export abstract class D2ApiVersioned<
     }
 
     dataStore(namespace: string): DataStore {
-        return new DataStore(this, namespace);
+        return new DataStore(this, "global", namespace);
+    }
+
+    userDataStore(namespace: string): DataStore {
+        return new DataStore(this, "user", namespace);
     }
 
     constructor(
