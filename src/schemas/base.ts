@@ -71,6 +71,21 @@ export interface D2Expression {
     slidingWindow: boolean;
 }
 
+export type D2RelationshipConstraint =
+    | {
+          relationshipEntity: "TRACKED_ENTITY_INSTANCE";
+          trackedEntityType: Ref;
+          program?: Ref;
+      }
+    | {
+          relationshipEntity: "PROGRAM_INSTANCE";
+          program: Ref;
+      }
+    | {
+          relationshipEntity: "PROGRAM_STAGE_INSTANCE";
+          program: Ref;
+      };
+
 export type D2AccessSchema = GetDefaultSchema<D2Access>;
 export type D2TranslationSchema = GetDefaultSchema<D2Translation>;
 export type D2StyleSchema = GetDefaultSchema<D2Style>;
