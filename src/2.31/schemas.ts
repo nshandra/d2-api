@@ -15,9 +15,16 @@ import {
     D2RelationshipConstraint,
 } from "../schemas/base";
 
+export type D2AttributeValue = {
+    attribute: D2Attribute;
+    created: string;
+    lastUpdated: string;
+    value: string;
+};
+
 export type D2Attribute = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryAttribute: boolean;
     categoryOptionAttribute: boolean;
     categoryOptionComboAttribute: boolean;
@@ -32,14 +39,12 @@ export type D2Attribute = {
     dataSetAttribute: boolean;
     description: string;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     documentAttribute: boolean;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     indicatorAttribute: boolean;
@@ -104,7 +109,7 @@ export type D2Attribute = {
 
 export type D2UserAuthorityGroup = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     authorities: string[];
     code: Id;
     created: string;
@@ -128,7 +133,7 @@ export type D2UserAuthorityGroup = {
 
 export type D2User = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     avatar: D2FileResource;
     birthday: string;
     code: Id;
@@ -175,7 +180,7 @@ export type D2User = {
 
 export type D2UserGroup = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -197,16 +202,9 @@ export type D2UserGroup = {
     users: D2User[];
 };
 
-export type D2Expression = {
-    description: string;
-    expression: string;
-    missingValueStrategy: "SKIP_IF_ANY_VALUE_MISSING" | "SKIP_IF_ALL_VALUES_MISSING" | "NEVER_SKIP";
-    slidingWindow: boolean;
-};
-
 export type D2ExternalFileResource = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -225,9 +223,41 @@ export type D2ExternalFileResource = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
+export type D2PushAnalysis = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    dashboard: D2Dashboard;
+    displayName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    message: string;
+    name: string;
+    publicAccess: string;
+    recipientUserGroups: D2UserGroup[];
+    title: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2Expression = {
+    description: string;
+    expression: string;
+    missingValueStrategy: "SKIP_IF_ANY_VALUE_MISSING" | "SKIP_IF_ALL_VALUES_MISSING" | "NEVER_SKIP";
+    slidingWindow: boolean;
+};
+
 export type D2SqlView = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     cacheStrategy:
         | "NO_CACHE"
         | "CACHE_15_MINUTES"
@@ -259,18 +289,16 @@ export type D2SqlView = {
 
 export type D2Constant = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     lastUpdated: string;
@@ -287,7 +315,7 @@ export type D2Constant = {
 
 export type D2OAuth2Client = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     cid: Id;
     code: Id;
     created: string;
@@ -312,14 +340,11 @@ export type D2OAuth2Client = {
 
 export type D2Option = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: string;
     created: string;
     description: string;
-    displayDescription: string;
-    displayFormName: string;
     displayName: string;
-    displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
@@ -331,7 +356,6 @@ export type D2Option = {
     name: string;
     optionSet: D2OptionSet;
     publicAccess: string;
-    shortName: string;
     sortOrder: number;
     style: D2Style;
     translations: D2Translation[];
@@ -342,7 +366,7 @@ export type D2Option = {
 
 export type D2JobConfiguration = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     configurable: boolean;
     continuousExecution: boolean;
@@ -363,10 +387,8 @@ export type D2JobConfiguration = {
         | "RESOURCE_TABLE"
         | "ANALYTICS_TABLE"
         | "DATA_SYNC"
-        | "TRACKER_PROGRAMS_DATA_SYNC"
-        | "EVENT_PROGRAMS_DATA_SYNC"
+        | "PROGRAM_DATA_SYNC"
         | "FILE_RESOURCE_CLEANUP"
-        | "IMAGE_PROCESSING"
         | "META_DATA_SYNC"
         | "SMS_SEND"
         | "SEND_SCHEDULED_MESSAGE"
@@ -378,6 +400,7 @@ export type D2JobConfiguration = {
         | "PREDICTOR"
         | "DATA_SET_NOTIFICATION"
         | "REMOVE_EXPIRED_RESERVED_VALUES"
+        | "KAFKA_TRACKER"
         | "MOCK"
         | "DATAVALUE_IMPORT"
         | "ANALYTICSTABLE_UPDATE"
@@ -389,8 +412,7 @@ export type D2JobConfiguration = {
         | "TEI_IMPORT"
         | "LEADER_ELECTION"
         | "LEADER_RENEWAL"
-        | "COMPLETE_DATA_SET_REGISTRATION_IMPORT"
-        | "PROGRAM_DATA_SYNC";
+        | "COMPLETE_DATA_SET_REGISTRATION_IMPORT";
     lastExecuted: string;
     lastExecutedStatus: "RUNNING" | "COMPLETED" | "STOPPED" | "SCHEDULED" | "DISABLED" | "FAILED";
     lastRuntimeExecution: string;
@@ -409,7 +431,7 @@ export type D2JobConfiguration = {
 
 export type D2OptionSet = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -464,8 +486,6 @@ export type D2OptionGroup = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -474,7 +494,7 @@ export type D2OptionGroup = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
@@ -495,13 +515,11 @@ export type D2OptionGroup = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     lastUpdated: string;
@@ -527,8 +545,6 @@ export type D2OptionGroupSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -538,11 +554,10 @@ export type D2OptionGroupSet = {
         | "CUSTOM"
         | "DEFAULT";
     allItems: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     dataDimension: boolean;
-    dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     description: string;
     dimension: string;
     dimensionType:
@@ -564,16 +579,13 @@ export type D2OptionGroupSet = {
         | "VALIDATION_RULE"
         | "STATIC"
         | "ORGANISATION_UNIT_LEVEL";
-    dimensionalKeywords: D2DimensionalKeywords;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     filter: string;
-    formName: string;
     href: string;
     id: Id;
     items: any[];
@@ -583,7 +595,6 @@ export type D2OptionGroupSet = {
     name: string;
     optionGroups: D2OptionGroup[];
     optionSet: D2OptionSet;
-    programStage: D2ProgramStage;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -592,31 +603,9 @@ export type D2OptionGroupSet = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2ColorSet = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    colors: D2Color[];
-    created: string;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
 export type D2LegendSet = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -637,6 +626,28 @@ export type D2LegendSet = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
+export type D2ColorSet = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    colors: D2Color[];
+    created: string;
+    displayName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    publicAccess: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
 export type D2OrganisationUnit = {
     access: D2Access;
     address: string;
@@ -646,8 +657,6 @@ export type D2OrganisationUnit = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -657,12 +666,13 @@ export type D2OrganisationUnit = {
         | "CUSTOM"
         | "DEFAULT";
     ancestors: D2OrganisationUnit[];
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     children: D2OrganisationUnit[];
     closedDate: string;
     code: Id;
     comment: string;
     contactPerson: string;
+    coordinates: string;
     created: string;
     dataSets: D2DataSet[];
     description: string;
@@ -683,15 +693,13 @@ export type D2OrganisationUnit = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     email: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
-    geometry: D2Geometry;
+    featureType: "NONE" | "MULTI_POLYGON" | "POLYGON" | "POINT" | "SYMBOL";
     href: string;
     id: Id;
     lastUpdated: string;
@@ -721,7 +729,7 @@ export type D2OrganisationUnit = {
 
 export type D2OrganisationUnitLevel = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -750,8 +758,6 @@ export type D2OrganisationUnitGroup = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -760,9 +766,10 @@ export type D2OrganisationUnitGroup = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     color: string;
+    coordinates: string;
     created: string;
     description: string;
     dimensionItem: string;
@@ -782,15 +789,12 @@ export type D2OrganisationUnitGroup = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     featureType: "NONE" | "MULTI_POLYGON" | "POLYGON" | "POINT" | "SYMBOL";
-    formName: string;
-    geometry: D2Geometry;
     groupSets: D2OrganisationUnitGroupSet[];
     href: string;
     id: Id;
@@ -817,8 +821,6 @@ export type D2OrganisationUnitGroupSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -828,12 +830,11 @@ export type D2OrganisationUnitGroupSet = {
         | "CUSTOM"
         | "DEFAULT";
     allItems: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     compulsory: boolean;
     created: string;
     dataDimension: boolean;
-    dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     description: string;
     dimension: string;
     dimensionType:
@@ -855,16 +856,13 @@ export type D2OrganisationUnitGroupSet = {
         | "VALIDATION_RULE"
         | "STATIC"
         | "ORGANISATION_UNIT_LEVEL";
-    dimensionalKeywords: D2DimensionalKeywords;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     filter: string;
-    formName: string;
     href: string;
     id: Id;
     includeSubhierarchyInAnalytics: boolean;
@@ -874,7 +872,6 @@ export type D2OrganisationUnitGroupSet = {
     legendSet: D2LegendSet;
     name: string;
     organisationUnitGroups: D2OrganisationUnitGroup[];
-    programStage: D2ProgramStage;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -891,8 +888,6 @@ export type D2CategoryOption = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -901,7 +896,7 @@ export type D2CategoryOption = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categories: D2Category[];
     categoryOptionCombos: D2CategoryOptionCombo[];
     categoryOptionGroups: D2CategoryOptionGroup[];
@@ -925,14 +920,12 @@ export type D2CategoryOption = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     endDate: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     isDefault: boolean;
@@ -960,8 +953,6 @@ export type D2CategoryOptionGroup = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -970,7 +961,7 @@ export type D2CategoryOptionGroup = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryOptions: D2CategoryOption[];
     code: Id;
     created: string;
@@ -993,13 +984,11 @@ export type D2CategoryOptionGroup = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     groupSets: D2CategoryOptionGroupSet[];
     href: string;
     id: Id;
@@ -1024,8 +1013,6 @@ export type D2CategoryOptionGroupSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1035,7 +1022,7 @@ export type D2CategoryOptionGroupSet = {
         | "CUSTOM"
         | "DEFAULT";
     allItems: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryOptionGroups: D2CategoryOptionGroup[];
     code: Id;
     created: string;
@@ -1062,16 +1049,13 @@ export type D2CategoryOptionGroupSet = {
         | "VALIDATION_RULE"
         | "STATIC"
         | "ORGANISATION_UNIT_LEVEL";
-    dimensionalKeywords: D2DimensionalKeywords;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     filter: string;
-    formName: string;
     href: string;
     id: Id;
     items: any[];
@@ -1079,7 +1063,6 @@ export type D2CategoryOptionGroupSet = {
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     name: string;
-    programStage: D2ProgramStage;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -1096,8 +1079,6 @@ export type D2Category = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1107,7 +1088,7 @@ export type D2Category = {
         | "CUSTOM"
         | "DEFAULT";
     allItems: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryCombos: D2CategoryCombo[];
     categoryOptions: D2CategoryOption[];
     code: Id;
@@ -1135,16 +1116,13 @@ export type D2Category = {
         | "VALIDATION_RULE"
         | "STATIC"
         | "ORGANISATION_UNIT_LEVEL";
-    dimensionalKeywords: D2DimensionalKeywords;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     filter: string;
-    formName: string;
     href: string;
     id: Id;
     items: any[];
@@ -1152,7 +1130,6 @@ export type D2Category = {
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     name: string;
-    programStage: D2ProgramStage;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -1163,7 +1140,7 @@ export type D2Category = {
 
 export type D2CategoryCombo = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categories: D2Category[];
     categoryOptionCombos: D2CategoryOptionCombo[];
     code: Id;
@@ -1195,8 +1172,6 @@ export type D2CategoryOptionCombo = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1205,7 +1180,7 @@ export type D2CategoryOptionCombo = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryCombo: D2CategoryCombo;
     categoryOptions: D2CategoryOption[];
     code: Id;
@@ -1228,13 +1203,11 @@ export type D2CategoryOptionCombo = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     ignoreApproval: boolean;
@@ -1260,8 +1233,6 @@ export type D2DataElement = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1270,7 +1241,7 @@ export type D2DataElement = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryCombo: D2CategoryCombo;
     code: Id;
     commentOptionSet: D2OptionSet;
@@ -1358,8 +1329,6 @@ export type D2DataElementGroup = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1368,7 +1337,7 @@ export type D2DataElementGroup = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     dataElements: D2DataElement[];
@@ -1390,13 +1359,11 @@ export type D2DataElementGroup = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     groupSets: D2DataElementGroupSet[];
     href: string;
     id: Id;
@@ -1421,8 +1388,6 @@ export type D2DataElementGroupSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1432,12 +1397,11 @@ export type D2DataElementGroupSet = {
         | "CUSTOM"
         | "DEFAULT";
     allItems: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     compulsory: boolean;
     created: string;
     dataDimension: boolean;
-    dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
     dataElementGroups: D2DataElementGroup[];
     description: string;
     dimension: string;
@@ -1460,16 +1424,13 @@ export type D2DataElementGroupSet = {
         | "VALIDATION_RULE"
         | "STATIC"
         | "ORGANISATION_UNIT_LEVEL";
-    dimensionalKeywords: D2DimensionalKeywords;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     filter: string;
-    formName: string;
     href: string;
     id: Id;
     items: any[];
@@ -1477,9 +1438,31 @@ export type D2DataElementGroupSet = {
     lastUpdatedBy: D2User;
     legendSet: D2LegendSet;
     name: string;
-    programStage: D2ProgramStage;
     publicAccess: string;
     shortName: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2IndicatorType = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    displayName: string;
+    externalAccess: boolean;
+    factor: number;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    number: boolean;
+    publicAccess: string;
     translations: D2Translation[];
     user: D2User;
     userAccesses: D2UserAccess[];
@@ -1496,7 +1479,7 @@ export type D2AnalyticsTableHook = {
         | "EVENT"
         | "ENROLLMENT"
         | "VALIDATION_RESULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -1531,29 +1514,6 @@ export type D2AnalyticsTableHook = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2IndicatorType = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    created: string;
-    displayName: string;
-    externalAccess: boolean;
-    factor: number;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    number: boolean;
-    publicAccess: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
 export type D2Indicator = {
     access: D2Access;
     aggregateExportAttributeOptionCombo: string;
@@ -1564,8 +1524,6 @@ export type D2Indicator = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1575,7 +1533,7 @@ export type D2Indicator = {
         | "CUSTOM"
         | "DEFAULT";
     annualized: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     dataSets: D2DataSet[];
@@ -1599,11 +1557,8 @@ export type D2Indicator = {
         | "DATA_ELEMENT_GROUP"
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
-    displayDenominatorDescription: string;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
-    displayNumeratorDescription: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -1632,7 +1587,7 @@ export type D2Indicator = {
 
 export type D2IndicatorGroup = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -1655,7 +1610,7 @@ export type D2IndicatorGroup = {
 
 export type D2IndicatorGroupSet = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     compulsory: boolean;
     created: string;
@@ -1679,7 +1634,7 @@ export type D2IndicatorGroupSet = {
 
 export type D2DataEntryForm = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -1709,8 +1664,6 @@ export type D2DataSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1719,7 +1672,7 @@ export type D2DataSet = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryCombo: D2CategoryCombo;
     code: Id;
     compulsoryDataElementOperands: D2DataElementOperand[];
@@ -1747,7 +1700,6 @@ export type D2DataSet = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     expiryDays: number;
@@ -1771,7 +1723,6 @@ export type D2DataSet = {
     notificationRecipients: D2UserGroup;
     notifyCompletingUser: boolean;
     openFuturePeriods: number;
-    openPeriodsAfterCoEndDate: number;
     organisationUnits: D2OrganisationUnit[];
     periodType: string;
     publicAccess: string;
@@ -1793,7 +1744,7 @@ export type D2DataSet = {
 
 export type D2DataSetNotificationTemplate = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     dataSetNotificationTrigger: "DATA_SET_COMPLETION" | "SCHEDULED_DAYS";
@@ -1825,7 +1776,7 @@ export type D2DataSetNotificationTemplate = {
 
 export type D2Section = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryCombos: D2CategoryCombo[];
     code: Id;
     created: string;
@@ -1855,7 +1806,7 @@ export type D2Section = {
 
 export type D2DataApprovalLevel = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryOptionGroupSet: D2CategoryOptionGroupSet;
     code: Id;
     created: string;
@@ -1880,7 +1831,7 @@ export type D2DataApprovalLevel = {
 
 export type D2DataApprovalWorkflow = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryCombo: D2CategoryCombo;
     code: Id;
     created: string;
@@ -1913,8 +1864,6 @@ export type D2ValidationRule = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -1923,7 +1872,7 @@ export type D2ValidationRule = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
@@ -1944,13 +1893,11 @@ export type D2ValidationRule = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     importance: "HIGH" | "MEDIUM" | "LOW";
@@ -1986,7 +1933,7 @@ export type D2ValidationRule = {
 
 export type D2ValidationRuleGroup = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
@@ -2009,7 +1956,7 @@ export type D2ValidationRuleGroup = {
 
 export type D2ValidationNotificationTemplate = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -2043,8 +1990,6 @@ export type D2TrackedEntityAttribute = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -2053,7 +1998,7 @@ export type D2TrackedEntityAttribute = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     confidential: boolean;
     created: string;
@@ -2075,7 +2020,6 @@ export type D2TrackedEntityAttribute = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayInListNoProgram: boolean;
     displayName: string;
     displayOnVisitSchedule: boolean;
@@ -2099,6 +2043,7 @@ export type D2TrackedEntityAttribute = {
     optionSetValue: boolean;
     orgunitScope: boolean;
     pattern: string;
+    programScope: boolean;
     publicAccess: string;
     shortName: string;
     skipSynchronization: boolean;
@@ -2141,12 +2086,11 @@ export type D2TrackedEntityAttribute = {
 export type D2TrackedEntityType = {
     access: D2Access;
     allowAuditLog: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
@@ -2173,7 +2117,7 @@ export type D2TrackedEntityType = {
 
 export type D2TrackedEntityTypeAttribute = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayInList: boolean;
@@ -2226,19 +2170,17 @@ export type D2TrackedEntityTypeAttribute = {
 
 export type D2ProgramTrackedEntityAttributeGroup = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     attributes: D2ProgramTrackedEntityAttribute[];
     code: Id;
     created: string;
     description: string;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     lastUpdated: string;
@@ -2255,7 +2197,7 @@ export type D2ProgramTrackedEntityAttributeGroup = {
 
 export type D2ProgramNotificationTemplate = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     deliveryChannels: never[];
@@ -2299,15 +2241,12 @@ export type D2ProgramNotificationTemplate = {
 
 export type D2ProgramStageSection = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     dataElements: D2DataElement[];
     description: string;
-    displayDescription: string;
-    displayFormName: string;
     displayName: string;
-    displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
@@ -2321,7 +2260,6 @@ export type D2ProgramStageSection = {
     programStage: D2ProgramStage;
     publicAccess: string;
     renderType: any;
-    shortName: string;
     sortOrder: number;
     style: D2Style;
     translations: D2Translation[];
@@ -2333,7 +2271,7 @@ export type D2ProgramStageSection = {
 export type D2ProgramStage = {
     access: D2Access;
     allowGenerateNextVisit: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     autoGenerateEvent: boolean;
     blockEntryForm: boolean;
     code: Id;
@@ -2341,12 +2279,9 @@ export type D2ProgramStage = {
     dataEntryForm: D2DataEntryForm;
     description: string;
     displayDescription: string;
-    displayFormName: string;
     displayGenerateEventBox: boolean;
     displayName: string;
-    displayShortName: string;
     dueDateLabel: string;
-    enableUserAssignment: boolean;
     executionDateLabel: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -2362,7 +2297,6 @@ export type D2ProgramStage = {
     lastUpdatedBy: D2User;
     minDaysFromStart: number;
     name: string;
-    nextScheduleDate: D2DataElement;
     notificationTemplates: D2ProgramNotificationTemplate[];
     openAfterEnrollment: boolean;
     periodType: string;
@@ -2374,7 +2308,6 @@ export type D2ProgramStage = {
     remindCompleted: boolean;
     repeatable: boolean;
     reportDateToUse: string;
-    shortName: string;
     sortOrder: number;
     standardInterval: number;
     style: D2Style;
@@ -2387,7 +2320,7 @@ export type D2ProgramStage = {
 
 export type D2SMSCommand = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     codeValueSeparator: string;
     completenessMethod: "ALL_DATAVALUE" | "AT_LEAST_ONE_DATAVALUE" | "DO_NOT_MARK_COMPLETE";
@@ -2433,7 +2366,7 @@ export type D2SMSCommand = {
 export type D2Program = {
     access: D2Access;
     accessLevel: "OPEN" | "AUDITED" | "PROTECTED" | "CLOSED";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryCombo: D2CategoryCombo;
     code: Id;
     completeEventsExpiryDays: number;
@@ -2441,7 +2374,6 @@ export type D2Program = {
     dataEntryForm: D2DataEntryForm;
     description: string;
     displayDescription: string;
-    displayFormName: string;
     displayFrontPageList: boolean;
     displayIncidentDate: boolean;
     displayName: string;
@@ -2489,107 +2421,7 @@ export type D2Program = {
     userRoles: D2UserAuthorityGroup[];
     version: number;
     withoutRegistration: boolean;
-};
-
-export type D2EventReport = {
-    access: D2Access;
-    aggregationType:
-        | "SUM"
-        | "AVERAGE"
-        | "AVERAGE_SUM_ORG_UNIT"
-        | "LAST"
-        | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
-        | "COUNT"
-        | "STDDEV"
-        | "VARIANCE"
-        | "MIN"
-        | "MAX"
-        | "NONE"
-        | "CUSTOM"
-        | "DEFAULT";
-    attributeDimensions: any[];
-    attributeValueDimension: D2TrackedEntityAttribute;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    categoryDimensions: D2CategoryDimension[];
-    categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimension[];
-    code: Id;
-    colSubTotals: boolean;
-    colTotals: boolean;
-    collapseDataDimensions: boolean;
-    columnDimensions: string[];
-    columns: any[];
-    completedOnly: boolean;
-    created: string;
-    dataDimensionItems: any[];
-    dataElementDimensions: D2TrackedEntityDataElementDimension[];
-    dataElementGroupSetDimensions: D2DataElementGroupSetDimension[];
-    dataElementValueDimension: D2DataElement;
-    dataType: "AGGREGATED_VALUES" | "EVENTS";
-    description: string;
-    digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
-    displayDensity: "COMFORTABLE" | "NORMAL" | "COMPACT" | "NONE";
-    displayDescription: string;
-    displayFormName: string;
-    displayName: string;
-    displayShortName: string;
-    endDate: string;
-    eventStatus: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    filterDimensions: string[];
-    filters: any[];
-    fontSize: "LARGE" | "NORMAL" | "SMALL";
-    formName: string;
-    hideEmptyRows: boolean;
-    hideNaData: boolean;
-    hideSubtitle: boolean;
-    hideTitle: boolean;
-    href: string;
-    id: Id;
-    interpretations: D2Interpretation[];
-    itemOrganisationUnitGroups: D2OrganisationUnitGroup[];
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    orgUnitField: string;
-    organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimension[];
-    organisationUnitLevels: number[];
-    organisationUnits: D2OrganisationUnit[];
-    outputType: "EVENT" | "ENROLLMENT" | "TRACKED_ENTITY_INSTANCE";
-    parentGraphMap: D2Map;
-    periods: any[];
-    program: D2Program;
-    programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
-    programStage: D2ProgramStage;
-    programStatus: "ACTIVE" | "COMPLETED" | "CANCELLED";
-    publicAccess: string;
-    relativePeriods: any;
-    rowDimensions: string[];
-    rowSubTotals: boolean;
-    rowTotals: boolean;
-    rows: any[];
-    shortName: string;
-    showDimensionLabels: boolean;
-    showHierarchy: boolean;
-    sortOrder: number;
-    startDate: string;
-    subscribed: boolean;
-    subscribers: string[];
-    subtitle: string;
-    timeField: string;
-    title: string;
-    topLimit: number;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-    userOrganisationUnit: boolean;
-    userOrganisationUnitChildren: boolean;
-    userOrganisationUnitGrandChildren: boolean;
-    value: any;
+    workflow: D2DataApprovalWorkflow;
 };
 
 export type D2EventChart = {
@@ -2600,8 +2432,6 @@ export type D2EventChart = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -2612,7 +2442,7 @@ export type D2EventChart = {
         | "DEFAULT";
     attributeDimensions: any[];
     attributeValueDimension: D2TrackedEntityAttribute;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     baseLineLabel: string;
     baseLineValue: number;
     categoryDimensions: D2CategoryDimension[];
@@ -2632,7 +2462,6 @@ export type D2EventChart = {
     description: string;
     digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     domainAxisLabel: string;
@@ -2643,7 +2472,6 @@ export type D2EventChart = {
     favorites: string[];
     filterDimensions: string[];
     filters: any[];
-    formName: string;
     hideEmptyRowItems: "NONE" | "BEFORE_FIRST" | "AFTER_LAST" | "BEFORE_FIRST_AFTER_LAST" | "ALL";
     hideLegend: boolean;
     hideNaData: boolean;
@@ -2659,7 +2487,6 @@ export type D2EventChart = {
     legendSet: D2LegendSet;
     name: string;
     noSpaceBetweenColumns: boolean;
-    orgUnitField: string;
     organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimension[];
     organisationUnitLevels: number[];
     organisationUnits: D2OrganisationUnit[];
@@ -2705,8 +2532,7 @@ export type D2EventChart = {
         | "RADAR"
         | "GAUGE"
         | "YEAR_OVER_YEAR_LINE"
-        | "YEAR_OVER_YEAR_COLUMN"
-        | "SINGLE_VALUE";
+        | "YEAR_OVER_YEAR_COLUMN";
     user: D2User;
     userAccesses: D2UserAccess[];
     userGroupAccesses: D2UserGroupAccess[];
@@ -2717,16 +2543,109 @@ export type D2EventChart = {
     yearlySeries: string[];
 };
 
+export type D2EventReport = {
+    access: D2Access;
+    aggregationType:
+        | "SUM"
+        | "AVERAGE"
+        | "AVERAGE_SUM_ORG_UNIT"
+        | "LAST"
+        | "LAST_AVERAGE_ORG_UNIT"
+        | "COUNT"
+        | "STDDEV"
+        | "VARIANCE"
+        | "MIN"
+        | "MAX"
+        | "NONE"
+        | "CUSTOM"
+        | "DEFAULT";
+    attributeDimensions: any[];
+    attributeValueDimension: D2TrackedEntityAttribute;
+    attributeValues: D2AttributeValue[];
+    categoryDimensions: D2CategoryDimension[];
+    categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimension[];
+    code: Id;
+    colSubTotals: boolean;
+    colTotals: boolean;
+    collapseDataDimensions: boolean;
+    columnDimensions: string[];
+    columns: any[];
+    completedOnly: boolean;
+    created: string;
+    dataDimensionItems: any[];
+    dataElementDimensions: D2TrackedEntityDataElementDimension[];
+    dataElementGroupSetDimensions: D2DataElementGroupSetDimension[];
+    dataElementValueDimension: D2DataElement;
+    dataType: "AGGREGATED_VALUES" | "EVENTS";
+    description: string;
+    digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
+    displayDensity: "COMFORTABLE" | "NORMAL" | "COMPACT" | "NONE";
+    displayDescription: string;
+    displayName: string;
+    displayShortName: string;
+    endDate: string;
+    eventStatus: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    filterDimensions: string[];
+    filters: any[];
+    fontSize: "LARGE" | "NORMAL" | "SMALL";
+    hideEmptyRows: boolean;
+    hideNaData: boolean;
+    hideSubtitle: boolean;
+    hideTitle: boolean;
+    href: string;
+    id: Id;
+    interpretations: D2Interpretation[];
+    itemOrganisationUnitGroups: D2OrganisationUnitGroup[];
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimension[];
+    organisationUnitLevels: number[];
+    organisationUnits: D2OrganisationUnit[];
+    outputType: "EVENT" | "ENROLLMENT" | "TRACKED_ENTITY_INSTANCE";
+    parentGraphMap: D2Map;
+    periods: any[];
+    program: D2Program;
+    programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
+    programStage: D2ProgramStage;
+    programStatus: "ACTIVE" | "COMPLETED" | "CANCELLED";
+    publicAccess: string;
+    relativePeriods: any;
+    rowDimensions: string[];
+    rowSubTotals: boolean;
+    rowTotals: boolean;
+    rows: any[];
+    shortName: string;
+    showDimensionLabels: boolean;
+    showHierarchy: boolean;
+    sortOrder: number;
+    startDate: string;
+    subscribed: boolean;
+    subscribers: string[];
+    subtitle: string;
+    timeField: string;
+    title: string;
+    topLimit: number;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+    userOrganisationUnit: boolean;
+    userOrganisationUnitChildren: boolean;
+    userOrganisationUnitGrandChildren: boolean;
+    value: any;
+};
+
 export type D2ProgramSection = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
-    displayDescription: string;
-    displayFormName: string;
     displayName: string;
-    displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
@@ -2737,12 +2656,11 @@ export type D2ProgramSection = {
     lastUpdatedBy: D2User;
     name: string;
     program: D2Program;
+    programTrackedEntityAttribute: D2TrackedEntityAttribute[];
     publicAccess: string;
     renderType: any;
-    shortName: string;
     sortOrder: number;
     style: D2Style;
-    trackedEntityAttributes: D2TrackedEntityAttribute[];
     translations: D2Translation[];
     user: D2User;
     userAccesses: D2UserAccess[];
@@ -2759,8 +2677,6 @@ export type D2ProgramIndicator = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -2771,7 +2687,7 @@ export type D2ProgramIndicator = {
         | "DEFAULT";
     analyticsPeriodBoundaries: D2AnalyticsPeriodBoundary[];
     analyticsType: "EVENT" | "ENROLLMENT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     decimals: number;
@@ -2793,7 +2709,6 @@ export type D2ProgramIndicator = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayInForm: boolean;
     displayName: string;
     displayShortName: string;
@@ -2821,32 +2736,9 @@ export type D2ProgramIndicator = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2ProgramIndicatorGroup = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    created: string;
-    description: string;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    programIndicators: D2ProgramIndicator[];
-    publicAccess: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
 export type D2ProgramRuleVariable = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     dataElement: D2DataElement;
@@ -2879,19 +2771,15 @@ export type D2ProgramRuleVariable = {
 
 export type D2RelationshipType = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    bidirectional: boolean;
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
-    displayFromToName: string;
     displayName: string;
-    displayToFromName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
     fromConstraint: D2RelationshipConstraint;
-    fromToName: string;
     href: string;
     id: Id;
     lastUpdated: string;
@@ -2899,7 +2787,29 @@ export type D2RelationshipType = {
     name: string;
     publicAccess: string;
     toConstraint: D2RelationshipConstraint;
-    toFromName: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2ProgramIndicatorGroup = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    description: string;
+    displayName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    programIndicators: D2ProgramIndicator[];
+    publicAccess: string;
     translations: D2Translation[];
     user: D2User;
     userAccesses: D2UserAccess[];
@@ -2908,7 +2818,7 @@ export type D2RelationshipType = {
 
 export type D2ProgramRuleAction = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     content: string;
     created: string;
@@ -2959,7 +2869,7 @@ export type D2ProgramRuleAction = {
 
 export type D2ProgramRule = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     condition: string;
     created: string;
@@ -2992,8 +2902,6 @@ export type D2MapView = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -3004,7 +2912,7 @@ export type D2MapView = {
         | "DEFAULT";
     areaRadius: number;
     attributeDimensions: any[];
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     categoryDimensions: D2CategoryDimension[];
     categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimension[];
     classes: number;
@@ -3023,7 +2931,6 @@ export type D2MapView = {
     description: string;
     digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     endDate: string;
@@ -3034,10 +2941,8 @@ export type D2MapView = {
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    filterDimensions: string[];
     filters: any[];
     followUp: boolean;
-    formName: string;
     hidden: boolean;
     hideSubtitle: boolean;
     hideTitle: boolean;
@@ -3057,7 +2962,6 @@ export type D2MapView = {
     method: number;
     name: string;
     opacity: number;
-    orgUnitField: string;
     organisationUnitGroupSet: D2OrganisationUnitGroupSet;
     organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimension[];
     organisationUnitLevels: number[];
@@ -3081,7 +2985,6 @@ export type D2MapView = {
     radiusHigh: number;
     radiusLow: number;
     relativePeriods: any;
-    renderingStrategy: "SINGLE" | "SPLIT_BY_PERIOD" | "TIMELINE";
     rows: any[];
     shortName: string;
     sortOrder: number;
@@ -3103,9 +3006,43 @@ export type D2MapView = {
     userOrganisationUnitGrandChildren: boolean;
 };
 
+export type D2Report = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    cacheStrategy:
+        | "NO_CACHE"
+        | "CACHE_15_MINUTES"
+        | "CACHE_30_MINUTES"
+        | "CACHE_1_HOUR"
+        | "CACHE_6AM_TOMORROW"
+        | "CACHE_TWO_WEEKS"
+        | "RESPECT_SYSTEM_SETTING";
+    code: Id;
+    created: string;
+    designContent: string;
+    displayName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    publicAccess: string;
+    relativePeriods: any;
+    reportParams: any;
+    reportTable: D2ReportTable;
+    translations: D2Translation[];
+    type: "JASPER_REPORT_TABLE" | "JASPER_JDBC" | "HTML";
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
 export type D2ExternalMapLayer = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     attribution: string;
     code: Id;
     created: string;
@@ -3132,7 +3069,7 @@ export type D2ExternalMapLayer = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2ReportTable = {
+export type D2Chart = {
     access: D2Access;
     aggregationType:
         | "SUM"
@@ -3140,8 +3077,6 @@ export type D2ReportTable = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -3151,7 +3086,188 @@ export type D2ReportTable = {
         | "CUSTOM"
         | "DEFAULT";
     attributeDimensions: any[];
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
+    baseLineLabel: string;
+    baseLineValue: number;
+    category: string;
+    categoryDimensions: D2CategoryDimension[];
+    categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimension[];
+    code: Id;
+    colorSet: D2ColorSet;
+    columns: any[];
+    completedOnly: boolean;
+    created: string;
+    cumulativeValues: boolean;
+    dataDimensionItems: any[];
+    dataElementDimensions: D2TrackedEntityDataElementDimension[];
+    dataElementGroupSetDimensions: D2DataElementGroupSetDimension[];
+    description: string;
+    digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
+    displayDescription: string;
+    displayName: string;
+    displayShortName: string;
+    domainAxisLabel: string;
+    endDate: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    filterDimensions: string[];
+    filters: any[];
+    hideEmptyRowItems: "NONE" | "BEFORE_FIRST" | "AFTER_LAST" | "BEFORE_FIRST_AFTER_LAST" | "ALL";
+    hideLegend: boolean;
+    hideSubtitle: boolean;
+    hideTitle: boolean;
+    href: string;
+    id: Id;
+    interpretations: D2Interpretation[];
+    itemOrganisationUnitGroups: D2OrganisationUnitGroup[];
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
+    legendSet: D2LegendSet;
+    name: string;
+    noSpaceBetweenColumns: boolean;
+    organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimension[];
+    organisationUnitLevels: number[];
+    organisationUnits: D2OrganisationUnit[];
+    parentGraphMap: D2Map;
+    percentStackedValues: boolean;
+    periods: any[];
+    programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
+    publicAccess: string;
+    rangeAxisDecimals: number;
+    rangeAxisLabel: string;
+    rangeAxisMaxValue: number;
+    rangeAxisMinValue: number;
+    rangeAxisSteps: number;
+    regressionType: "NONE" | "LINEAR" | "POLYNOMIAL" | "LOESS";
+    relativePeriods: any;
+    rows: any[];
+    series: string;
+    shortName: string;
+    showData: boolean;
+    sortOrder: number;
+    startDate: string;
+    subscribed: boolean;
+    subscribers: string[];
+    subtitle: string;
+    targetLineLabel: string;
+    targetLineValue: number;
+    timeField: string;
+    title: string;
+    topLimit: number;
+    translations: D2Translation[];
+    type:
+        | "COLUMN"
+        | "STACKED_COLUMN"
+        | "BAR"
+        | "STACKED_BAR"
+        | "LINE"
+        | "AREA"
+        | "PIE"
+        | "RADAR"
+        | "GAUGE"
+        | "YEAR_OVER_YEAR_LINE"
+        | "YEAR_OVER_YEAR_COLUMN";
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+    userOrganisationUnit: boolean;
+    userOrganisationUnitChildren: boolean;
+    userOrganisationUnitGrandChildren: boolean;
+    yearlySeries: string[];
+};
+
+export type D2Map = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    basemap: string;
+    code: Id;
+    created: string;
+    description: string;
+    displayDescription: string;
+    displayName: string;
+    displayShortName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    interpretations: D2Interpretation[];
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    latitude: number;
+    longitude: number;
+    mapViews: D2MapView[];
+    name: string;
+    publicAccess: string;
+    shortName: string;
+    subscribed: boolean;
+    subscribers: string[];
+    title: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+    zoom: number;
+};
+
+export type D2ValidationResult = {
+    attributeOptionCombo: D2CategoryOptionCombo;
+    created: string;
+    dayInPeriod: number;
+    id: number;
+    leftsideValue: number;
+    notificationSent: boolean;
+    organisationUnit: D2OrganisationUnit;
+    period: any;
+    rightsideValue: number;
+    validationRule: D2ValidationRule;
+};
+
+export type D2Document = {
+    access: D2Access;
+    attachment: boolean;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    contentType: string;
+    created: string;
+    displayName: string;
+    external: boolean;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    publicAccess: string;
+    translations: D2Translation[];
+    url: string;
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2ReportTable = {
+    access: D2Access;
+    aggregationType:
+        | "SUM"
+        | "AVERAGE"
+        | "AVERAGE_SUM_ORG_UNIT"
+        | "LAST"
+        | "LAST_AVERAGE_ORG_UNIT"
+        | "COUNT"
+        | "STDDEV"
+        | "VARIANCE"
+        | "MIN"
+        | "MAX"
+        | "NONE"
+        | "CUSTOM"
+        | "DEFAULT";
+    attributeDimensions: any[];
+    attributeValues: D2AttributeValue[];
     categoryDimensions: D2CategoryDimension[];
     categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimension[];
     code: Id;
@@ -3169,7 +3285,6 @@ export type D2ReportTable = {
     digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
     displayDensity: "COMFORTABLE" | "NORMAL" | "COMPACT" | "NONE";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     endDate: string;
@@ -3179,7 +3294,6 @@ export type D2ReportTable = {
     filterDimensions: string[];
     filters: any[];
     fontSize: "LARGE" | "NORMAL" | "SMALL";
-    formName: string;
     hideEmptyColumns: boolean;
     hideEmptyRows: boolean;
     hideSubtitle: boolean;
@@ -3196,7 +3310,6 @@ export type D2ReportTable = {
     measureCriteria: string;
     name: string;
     numberType: "VALUE" | "ROW_PERCENTAGE" | "COLUMN_PERCENTAGE";
-    orgUnitField: string;
     organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimension[];
     organisationUnitLevels: number[];
     organisationUnits: D2OrganisationUnit[];
@@ -3232,245 +3345,19 @@ export type D2ReportTable = {
     userOrganisationUnitGrandChildren: boolean;
 };
 
-export type D2Document = {
-    access: D2Access;
-    attachment: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    contentType: string;
-    created: string;
-    displayName: string;
-    external: boolean;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    translations: D2Translation[];
-    url: string;
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2Report = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    cacheStrategy:
-        | "NO_CACHE"
-        | "CACHE_15_MINUTES"
-        | "CACHE_30_MINUTES"
-        | "CACHE_1_HOUR"
-        | "CACHE_6AM_TOMORROW"
-        | "CACHE_TWO_WEEKS"
-        | "RESPECT_SYSTEM_SETTING";
-    code: Id;
-    created: string;
-    designContent: string;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    relativePeriods: any;
-    reportParams: any;
-    reportTable: D2ReportTable;
-    translations: D2Translation[];
-    type: "JASPER_REPORT_TABLE" | "JASPER_JDBC" | "HTML";
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2ValidationResult = {
-    attributeOptionCombo: D2CategoryOptionCombo;
-    created: string;
-    dayInPeriod: number;
-    id: string;
-    leftsideValue: number;
-    notificationSent: boolean;
-    organisationUnit: D2OrganisationUnit;
-    period: any;
-    rightsideValue: number;
-    validationRule: D2ValidationRule;
-};
-
-export type D2Chart = {
-    access: D2Access;
-    aggregationType:
-        | "SUM"
-        | "AVERAGE"
-        | "AVERAGE_SUM_ORG_UNIT"
-        | "LAST"
-        | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
-        | "COUNT"
-        | "STDDEV"
-        | "VARIANCE"
-        | "MIN"
-        | "MAX"
-        | "NONE"
-        | "CUSTOM"
-        | "DEFAULT";
-    attributeDimensions: any[];
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    baseLineLabel: string;
-    baseLineValue: number;
-    category: string;
-    categoryDimensions: D2CategoryDimension[];
-    categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimension[];
-    code: Id;
-    colorSet: D2ColorSet;
-    columns: any[];
-    completedOnly: boolean;
-    created: string;
-    cumulativeValues: boolean;
-    dataDimensionItems: any[];
-    dataElementDimensions: D2TrackedEntityDataElementDimension[];
-    dataElementGroupSetDimensions: D2DataElementGroupSetDimension[];
-    description: string;
-    digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
-    displayDescription: string;
-    displayFormName: string;
-    displayName: string;
-    displayShortName: string;
-    domainAxisLabel: string;
-    endDate: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    filterDimensions: string[];
-    filters: any[];
-    formName: string;
-    hideEmptyRowItems: "NONE" | "BEFORE_FIRST" | "AFTER_LAST" | "BEFORE_FIRST_AFTER_LAST" | "ALL";
-    hideLegend: boolean;
-    hideSubtitle: boolean;
-    hideTitle: boolean;
-    href: string;
-    id: Id;
-    interpretations: D2Interpretation[];
-    itemOrganisationUnitGroups: D2OrganisationUnitGroup[];
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
-    legendSet: D2LegendSet;
-    name: string;
-    noSpaceBetweenColumns: boolean;
-    orgUnitField: string;
-    organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimension[];
-    organisationUnitLevels: number[];
-    organisationUnits: D2OrganisationUnit[];
-    parentGraphMap: D2Map;
-    percentStackedValues: boolean;
-    periods: any[];
-    programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
-    publicAccess: string;
-    rangeAxisDecimals: number;
-    rangeAxisLabel: string;
-    rangeAxisMaxValue: number;
-    rangeAxisMinValue: number;
-    rangeAxisSteps: number;
-    regressionType: "NONE" | "LINEAR" | "POLYNOMIAL" | "LOESS";
-    relativePeriods: any;
-    rows: any[];
-    series: string;
-    seriesItems: any[];
-    shortName: string;
-    showData: boolean;
-    sortOrder: number;
-    startDate: string;
-    subscribed: boolean;
-    subscribers: string[];
-    subtitle: string;
-    targetLineLabel: string;
-    targetLineValue: number;
-    timeField: string;
-    title: string;
-    topLimit: number;
-    translations: D2Translation[];
-    type:
-        | "COLUMN"
-        | "STACKED_COLUMN"
-        | "BAR"
-        | "STACKED_BAR"
-        | "LINE"
-        | "AREA"
-        | "PIE"
-        | "RADAR"
-        | "GAUGE"
-        | "YEAR_OVER_YEAR_LINE"
-        | "YEAR_OVER_YEAR_COLUMN"
-        | "SINGLE_VALUE";
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-    userOrganisationUnit: boolean;
-    userOrganisationUnitChildren: boolean;
-    userOrganisationUnitGrandChildren: boolean;
-    yearlySeries: string[];
-};
-
-export type D2Map = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    basemap: string;
-    code: Id;
-    created: string;
-    description: string;
-    displayDescription: string;
-    displayFormName: string;
-    displayName: string;
-    displayShortName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    formName: string;
-    href: string;
-    id: Id;
-    interpretations: D2Interpretation[];
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    latitude: number;
-    longitude: number;
-    mapViews: D2MapView[];
-    name: string;
-    publicAccess: string;
-    shortName: string;
-    subscribed: boolean;
-    subscribers: string[];
-    title: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-    zoom: number;
-};
-
 export type D2Predictor = {
     access: D2Access;
     annualSampleCount: number;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     generator: D2Expression;
     href: string;
     id: Id;
@@ -3495,7 +3382,7 @@ export type D2Predictor = {
 
 export type D2PredictorGroup = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
@@ -3519,7 +3406,7 @@ export type D2PredictorGroup = {
 export type D2DashboardItem = {
     access: D2Access;
     appKey: string;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     chart: D2Chart;
     code: Id;
     contentCount: number;
@@ -3570,19 +3457,17 @@ export type D2DashboardItem = {
 
 export type D2Dashboard = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     dashboardItems: D2DashboardItem[];
     description: string;
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     itemCount: number;
@@ -3597,34 +3482,9 @@ export type D2Dashboard = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2PushAnalysis = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    created: string;
-    dashboard: D2Dashboard;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    message: string;
-    name: string;
-    publicAccess: string;
-    recipientUserGroups: D2UserGroup[];
-    title: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
 export type D2KeyJsonValue = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayName: string;
@@ -3646,6 +3506,70 @@ export type D2KeyJsonValue = {
     value: string;
 };
 
+export type D2ReportingRate = {
+    access: D2Access;
+    aggregationType:
+        | "SUM"
+        | "AVERAGE"
+        | "AVERAGE_SUM_ORG_UNIT"
+        | "LAST"
+        | "LAST_AVERAGE_ORG_UNIT"
+        | "COUNT"
+        | "STDDEV"
+        | "VARIANCE"
+        | "MIN"
+        | "MAX"
+        | "NONE"
+        | "CUSTOM"
+        | "DEFAULT";
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    dataSet: D2DataSet;
+    description: string;
+    dimensionItem: string;
+    dimensionItemType:
+        | "DATA_ELEMENT"
+        | "DATA_ELEMENT_OPERAND"
+        | "INDICATOR"
+        | "REPORTING_RATE"
+        | "PROGRAM_DATA_ELEMENT"
+        | "PROGRAM_ATTRIBUTE"
+        | "PROGRAM_INDICATOR"
+        | "PERIOD"
+        | "ORGANISATION_UNIT"
+        | "CATEGORY_OPTION"
+        | "OPTION_GROUP"
+        | "DATA_ELEMENT_GROUP"
+        | "ORGANISATION_UNIT_GROUP"
+        | "CATEGORY_OPTION_GROUP";
+    displayDescription: string;
+    displayName: string;
+    displayShortName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    legendSet: D2LegendSet;
+    legendSets: D2LegendSet[];
+    metric:
+        | "REPORTING_RATE"
+        | "REPORTING_RATE_ON_TIME"
+        | "ACTUAL_REPORTS"
+        | "ACTUAL_REPORTS_ON_TIME"
+        | "EXPECTED_REPORTS";
+    name: string;
+    publicAccess: string;
+    shortName: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
 export type D2MinMaxDataElement = {
     dataElement: D2DataElement;
     generated: boolean;
@@ -3655,90 +3579,91 @@ export type D2MinMaxDataElement = {
     source: D2OrganisationUnit;
 };
 
-export type D2ProgramStageInstance = {
+export type D2DataElementGroupSetDimension = {
+    dataElementGroupSet: D2DataElementGroupSet;
+    dataElementGroups: D2DataElementGroup[];
+};
+
+export type D2Relationship = {
     access: D2Access;
-    assignedUser: D2User;
-    attributeOptionCombo: D2CategoryOptionCombo;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
-    comments: any[];
-    completed: boolean;
-    completedBy: string;
-    completedDate: string;
-    creatableInSearchScope: boolean;
     created: string;
-    createdAtClient: string;
-    deleted: boolean;
+    description: string;
     displayName: string;
-    dueDate: string;
-    eventDataValues: any[];
-    eventDate: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    geometry: D2Geometry;
+    formName: string;
+    from: any;
     href: string;
     id: Id;
     lastUpdated: string;
-    lastUpdatedAtClient: string;
     lastUpdatedBy: D2User;
-    messageConversations: D2MessageConversation[];
+    name: string;
+    publicAccess: string;
+    relationshipType: D2RelationshipType;
+    style: D2Style;
+    to: any;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2Interpretation = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    chart: D2Chart;
+    code: Id;
+    comments: D2InterpretationComment[];
+    created: string;
+    dataSet: D2DataSet;
+    displayName: string;
+    eventChart: D2EventChart;
+    eventReport: D2EventReport;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    likedBy: D2User[];
+    likes: number;
+    map: D2Map;
+    mentions: any[];
     name: string;
     organisationUnit: D2OrganisationUnit;
-    programInstance: D2ProgramInstance;
-    programStage: D2ProgramStage;
+    period: any;
     publicAccess: string;
-    relationshipItems: any[];
-    status: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
-    storedBy: string;
+    reportTable: D2ReportTable;
+    text: string;
     translations: D2Translation[];
+    type: "REPORT_TABLE" | "CHART" | "MAP" | "EVENT_REPORT" | "EVENT_CHART" | "DATASET_REPORT";
     user: D2User;
     userAccesses: D2UserAccess[];
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2UserAccess = {
-    access: string;
-    displayName: string;
-    id: string;
-    userUid: string;
+export type D2TrackedEntityProgramIndicatorDimension = {
+    filter: string;
+    legendSet: D2LegendSet;
+    programIndicator: D2ProgramIndicator;
 };
 
-export type D2MessageConversation = {
-    access: D2Access;
-    assignee: D2User;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    created: string;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    followUp: boolean;
-    href: string;
-    id: Id;
-    lastMessage: string;
-    lastSender: D2User;
-    lastSenderFirstname: string;
-    lastSenderSurname: string;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    messageCount: number;
-    messageType: "PRIVATE" | "SYSTEM" | "VALIDATION_RESULT" | "TICKET";
-    messages: any[];
-    name: string;
-    priority: "NONE" | "LOW" | "MEDIUM" | "HIGH";
-    publicAccess: string;
-    read: boolean;
-    status: "NONE" | "OPEN" | "PENDING" | "INVALID" | "SOLVED";
-    subject: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userFirstname: string;
-    userGroupAccesses: D2UserGroupAccess[];
-    userMessages: any[];
-    userSurname: string;
+export type D2TrackedEntityDataElementDimension = {
+    dataElement: D2DataElement;
+    filter: string;
+    legendSet: D2LegendSet;
+};
+
+export type D2Icon = {};
+
+export type D2DataInputPeriod = {
+    closingDate: string;
+    openingDate: string;
+    period: any;
 };
 
 export type D2OrganisationUnitGroupSetDimension = {
@@ -3746,9 +3671,32 @@ export type D2OrganisationUnitGroupSetDimension = {
     organisationUnitGroups: D2OrganisationUnitGroup[];
 };
 
+export type D2InterpretationComment = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    displayName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    mentions: any[];
+    name: string;
+    publicAccess: string;
+    text: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
 export type D2UserCredentials = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     catDimensionConstraints: D2Category[];
     code: Id;
     cogsDimensionConstraints: D2CategoryOptionGroupSet[];
@@ -3782,134 +3730,92 @@ export type D2UserCredentials = {
     username: string;
 };
 
-export type D2Relationship = {
+export type D2ProgramTrackedEntityAttributeDimensionItem = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    aggregationType:
+        | "SUM"
+        | "AVERAGE"
+        | "AVERAGE_SUM_ORG_UNIT"
+        | "LAST"
+        | "LAST_AVERAGE_ORG_UNIT"
+        | "COUNT"
+        | "STDDEV"
+        | "VARIANCE"
+        | "MIN"
+        | "MAX"
+        | "NONE"
+        | "CUSTOM"
+        | "DEFAULT";
+    attribute: D2TrackedEntityAttribute;
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     description: string;
+    dimensionItem: string;
+    dimensionItemType:
+        | "DATA_ELEMENT"
+        | "DATA_ELEMENT_OPERAND"
+        | "INDICATOR"
+        | "REPORTING_RATE"
+        | "PROGRAM_DATA_ELEMENT"
+        | "PROGRAM_ATTRIBUTE"
+        | "PROGRAM_INDICATOR"
+        | "PERIOD"
+        | "ORGANISATION_UNIT"
+        | "CATEGORY_OPTION"
+        | "OPTION_GROUP"
+        | "DATA_ELEMENT_GROUP"
+        | "ORGANISATION_UNIT_GROUP"
+        | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
-    from: any;
     href: string;
     id: Id;
     lastUpdated: string;
     lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    relationshipType: D2RelationshipType;
-    shortName: string;
-    style: D2Style;
-    to: any;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2TrackedEntityProgramIndicatorDimension = {
-    filter: string;
     legendSet: D2LegendSet;
-    programIndicator: D2ProgramIndicator;
-};
-
-export type D2DataElementGroupSetDimension = {
-    dataElementGroupSet: D2DataElementGroupSet;
-    dataElementGroups: D2DataElementGroup[];
-};
-
-export type D2UserGroupAccess = {
-    access: string;
-    displayName: string;
-    id: string;
-    userGroupUid: string;
-};
-
-export type D2ProgramStageDataElement = {
-    access: D2Access;
-    allowFutureDate: boolean;
-    allowProvidedElsewhere: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    compulsory: boolean;
-    created: string;
-    dataElement: D2DataElement;
-    displayInReports: boolean;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    programStage: D2ProgramStage;
-    publicAccess: string;
-    renderOptionsAsRadio: boolean;
-    renderType: any;
-    skipSynchronization: boolean;
-    sortOrder: number;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2Legend = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    color: string;
-    created: string;
-    displayName: string;
-    endValue: number;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    image: string;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    startValue: number;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2TrackedEntityInstanceFilter = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    created: string;
-    description: string;
-    displayName: string;
-    enrollmentCreatedPeriod: any;
-    enrollmentStatus: "ACTIVE" | "COMPLETED" | "CANCELLED";
-    eventFilters: any[];
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    followup: boolean;
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
+    legendSets: D2LegendSet[];
     name: string;
     program: D2Program;
     publicAccess: string;
-    sortOrder: number;
-    style: D2Style;
+    shortName: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2TrackedEntityInstance = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    createdAtClient: string;
+    deleted: boolean;
+    displayName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    geometry: D2Geometry;
+    href: string;
+    id: Id;
+    inactive: boolean;
+    lastUpdated: string;
+    lastUpdatedAtClient: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    organisationUnit: D2OrganisationUnit;
+    programInstances: D2ProgramInstance[];
+    programOwners: any[];
+    publicAccess: string;
+    relationshipItems: any[];
+    representative: D2TrackedEntityInstance;
+    trackedEntityAttributeValues: any[];
+    trackedEntityType: D2TrackedEntityType;
     translations: D2Translation[];
     user: D2User;
     userAccesses: D2UserAccess[];
@@ -3924,8 +3830,6 @@ export type D2ProgramDataElementDimensionItem = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
         | "STDDEV"
         | "VARIANCE"
@@ -3934,7 +3838,7 @@ export type D2ProgramDataElementDimensionItem = {
         | "NONE"
         | "CUSTOM"
         | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     dataElement: D2DataElement;
@@ -3956,13 +3860,11 @@ export type D2ProgramDataElementDimensionItem = {
         | "ORGANISATION_UNIT_GROUP"
         | "CATEGORY_OPTION_GROUP";
     displayDescription: string;
-    displayFormName: string;
     displayName: string;
     displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     lastUpdated: string;
@@ -4005,11 +3907,170 @@ export type D2ProgramDataElementDimensionItem = {
         | "IMAGE";
 };
 
+export type D2DataSetElement = {
+    categoryCombo: D2CategoryCombo;
+    dataElement: D2DataElement;
+    dataSet: D2DataSet;
+};
+
+export type D2Legend = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    color: string;
+    created: string;
+    displayName: string;
+    endValue: number;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    image: string;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    publicAccess: string;
+    startValue: number;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2DataElementOperand = {
+    access: D2Access;
+    aggregationType:
+        | "SUM"
+        | "AVERAGE"
+        | "AVERAGE_SUM_ORG_UNIT"
+        | "LAST"
+        | "LAST_AVERAGE_ORG_UNIT"
+        | "COUNT"
+        | "STDDEV"
+        | "VARIANCE"
+        | "MIN"
+        | "MAX"
+        | "NONE"
+        | "CUSTOM"
+        | "DEFAULT";
+    attributeOptionCombo: D2CategoryOptionCombo;
+    attributeValues: D2AttributeValue[];
+    categoryOptionCombo: D2CategoryOptionCombo;
+    code: Id;
+    created: string;
+    dataElement: D2DataElement;
+    description: string;
+    dimensionItem: string;
+    dimensionItemType:
+        | "DATA_ELEMENT"
+        | "DATA_ELEMENT_OPERAND"
+        | "INDICATOR"
+        | "REPORTING_RATE"
+        | "PROGRAM_DATA_ELEMENT"
+        | "PROGRAM_ATTRIBUTE"
+        | "PROGRAM_INDICATOR"
+        | "PERIOD"
+        | "ORGANISATION_UNIT"
+        | "CATEGORY_OPTION"
+        | "OPTION_GROUP"
+        | "DATA_ELEMENT_GROUP"
+        | "ORGANISATION_UNIT_GROUP"
+        | "CATEGORY_OPTION_GROUP";
+    displayDescription: string;
+    displayName: string;
+    displayShortName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    legendSet: D2LegendSet;
+    legendSets: D2LegendSet[];
+    name: string;
+    publicAccess: string;
+    shortName: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2UserGroupAccess = {
+    access: string;
+    displayName: string;
+    id: string;
+    userGroupUid: string;
+};
+
+export type D2CategoryDimension = {
+    category: D2Category;
+    categoryOptions: D2CategoryOption[];
+};
+
+export type D2UserAccess = {
+    access: string;
+    displayName: string;
+    id: string;
+    userUid: string;
+};
+
+export type D2FileResource = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    contentLength: string;
+    contentMd5: string;
+    contentType: string;
+    created: string;
+    displayName: string;
+    domain: "DATA_VALUE" | "PUSH_ANALYSIS" | "DOCUMENT" | "MESSAGE_ATTACHMENT" | "USER_AVATAR";
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    publicAccess: string;
+    storageStatus: "NONE" | "PENDING" | "FAILED" | "STORED";
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
+export type D2MetadataVersion = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    displayName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    hashCode: string;
+    href: string;
+    id: Id;
+    importDate: string;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    publicAccess: string;
+    translations: D2Translation[];
+    type: "BEST_EFFORT" | "ATOMIC";
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
 export type D2ProgramInstance = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
-    completedBy: string;
     created: string;
     createdAtClient: string;
     deleted: boolean;
@@ -4020,7 +4081,6 @@ export type D2ProgramInstance = {
     favorite: boolean;
     favorites: string[];
     followup: boolean;
-    geometry: D2Geometry;
     href: string;
     id: Id;
     incidentDate: string;
@@ -4044,234 +4104,10 @@ export type D2ProgramInstance = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2DataElementOperand = {
-    access: D2Access;
-    aggregationType:
-        | "SUM"
-        | "AVERAGE"
-        | "AVERAGE_SUM_ORG_UNIT"
-        | "LAST"
-        | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
-        | "COUNT"
-        | "STDDEV"
-        | "VARIANCE"
-        | "MIN"
-        | "MAX"
-        | "NONE"
-        | "CUSTOM"
-        | "DEFAULT";
-    attributeOptionCombo: D2CategoryOptionCombo;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    categoryOptionCombo: D2CategoryOptionCombo;
-    code: Id;
-    created: string;
-    dataElement: D2DataElement;
-    description: string;
-    dimensionItem: string;
-    dimensionItemType:
-        | "DATA_ELEMENT"
-        | "DATA_ELEMENT_OPERAND"
-        | "INDICATOR"
-        | "REPORTING_RATE"
-        | "PROGRAM_DATA_ELEMENT"
-        | "PROGRAM_ATTRIBUTE"
-        | "PROGRAM_INDICATOR"
-        | "PERIOD"
-        | "ORGANISATION_UNIT"
-        | "CATEGORY_OPTION"
-        | "OPTION_GROUP"
-        | "DATA_ELEMENT_GROUP"
-        | "ORGANISATION_UNIT_GROUP"
-        | "CATEGORY_OPTION_GROUP";
-    displayDescription: string;
-    displayFormName: string;
-    displayName: string;
-    displayShortName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    formName: string;
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    legendSet: D2LegendSet;
-    legendSets: D2LegendSet[];
-    name: string;
-    publicAccess: string;
-    shortName: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2ProgramStageInstanceFilter = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    created: string;
-    description: string;
-    displayName: string;
-    eventQueryCriteria: any;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    program: Id;
-    programStage: Id;
-    publicAccess: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2Interpretation = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    chart: D2Chart;
-    code: Id;
-    comments: D2InterpretationComment[];
-    created: string;
-    dataSet: D2DataSet;
-    displayName: string;
-    eventChart: D2EventChart;
-    eventReport: D2EventReport;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    likedBy: D2User[];
-    likes: number;
-    map: D2Map;
-    mentions: any[];
-    name: string;
-    organisationUnit: D2OrganisationUnit;
-    period: any;
-    publicAccess: string;
-    reportTable: D2ReportTable;
-    text: string;
-    translations: D2Translation[];
-    type: "REPORT_TABLE" | "CHART" | "MAP" | "EVENT_REPORT" | "EVENT_CHART" | "DATASET_REPORT";
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2FileResource = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    contentLength: string;
-    contentMd5: string;
-    contentType: string;
-    created: string;
-    displayName: string;
-    domain: "DATA_VALUE" | "PUSH_ANALYSIS" | "DOCUMENT" | "MESSAGE_ATTACHMENT" | "USER_AVATAR";
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    hasMultipleStorageFiles: boolean;
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    storageStatus: "NONE" | "PENDING" | "FAILED" | "STORED";
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2CategoryDimension = {
-    category: D2Category;
-    categoryOptions: D2CategoryOption[];
-};
-
-export type D2ReportingRate = {
-    access: D2Access;
-    aggregationType:
-        | "SUM"
-        | "AVERAGE"
-        | "AVERAGE_SUM_ORG_UNIT"
-        | "LAST"
-        | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
-        | "COUNT"
-        | "STDDEV"
-        | "VARIANCE"
-        | "MIN"
-        | "MAX"
-        | "NONE"
-        | "CUSTOM"
-        | "DEFAULT";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    created: string;
-    dataSet: D2DataSet;
-    description: string;
-    dimensionItem: string;
-    dimensionItemType:
-        | "DATA_ELEMENT"
-        | "DATA_ELEMENT_OPERAND"
-        | "INDICATOR"
-        | "REPORTING_RATE"
-        | "PROGRAM_DATA_ELEMENT"
-        | "PROGRAM_ATTRIBUTE"
-        | "PROGRAM_INDICATOR"
-        | "PERIOD"
-        | "ORGANISATION_UNIT"
-        | "CATEGORY_OPTION"
-        | "OPTION_GROUP"
-        | "DATA_ELEMENT_GROUP"
-        | "ORGANISATION_UNIT_GROUP"
-        | "CATEGORY_OPTION_GROUP";
-    displayDescription: string;
-    displayFormName: string;
-    displayName: string;
-    displayShortName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    formName: string;
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    legendSet: D2LegendSet;
-    legendSets: D2LegendSet[];
-    metric:
-        | "REPORTING_RATE"
-        | "REPORTING_RATE_ON_TIME"
-        | "ACTUAL_REPORTS"
-        | "ACTUAL_REPORTS_ON_TIME"
-        | "EXPECTED_REPORTS";
-    name: string;
-    publicAccess: string;
-    shortName: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
 export type D2ProgramTrackedEntityAttribute = {
     access: D2Access;
     allowFutureDate: boolean;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
     displayInList: boolean;
@@ -4326,118 +4162,130 @@ export type D2ProgramTrackedEntityAttribute = {
         | "IMAGE";
 };
 
+export type D2MessageConversation = {
+    access: D2Access;
+    assignee: D2User;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    displayName: string;
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    followUp: boolean;
+    href: string;
+    id: Id;
+    lastMessage: string;
+    lastSender: D2User;
+    lastSenderFirstname: string;
+    lastSenderSurname: string;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    messageCount: number;
+    messageType: "PRIVATE" | "SYSTEM" | "VALIDATION_RESULT" | "TICKET";
+    messages: any[];
+    name: string;
+    priority: "NONE" | "LOW" | "MEDIUM" | "HIGH";
+    publicAccess: string;
+    read: boolean;
+    status: "NONE" | "OPEN" | "PENDING" | "INVALID" | "SOLVED";
+    subject: string;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userFirstname: string;
+    userGroupAccesses: D2UserGroupAccess[];
+    userMessages: any[];
+    userSurname: string;
+};
+
+export type D2TrackedEntityInstanceFilter = {
+    access: D2Access;
+    attributeValues: D2AttributeValue[];
+    code: Id;
+    created: string;
+    description: string;
+    displayName: string;
+    enrollmentCreatedPeriod: any;
+    enrollmentStatus: "ACTIVE" | "COMPLETED" | "CANCELLED";
+    eventFilters: any[];
+    externalAccess: boolean;
+    favorite: boolean;
+    favorites: string[];
+    followup: boolean;
+    href: string;
+    id: Id;
+    lastUpdated: string;
+    lastUpdatedBy: D2User;
+    name: string;
+    program: D2Program;
+    publicAccess: string;
+    sortOrder: number;
+    style: D2Style;
+    translations: D2Translation[];
+    user: D2User;
+    userAccesses: D2UserAccess[];
+    userGroupAccesses: D2UserGroupAccess[];
+};
+
 export type D2CategoryOptionGroupSetDimension = {
     categoryOptionGroupSet: D2CategoryOptionGroupSet;
     categoryOptionGroups: D2CategoryOptionGroup[];
 };
 
-export type D2ProgramTrackedEntityAttributeDimensionItem = {
+export type D2ProgramStageInstance = {
     access: D2Access;
-    aggregationType:
-        | "SUM"
-        | "AVERAGE"
-        | "AVERAGE_SUM_ORG_UNIT"
-        | "LAST"
-        | "LAST_AVERAGE_ORG_UNIT"
-        | "FIRST"
-        | "FIRST_AVERAGE_ORG_UNIT"
-        | "COUNT"
-        | "STDDEV"
-        | "VARIANCE"
-        | "MIN"
-        | "MAX"
-        | "NONE"
-        | "CUSTOM"
-        | "DEFAULT";
-    attribute: D2TrackedEntityAttribute;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
     created: string;
-    description: string;
-    dimensionItem: string;
-    dimensionItemType:
-        | "DATA_ELEMENT"
-        | "DATA_ELEMENT_OPERAND"
-        | "INDICATOR"
-        | "REPORTING_RATE"
-        | "PROGRAM_DATA_ELEMENT"
-        | "PROGRAM_ATTRIBUTE"
-        | "PROGRAM_INDICATOR"
-        | "PERIOD"
-        | "ORGANISATION_UNIT"
-        | "CATEGORY_OPTION"
-        | "OPTION_GROUP"
-        | "DATA_ELEMENT_GROUP"
-        | "ORGANISATION_UNIT_GROUP"
-        | "CATEGORY_OPTION_GROUP";
-    displayDescription: string;
-    displayFormName: string;
     displayName: string;
-    displayShortName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    formName: string;
     href: string;
     id: Id;
     lastUpdated: string;
     lastUpdatedBy: D2User;
-    legendSet: D2LegendSet;
-    legendSets: D2LegendSet[];
     name: string;
-    program: D2Program;
     publicAccess: string;
-    shortName: string;
     translations: D2Translation[];
     user: D2User;
     userAccesses: D2UserAccess[];
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2TrackedEntityAttributeValue = {
-    created: string;
-    lastUpdated: string;
-    storedBy: string;
-    trackedEntityAttribute: D2TrackedEntityAttribute;
-    trackedEntityInstance: D2TrackedEntityInstance;
-    value: string;
-};
-
-export type D2MetadataVersion = {
+export type D2Color = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     code: Id;
+    color: string;
     created: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
-    hashCode: string;
     href: string;
     id: Id;
-    importDate: string;
     lastUpdated: string;
     lastUpdatedBy: D2User;
     name: string;
     publicAccess: string;
     translations: D2Translation[];
-    type: "BEST_EFFORT" | "ATOMIC";
     user: D2User;
     userAccesses: D2UserAccess[];
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2DataInputPeriod = {
-    closingDate: string;
-    openingDate: string;
-    period: any;
-};
-
-export type D2InterpretationComment = {
+export type D2ProgramStageDataElement = {
     access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    allowFutureDate: boolean;
+    allowProvidedElsewhere: boolean;
+    attributeValues: D2AttributeValue[];
     code: Id;
+    compulsory: boolean;
     created: string;
+    dataElement: D2DataElement;
+    displayInReports: boolean;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -4446,10 +4294,13 @@ export type D2InterpretationComment = {
     id: Id;
     lastUpdated: string;
     lastUpdatedBy: D2User;
-    mentions: any[];
     name: string;
+    programStage: D2ProgramStage;
     publicAccess: string;
-    text: string;
+    renderOptionsAsRadio: boolean;
+    renderType: any;
+    skipSynchronization: boolean;
+    sortOrder: number;
     translations: D2Translation[];
     user: D2User;
     userAccesses: D2UserAccess[];
@@ -4463,7 +4314,7 @@ export type D2AnalyticsPeriodBoundary = {
         | "BEFORE_END_OF_REPORTING_PERIOD"
         | "AFTER_START_OF_REPORTING_PERIOD"
         | "AFTER_END_OF_REPORTING_PERIOD";
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+    attributeValues: D2AttributeValue[];
     boundaryTarget: string;
     code: Id;
     created: string;
@@ -4485,81 +4336,25 @@ export type D2AnalyticsPeriodBoundary = {
     userGroupAccesses: D2UserGroupAccess[];
 };
 
-export type D2TrackedEntityDataElementDimension = {
-    dataElement: D2DataElement;
-    filter: string;
-    legendSet: D2LegendSet;
-    programStage: D2ProgramStage;
-};
-
-export type D2Icon = {};
-
-export type D2TrackedEntityInstance = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    created: string;
-    createdAtClient: string;
-    deleted: boolean;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    geometry: D2Geometry;
-    href: string;
-    id: Id;
-    inactive: boolean;
-    lastUpdated: string;
-    lastUpdatedAtClient: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    organisationUnit: D2OrganisationUnit;
-    programInstances: D2ProgramInstance[];
-    programOwners: any[];
-    publicAccess: string;
-    relationshipItems: any[];
-    trackedEntityAttributeValues: D2TrackedEntityAttributeValue[];
-    trackedEntityType: D2TrackedEntityType;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2Color = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    color: string;
-    created: string;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2DataSetElement = {
-    categoryCombo: D2CategoryCombo;
-    dataElement: D2DataElement;
-    dataSet: D2DataSet;
-};
+export interface D2AttributeValueSchema {
+    name: "D2AttributeValue";
+    model: D2AttributeValue;
+    fields: { attribute: D2AttributeSchema; created: string; lastUpdated: string; value: string };
+    fieldPresets: {
+        $all: Preset<D2AttributeValue, keyof D2AttributeValue>;
+        $identifiable: Preset<D2AttributeValue, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2AttributeValue, FieldPresets["nameable"]>;
+        $persisted: Preset<D2AttributeValue, "lastUpdated" | "attribute" | "value" | "created">;
+        $owner: Preset<D2AttributeValue, "lastUpdated" | "attribute" | "value" | "created">;
+    };
+}
 
 export interface D2AttributeSchema {
     name: "D2Attribute";
     model: D2Attribute;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryAttribute: boolean;
         categoryOptionAttribute: boolean;
         categoryOptionComboAttribute: boolean;
@@ -4574,14 +4369,12 @@ export interface D2AttributeSchema {
         dataSetAttribute: boolean;
         description: string;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         documentAttribute: boolean;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         indicatorAttribute: boolean;
@@ -4757,7 +4550,7 @@ export interface D2UserAuthorityGroupSchema {
     model: D2UserAuthorityGroup;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         authorities: string[];
         code: Id;
         created: string;
@@ -4822,7 +4615,7 @@ export interface D2UserSchema {
     model: D2User;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         avatar: D2FileResourceSchema;
         birthday: string;
         code: Id;
@@ -4945,7 +4738,7 @@ export interface D2UserGroupSchema {
     model: D2UserGroup;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -5008,39 +4801,12 @@ export interface D2UserGroupSchema {
     };
 }
 
-export interface D2ExpressionSchema {
-    name: "D2Expression";
-    model: D2Expression;
-    fields: {
-        description: string;
-        expression: string;
-        missingValueStrategy:
-            | "SKIP_IF_ANY_VALUE_MISSING"
-            | "SKIP_IF_ALL_VALUES_MISSING"
-            | "NEVER_SKIP";
-        slidingWindow: boolean;
-    };
-    fieldPresets: {
-        $all: Preset<D2Expression, keyof D2Expression>;
-        $identifiable: Preset<D2Expression, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Expression, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Expression,
-            "description" | "expression" | "missingValueStrategy" | "slidingWindow"
-        >;
-        $owner: Preset<
-            D2Expression,
-            "description" | "expression" | "missingValueStrategy" | "slidingWindow"
-        >;
-    };
-}
-
 export interface D2ExternalFileResourceSchema {
     name: "D2ExternalFileResource";
     model: D2ExternalFileResource;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -5073,12 +4839,99 @@ export interface D2ExternalFileResourceSchema {
     };
 }
 
+export interface D2PushAnalysisSchema {
+    name: "D2PushAnalysis";
+    model: D2PushAnalysis;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        created: string;
+        dashboard: D2DashboardSchema;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        message: string;
+        name: string;
+        publicAccess: string;
+        recipientUserGroups: D2UserGroupSchema[];
+        title: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2PushAnalysis, keyof D2PushAnalysis>;
+        $identifiable: Preset<D2PushAnalysis, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2PushAnalysis, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2PushAnalysis,
+            | "lastUpdatedBy"
+            | "code"
+            | "created"
+            | "recipientUserGroups"
+            | "message"
+            | "title"
+            | "lastUpdated"
+            | "name"
+            | "id"
+            | "dashboard"
+        >;
+        $owner: Preset<
+            D2PushAnalysis,
+            | "lastUpdatedBy"
+            | "code"
+            | "created"
+            | "recipientUserGroups"
+            | "message"
+            | "title"
+            | "lastUpdated"
+            | "name"
+            | "id"
+            | "dashboard"
+        >;
+    };
+}
+
+export interface D2ExpressionSchema {
+    name: "D2Expression";
+    model: D2Expression;
+    fields: {
+        description: string;
+        expression: string;
+        missingValueStrategy:
+            | "SKIP_IF_ANY_VALUE_MISSING"
+            | "SKIP_IF_ALL_VALUES_MISSING"
+            | "NEVER_SKIP";
+        slidingWindow: boolean;
+    };
+    fieldPresets: {
+        $all: Preset<D2Expression, keyof D2Expression>;
+        $identifiable: Preset<D2Expression, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Expression, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2Expression,
+            "description" | "expression" | "missingValueStrategy" | "slidingWindow"
+        >;
+        $owner: Preset<
+            D2Expression,
+            "description" | "expression" | "missingValueStrategy" | "slidingWindow"
+        >;
+    };
+}
+
 export interface D2SqlViewSchema {
     name: "D2SqlView";
     model: D2SqlView;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         cacheStrategy:
             | "NO_CACHE"
             | "CACHE_15_MINUTES"
@@ -5157,18 +5010,16 @@ export interface D2ConstantSchema {
     model: D2Constant;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         lastUpdated: string;
@@ -5230,7 +5081,7 @@ export interface D2OAuth2ClientSchema {
     model: D2OAuth2Client;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         cid: Id;
         code: Id;
         created: string;
@@ -5290,14 +5141,11 @@ export interface D2OptionSchema {
     model: D2Option;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: string;
         created: string;
         description: string;
-        displayDescription: string;
-        displayFormName: string;
         displayName: string;
-        displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
@@ -5309,7 +5157,6 @@ export interface D2OptionSchema {
         name: string;
         optionSet: D2OptionSetSchema;
         publicAccess: string;
-        shortName: string;
         sortOrder: number;
         style: D2Style;
         translations: D2Translation[];
@@ -5359,7 +5206,7 @@ export interface D2JobConfigurationSchema {
     model: D2JobConfiguration;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         configurable: boolean;
         continuousExecution: boolean;
@@ -5380,10 +5227,8 @@ export interface D2JobConfigurationSchema {
             | "RESOURCE_TABLE"
             | "ANALYTICS_TABLE"
             | "DATA_SYNC"
-            | "TRACKER_PROGRAMS_DATA_SYNC"
-            | "EVENT_PROGRAMS_DATA_SYNC"
+            | "PROGRAM_DATA_SYNC"
             | "FILE_RESOURCE_CLEANUP"
-            | "IMAGE_PROCESSING"
             | "META_DATA_SYNC"
             | "SMS_SEND"
             | "SEND_SCHEDULED_MESSAGE"
@@ -5395,6 +5240,7 @@ export interface D2JobConfigurationSchema {
             | "PREDICTOR"
             | "DATA_SET_NOTIFICATION"
             | "REMOVE_EXPIRED_RESERVED_VALUES"
+            | "KAFKA_TRACKER"
             | "MOCK"
             | "DATAVALUE_IMPORT"
             | "ANALYTICSTABLE_UPDATE"
@@ -5406,8 +5252,7 @@ export interface D2JobConfigurationSchema {
             | "TEI_IMPORT"
             | "LEADER_ELECTION"
             | "LEADER_RENEWAL"
-            | "COMPLETE_DATA_SET_REGISTRATION_IMPORT"
-            | "PROGRAM_DATA_SYNC";
+            | "COMPLETE_DATA_SET_REGISTRATION_IMPORT";
         lastExecuted: string;
         lastExecutedStatus:
             | "RUNNING"
@@ -5481,7 +5326,7 @@ export interface D2OptionSetSchema {
     model: D2OptionSet;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -5581,8 +5426,6 @@ export interface D2OptionGroupSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -5591,7 +5434,7 @@ export interface D2OptionGroupSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
@@ -5612,13 +5455,11 @@ export interface D2OptionGroupSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         lastUpdated: string;
@@ -5651,6 +5492,7 @@ export interface D2OptionGroupSchema {
             | "lastUpdatedBy"
             | "userGroupAccesses"
             | "created"
+            | "attributeValues"
             | "userAccesses"
             | "name"
             | "shortName"
@@ -5668,6 +5510,7 @@ export interface D2OptionGroupSchema {
             | "lastUpdatedBy"
             | "userGroupAccesses"
             | "created"
+            | "attributeValues"
             | "userAccesses"
             | "name"
             | "shortName"
@@ -5687,8 +5530,6 @@ export interface D2OptionGroupSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -5698,11 +5539,10 @@ export interface D2OptionGroupSetSchema {
             | "CUSTOM"
             | "DEFAULT";
         allItems: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         dataDimension: boolean;
-        dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         description: string;
         dimension: string;
         dimensionType:
@@ -5724,16 +5564,13 @@ export interface D2OptionGroupSetSchema {
             | "VALIDATION_RULE"
             | "STATIC"
             | "ORGANISATION_UNIT_LEVEL";
-        dimensionalKeywords: D2DimensionalKeywords;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         filter: string;
-        formName: string;
         href: string;
         id: Id;
         items: any[];
@@ -5743,7 +5580,6 @@ export interface D2OptionGroupSetSchema {
         name: string;
         optionGroups: D2OptionGroupSchema[];
         optionSet: D2OptionSetSchema;
-        programStage: D2ProgramStageSchema;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -5794,65 +5630,12 @@ export interface D2OptionGroupSetSchema {
     };
 }
 
-export interface D2ColorSetSchema {
-    name: "D2ColorSet";
-    model: D2ColorSet;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        colors: D2ColorSchema[];
-        created: string;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        publicAccess: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2ColorSet, keyof D2ColorSet>;
-        $identifiable: Preset<D2ColorSet, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ColorSet, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2ColorSet,
-            | "lastUpdatedBy"
-            | "code"
-            | "created"
-            | "colors"
-            | "lastUpdated"
-            | "translations"
-            | "name"
-            | "id"
-        >;
-        $owner: Preset<
-            D2ColorSet,
-            | "lastUpdatedBy"
-            | "code"
-            | "created"
-            | "colors"
-            | "lastUpdated"
-            | "translations"
-            | "name"
-            | "id"
-        >;
-    };
-}
-
 export interface D2LegendSetSchema {
     name: "D2LegendSet";
     model: D2LegendSet;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -5913,6 +5696,59 @@ export interface D2LegendSetSchema {
     };
 }
 
+export interface D2ColorSetSchema {
+    name: "D2ColorSet";
+    model: D2ColorSet;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        colors: D2ColorSchema[];
+        created: string;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        publicAccess: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2ColorSet, keyof D2ColorSet>;
+        $identifiable: Preset<D2ColorSet, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2ColorSet, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2ColorSet,
+            | "lastUpdatedBy"
+            | "code"
+            | "created"
+            | "colors"
+            | "lastUpdated"
+            | "translations"
+            | "name"
+            | "id"
+        >;
+        $owner: Preset<
+            D2ColorSet,
+            | "lastUpdatedBy"
+            | "code"
+            | "created"
+            | "colors"
+            | "lastUpdated"
+            | "translations"
+            | "name"
+            | "id"
+        >;
+    };
+}
+
 export interface D2OrganisationUnitSchema {
     name: "D2OrganisationUnit";
     model: D2OrganisationUnit;
@@ -5925,8 +5761,6 @@ export interface D2OrganisationUnitSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -5936,12 +5770,13 @@ export interface D2OrganisationUnitSchema {
             | "CUSTOM"
             | "DEFAULT";
         ancestors: D2OrganisationUnitSchema[];
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         children: D2OrganisationUnitSchema[];
         closedDate: string;
         code: Id;
         comment: string;
         contactPerson: string;
+        coordinates: string;
         created: string;
         dataSets: D2DataSetSchema[];
         description: string;
@@ -5962,15 +5797,13 @@ export interface D2OrganisationUnitSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         email: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
-        geometry: D2Geometry;
+        featureType: "NONE" | "MULTI_POLYGON" | "POLYGON" | "POINT" | "SYMBOL";
         href: string;
         id: Id;
         lastUpdated: string;
@@ -6011,7 +5844,6 @@ export interface D2OrganisationUnitSchema {
             | "id"
             | "organisationUnitGroups"
             | "lastUpdatedBy"
-            | "level"
             | "created"
             | "attributeValues"
             | "users"
@@ -6023,12 +5855,13 @@ export interface D2OrganisationUnitSchema {
             | "code"
             | "description"
             | "contactPerson"
+            | "featureType"
             | "openingDate"
             | "email"
             | "address"
+            | "coordinates"
             | "url"
             | "closedDate"
-            | "geometry"
             | "comment"
             | "user"
         >;
@@ -6040,7 +5873,6 @@ export interface D2OrganisationUnitSchema {
             | "translations"
             | "id"
             | "lastUpdatedBy"
-            | "level"
             | "created"
             | "attributeValues"
             | "phoneNumber"
@@ -6049,12 +5881,13 @@ export interface D2OrganisationUnitSchema {
             | "code"
             | "description"
             | "contactPerson"
+            | "featureType"
             | "openingDate"
             | "email"
             | "address"
+            | "coordinates"
             | "url"
             | "closedDate"
-            | "geometry"
             | "comment"
             | "user"
         >;
@@ -6066,7 +5899,7 @@ export interface D2OrganisationUnitLevelSchema {
     model: D2OrganisationUnitLevel;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -6128,8 +5961,6 @@ export interface D2OrganisationUnitGroupSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -6138,9 +5969,10 @@ export interface D2OrganisationUnitGroupSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         color: string;
+        coordinates: string;
         created: string;
         description: string;
         dimensionItem: string;
@@ -6160,15 +5992,12 @@ export interface D2OrganisationUnitGroupSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         featureType: "NONE" | "MULTI_POLYGON" | "POLYGON" | "POINT" | "SYMBOL";
-        formName: string;
-        geometry: D2Geometry;
         groupSets: D2OrganisationUnitGroupSetSchema[];
         href: string;
         id: Id;
@@ -6203,11 +6032,11 @@ export interface D2OrganisationUnitGroupSchema {
             | "lastUpdatedBy"
             | "userGroupAccesses"
             | "created"
+            | "coordinates"
             | "attributeValues"
             | "groupSets"
             | "userAccesses"
             | "name"
-            | "geometry"
             | "shortName"
             | "user"
         >;
@@ -6224,10 +6053,10 @@ export interface D2OrganisationUnitGroupSchema {
             | "lastUpdatedBy"
             | "userGroupAccesses"
             | "created"
+            | "coordinates"
             | "attributeValues"
             | "userAccesses"
             | "name"
-            | "geometry"
             | "shortName"
             | "user"
         >;
@@ -6245,8 +6074,6 @@ export interface D2OrganisationUnitGroupSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -6256,12 +6083,11 @@ export interface D2OrganisationUnitGroupSetSchema {
             | "CUSTOM"
             | "DEFAULT";
         allItems: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         compulsory: boolean;
         created: string;
         dataDimension: boolean;
-        dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         description: string;
         dimension: string;
         dimensionType:
@@ -6283,16 +6109,13 @@ export interface D2OrganisationUnitGroupSetSchema {
             | "VALIDATION_RULE"
             | "STATIC"
             | "ORGANISATION_UNIT_LEVEL";
-        dimensionalKeywords: D2DimensionalKeywords;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         filter: string;
-        formName: string;
         href: string;
         id: Id;
         includeSubhierarchyInAnalytics: boolean;
@@ -6302,7 +6125,6 @@ export interface D2OrganisationUnitGroupSetSchema {
         legendSet: D2LegendSetSchema;
         name: string;
         organisationUnitGroups: D2OrganisationUnitGroupSchema[];
-        programStage: D2ProgramStageSchema;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -6368,8 +6190,6 @@ export interface D2CategoryOptionSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -6378,7 +6198,7 @@ export interface D2CategoryOptionSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categories: D2CategorySchema[];
         categoryOptionCombos: D2CategoryOptionComboSchema[];
         categoryOptionGroups: D2CategoryOptionGroupSchema[];
@@ -6402,14 +6222,12 @@ export interface D2CategoryOptionSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         endDate: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         isDefault: boolean;
@@ -6439,7 +6257,6 @@ export interface D2CategoryOptionSchema {
             | "publicAccess"
             | "lastUpdated"
             | "translations"
-            | "formName"
             | "id"
             | "categories"
             | "organisationUnits"
@@ -6463,7 +6280,6 @@ export interface D2CategoryOptionSchema {
             | "publicAccess"
             | "lastUpdated"
             | "translations"
-            | "formName"
             | "id"
             | "organisationUnits"
             | "lastUpdatedBy"
@@ -6491,8 +6307,6 @@ export interface D2CategoryOptionGroupSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -6501,7 +6315,7 @@ export interface D2CategoryOptionGroupSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryOptions: D2CategoryOptionSchema[];
         code: Id;
         created: string;
@@ -6524,13 +6338,11 @@ export interface D2CategoryOptionGroupSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         groupSets: D2CategoryOptionGroupSetSchema[];
         href: string;
         id: Id;
@@ -6601,8 +6413,6 @@ export interface D2CategoryOptionGroupSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -6612,7 +6422,7 @@ export interface D2CategoryOptionGroupSetSchema {
             | "CUSTOM"
             | "DEFAULT";
         allItems: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryOptionGroups: D2CategoryOptionGroupSchema[];
         code: Id;
         created: string;
@@ -6639,16 +6449,13 @@ export interface D2CategoryOptionGroupSetSchema {
             | "VALIDATION_RULE"
             | "STATIC"
             | "ORGANISATION_UNIT_LEVEL";
-        dimensionalKeywords: D2DimensionalKeywords;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         filter: string;
-        formName: string;
         href: string;
         id: Id;
         items: any[];
@@ -6656,7 +6463,6 @@ export interface D2CategoryOptionGroupSetSchema {
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         name: string;
-        programStage: D2ProgramStageSchema;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -6720,8 +6526,6 @@ export interface D2CategorySchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -6731,7 +6535,7 @@ export interface D2CategorySchema {
             | "CUSTOM"
             | "DEFAULT";
         allItems: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryCombos: D2CategoryComboSchema[];
         categoryOptions: D2CategoryOptionSchema[];
         code: Id;
@@ -6759,16 +6563,13 @@ export interface D2CategorySchema {
             | "VALIDATION_RULE"
             | "STATIC"
             | "ORGANISATION_UNIT_LEVEL";
-        dimensionalKeywords: D2DimensionalKeywords;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         filter: string;
-        formName: string;
         href: string;
         id: Id;
         items: any[];
@@ -6776,7 +6577,6 @@ export interface D2CategorySchema {
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         name: string;
-        programStage: D2ProgramStageSchema;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -6833,7 +6633,7 @@ export interface D2CategoryComboSchema {
     model: D2CategoryCombo;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categories: D2CategorySchema[];
         categoryOptionCombos: D2CategoryOptionComboSchema[];
         code: Id;
@@ -6909,8 +6709,6 @@ export interface D2CategoryOptionComboSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -6919,7 +6717,7 @@ export interface D2CategoryOptionComboSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryCombo: D2CategoryComboSchema;
         categoryOptions: D2CategoryOptionSchema[];
         code: Id;
@@ -6942,13 +6740,11 @@ export interface D2CategoryOptionComboSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         ignoreApproval: boolean;
@@ -7011,8 +6807,6 @@ export interface D2DataElementSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -7021,7 +6815,7 @@ export interface D2DataElementSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryCombo: D2CategoryComboSchema;
         code: Id;
         commentOptionSet: D2OptionSetSchema;
@@ -7180,8 +6974,6 @@ export interface D2DataElementGroupSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -7190,7 +6982,7 @@ export interface D2DataElementGroupSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         dataElements: D2DataElementSchema[];
@@ -7212,13 +7004,11 @@ export interface D2DataElementGroupSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         groupSets: D2DataElementGroupSetSchema[];
         href: string;
         id: Id;
@@ -7287,8 +7077,6 @@ export interface D2DataElementGroupSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -7298,12 +7086,11 @@ export interface D2DataElementGroupSetSchema {
             | "CUSTOM"
             | "DEFAULT";
         allItems: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         compulsory: boolean;
         created: string;
         dataDimension: boolean;
-        dataDimensionType: "DISAGGREGATION" | "ATTRIBUTE";
         dataElementGroups: D2DataElementGroupSchema[];
         description: string;
         dimension: string;
@@ -7326,16 +7113,13 @@ export interface D2DataElementGroupSetSchema {
             | "VALIDATION_RULE"
             | "STATIC"
             | "ORGANISATION_UNIT_LEVEL";
-        dimensionalKeywords: D2DimensionalKeywords;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         filter: string;
-        formName: string;
         href: string;
         id: Id;
         items: any[];
@@ -7343,7 +7127,6 @@ export interface D2DataElementGroupSetSchema {
         lastUpdatedBy: D2UserSchema;
         legendSet: D2LegendSetSchema;
         name: string;
-        programStage: D2ProgramStageSchema;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -7396,6 +7179,62 @@ export interface D2DataElementGroupSetSchema {
     };
 }
 
+export interface D2IndicatorTypeSchema {
+    name: "D2IndicatorType";
+    model: D2IndicatorType;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        created: string;
+        displayName: string;
+        externalAccess: boolean;
+        factor: number;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        number: boolean;
+        publicAccess: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2IndicatorType, keyof D2IndicatorType>;
+        $identifiable: Preset<D2IndicatorType, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2IndicatorType, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2IndicatorType,
+            | "lastUpdatedBy"
+            | "code"
+            | "created"
+            | "lastUpdated"
+            | "number"
+            | "translations"
+            | "name"
+            | "id"
+            | "factor"
+        >;
+        $owner: Preset<
+            D2IndicatorType,
+            | "lastUpdatedBy"
+            | "code"
+            | "created"
+            | "lastUpdated"
+            | "number"
+            | "translations"
+            | "name"
+            | "id"
+            | "factor"
+        >;
+    };
+}
+
 export interface D2AnalyticsTableHookSchema {
     name: "D2AnalyticsTableHook";
     model: D2AnalyticsTableHook;
@@ -7409,7 +7248,7 @@ export interface D2AnalyticsTableHookSchema {
             | "EVENT"
             | "ENROLLMENT"
             | "VALIDATION_RESULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -7476,62 +7315,6 @@ export interface D2AnalyticsTableHookSchema {
     };
 }
 
-export interface D2IndicatorTypeSchema {
-    name: "D2IndicatorType";
-    model: D2IndicatorType;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        displayName: string;
-        externalAccess: boolean;
-        factor: number;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        number: boolean;
-        publicAccess: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2IndicatorType, keyof D2IndicatorType>;
-        $identifiable: Preset<D2IndicatorType, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2IndicatorType, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2IndicatorType,
-            | "lastUpdatedBy"
-            | "code"
-            | "created"
-            | "lastUpdated"
-            | "number"
-            | "translations"
-            | "name"
-            | "id"
-            | "factor"
-        >;
-        $owner: Preset<
-            D2IndicatorType,
-            | "lastUpdatedBy"
-            | "code"
-            | "created"
-            | "lastUpdated"
-            | "number"
-            | "translations"
-            | "name"
-            | "id"
-            | "factor"
-        >;
-    };
-}
-
 export interface D2IndicatorSchema {
     name: "D2Indicator";
     model: D2Indicator;
@@ -7545,8 +7328,6 @@ export interface D2IndicatorSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -7556,7 +7337,7 @@ export interface D2IndicatorSchema {
             | "CUSTOM"
             | "DEFAULT";
         annualized: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         dataSets: D2DataSetSchema[];
@@ -7580,11 +7361,8 @@ export interface D2IndicatorSchema {
             | "DATA_ELEMENT_GROUP"
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
-        displayDenominatorDescription: string;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
-        displayNumeratorDescription: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -7684,7 +7462,7 @@ export interface D2IndicatorGroupSchema {
     model: D2IndicatorGroup;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -7750,7 +7528,7 @@ export interface D2IndicatorGroupSetSchema {
     model: D2IndicatorGroupSet;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         compulsory: boolean;
         created: string;
@@ -7817,7 +7595,7 @@ export interface D2DataEntryFormSchema {
     model: D2DataEntryForm;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -7882,8 +7660,6 @@ export interface D2DataSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -7892,7 +7668,7 @@ export interface D2DataSetSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryCombo: D2CategoryComboSchema;
         code: Id;
         compulsoryDataElementOperands: D2DataElementOperandSchema[];
@@ -7920,7 +7696,6 @@ export interface D2DataSetSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         expiryDays: number;
@@ -7944,7 +7719,6 @@ export interface D2DataSetSchema {
         notificationRecipients: D2UserGroupSchema;
         notifyCompletingUser: boolean;
         openFuturePeriods: number;
-        openPeriodsAfterCoEndDate: number;
         organisationUnits: D2OrganisationUnitSchema[];
         periodType: string;
         publicAccess: string;
@@ -8008,7 +7782,6 @@ export interface D2DataSetSchema {
             | "renderHorizontally"
             | "renderAsTabs"
             | "mobile"
-            | "openPeriodsAfterCoEndDate"
             | "periodType"
             | "openFuturePeriods"
             | "expiryDays"
@@ -8053,7 +7826,6 @@ export interface D2DataSetSchema {
             | "renderHorizontally"
             | "renderAsTabs"
             | "mobile"
-            | "openPeriodsAfterCoEndDate"
             | "periodType"
             | "openFuturePeriods"
             | "expiryDays"
@@ -8067,7 +7839,7 @@ export interface D2DataSetNotificationTemplateSchema {
     model: D2DataSetNotificationTemplate;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         dataSetNotificationTrigger: "DATA_SET_COMPLETION" | "SCHEDULED_DAYS";
@@ -8148,7 +7920,7 @@ export interface D2SectionSchema {
     model: D2Section;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryCombos: D2CategoryComboSchema[];
         code: Id;
         created: string;
@@ -8225,7 +7997,7 @@ export interface D2DataApprovalLevelSchema {
     model: D2DataApprovalLevel;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryOptionGroupSet: D2CategoryOptionGroupSetSchema;
         code: Id;
         created: string;
@@ -8293,7 +8065,7 @@ export interface D2DataApprovalWorkflowSchema {
     model: D2DataApprovalWorkflow;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryCombo: D2CategoryComboSchema;
         code: Id;
         created: string;
@@ -8370,8 +8142,6 @@ export interface D2ValidationRuleSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -8380,7 +8150,7 @@ export interface D2ValidationRuleSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
@@ -8401,13 +8171,11 @@ export interface D2ValidationRuleSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         importance: "HIGH" | "MEDIUM" | "LOW";
@@ -8502,7 +8270,7 @@ export interface D2ValidationRuleGroupSchema {
     model: D2ValidationRuleGroup;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
@@ -8568,7 +8336,7 @@ export interface D2ValidationNotificationTemplateSchema {
     model: D2ValidationNotificationTemplate;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -8641,8 +8409,6 @@ export interface D2TrackedEntityAttributeSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -8651,7 +8417,7 @@ export interface D2TrackedEntityAttributeSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         confidential: boolean;
         created: string;
@@ -8673,7 +8439,6 @@ export interface D2TrackedEntityAttributeSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayInListNoProgram: boolean;
         displayName: string;
         displayOnVisitSchedule: boolean;
@@ -8697,6 +8462,7 @@ export interface D2TrackedEntityAttributeSchema {
         optionSetValue: boolean;
         orgunitScope: boolean;
         pattern: string;
+        programScope: boolean;
         publicAccess: string;
         shortName: string;
         skipSynchronization: boolean;
@@ -8742,6 +8508,7 @@ export interface D2TrackedEntityAttributeSchema {
         $persisted: Preset<
             D2TrackedEntityAttribute,
             | "aggregationType"
+            | "programScope"
             | "code"
             | "displayInListNoProgram"
             | "publicAccess"
@@ -8778,6 +8545,7 @@ export interface D2TrackedEntityAttributeSchema {
         $owner: Preset<
             D2TrackedEntityAttribute,
             | "aggregationType"
+            | "programScope"
             | "code"
             | "displayInListNoProgram"
             | "publicAccess"
@@ -8820,12 +8588,11 @@ export interface D2TrackedEntityTypeSchema {
     fields: {
         access: D2Access;
         allowAuditLog: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
@@ -8907,7 +8674,7 @@ export interface D2TrackedEntityTypeAttributeSchema {
     model: D2TrackedEntityTypeAttribute;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayInList: boolean;
@@ -8995,19 +8762,17 @@ export interface D2ProgramTrackedEntityAttributeGroupSchema {
     model: D2ProgramTrackedEntityAttributeGroup;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         attributes: D2ProgramTrackedEntityAttributeSchema[];
         code: Id;
         created: string;
         description: string;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         lastUpdated: string;
@@ -9030,8 +8795,8 @@ export interface D2ProgramTrackedEntityAttributeGroupSchema {
         $nameable: Preset<D2ProgramTrackedEntityAttributeGroup, FieldPresets["nameable"]>;
         $persisted: Preset<
             D2ProgramTrackedEntityAttributeGroup,
-            | "code"
             | "uniqunessType"
+            | "code"
             | "description"
             | "lastUpdated"
             | "translations"
@@ -9044,8 +8809,8 @@ export interface D2ProgramTrackedEntityAttributeGroupSchema {
         >;
         $owner: Preset<
             D2ProgramTrackedEntityAttributeGroup,
-            | "code"
             | "uniqunessType"
+            | "code"
             | "description"
             | "lastUpdated"
             | "translations"
@@ -9063,7 +8828,7 @@ export interface D2ProgramNotificationTemplateSchema {
     model: D2ProgramNotificationTemplate;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         deliveryChannels: never[];
@@ -9156,15 +8921,12 @@ export interface D2ProgramStageSectionSchema {
     model: D2ProgramStageSection;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         dataElements: D2DataElementSchema[];
         description: string;
-        displayDescription: string;
-        displayFormName: string;
         displayName: string;
-        displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
@@ -9178,7 +8940,6 @@ export interface D2ProgramStageSectionSchema {
         programStage: D2ProgramStageSchema;
         publicAccess: string;
         renderType: any;
-        shortName: string;
         sortOrder: number;
         style: D2Style;
         translations: D2Translation[];
@@ -9235,7 +8996,7 @@ export interface D2ProgramStageSchema {
     fields: {
         access: D2Access;
         allowGenerateNextVisit: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         autoGenerateEvent: boolean;
         blockEntryForm: boolean;
         code: Id;
@@ -9243,12 +9004,9 @@ export interface D2ProgramStageSchema {
         dataEntryForm: D2DataEntryFormSchema;
         description: string;
         displayDescription: string;
-        displayFormName: string;
         displayGenerateEventBox: boolean;
         displayName: string;
-        displayShortName: string;
         dueDateLabel: string;
-        enableUserAssignment: boolean;
         executionDateLabel: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -9264,7 +9022,6 @@ export interface D2ProgramStageSchema {
         lastUpdatedBy: D2UserSchema;
         minDaysFromStart: number;
         name: string;
-        nextScheduleDate: D2DataElementSchema;
         notificationTemplates: D2ProgramNotificationTemplateSchema[];
         openAfterEnrollment: boolean;
         periodType: string;
@@ -9276,7 +9033,6 @@ export interface D2ProgramStageSchema {
         remindCompleted: boolean;
         repeatable: boolean;
         reportDateToUse: string;
-        shortName: string;
         sortOrder: number;
         standardInterval: number;
         style: D2Style;
@@ -9292,8 +9048,8 @@ export interface D2ProgramStageSchema {
         $nameable: Preset<D2ProgramStage, FieldPresets["nameable"]>;
         $persisted: Preset<
             D2ProgramStage,
-            | "dataEntryForm"
             | "allowGenerateNextVisit"
+            | "dataEntryForm"
             | "publicAccess"
             | "reportDateToUse"
             | "program"
@@ -9310,7 +9066,6 @@ export interface D2ProgramStageSchema {
             | "userAccesses"
             | "name"
             | "hideDueDate"
-            | "enableUserAssignment"
             | "style"
             | "minDaysFromStart"
             | "standardInterval"
@@ -9326,7 +9081,6 @@ export interface D2ProgramStageSchema {
             | "featureType"
             | "remindCompleted"
             | "displayGenerateEventBox"
-            | "nextScheduleDate"
             | "validationStrategy"
             | "autoGenerateEvent"
             | "periodType"
@@ -9336,8 +9090,8 @@ export interface D2ProgramStageSchema {
         >;
         $owner: Preset<
             D2ProgramStage,
-            | "dataEntryForm"
             | "allowGenerateNextVisit"
+            | "dataEntryForm"
             | "publicAccess"
             | "reportDateToUse"
             | "program"
@@ -9354,7 +9108,6 @@ export interface D2ProgramStageSchema {
             | "userAccesses"
             | "name"
             | "hideDueDate"
-            | "enableUserAssignment"
             | "style"
             | "minDaysFromStart"
             | "standardInterval"
@@ -9370,7 +9123,6 @@ export interface D2ProgramStageSchema {
             | "featureType"
             | "remindCompleted"
             | "displayGenerateEventBox"
-            | "nextScheduleDate"
             | "validationStrategy"
             | "autoGenerateEvent"
             | "periodType"
@@ -9386,7 +9138,7 @@ export interface D2SMSCommandSchema {
     model: D2SMSCommand;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         codeValueSeparator: string;
         completenessMethod: "ALL_DATAVALUE" | "AT_LEAST_ONE_DATAVALUE" | "DO_NOT_MARK_COMPLETE";
@@ -9489,7 +9241,7 @@ export interface D2ProgramSchema {
     fields: {
         access: D2Access;
         accessLevel: "OPEN" | "AUDITED" | "PROTECTED" | "CLOSED";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryCombo: D2CategoryComboSchema;
         code: Id;
         completeEventsExpiryDays: number;
@@ -9497,7 +9249,6 @@ export interface D2ProgramSchema {
         dataEntryForm: D2DataEntryFormSchema;
         description: string;
         displayDescription: string;
-        displayFormName: string;
         displayFrontPageList: boolean;
         displayIncidentDate: boolean;
         displayName: string;
@@ -9545,6 +9296,7 @@ export interface D2ProgramSchema {
         userRoles: D2UserAuthorityGroupSchema[];
         version: number;
         withoutRegistration: boolean;
+        workflow: D2DataApprovalWorkflowSchema;
     };
     fieldPresets: {
         $all: Preset<D2Program, keyof D2Program>;
@@ -9565,6 +9317,7 @@ export interface D2ProgramSchema {
             | "lastUpdatedBy"
             | "onlyEnrollOnce"
             | "userGroupAccesses"
+            | "workflow"
             | "created"
             | "attributeValues"
             | "version"
@@ -9614,6 +9367,7 @@ export interface D2ProgramSchema {
             | "lastUpdatedBy"
             | "onlyEnrollOnce"
             | "userGroupAccesses"
+            | "workflow"
             | "created"
             | "attributeValues"
             | "version"
@@ -9650,251 +9404,6 @@ export interface D2ProgramSchema {
     };
 }
 
-export interface D2EventReportSchema {
-    name: "D2EventReport";
-    model: D2EventReport;
-    fields: {
-        access: D2Access;
-        aggregationType:
-            | "SUM"
-            | "AVERAGE"
-            | "AVERAGE_SUM_ORG_UNIT"
-            | "LAST"
-            | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
-            | "COUNT"
-            | "STDDEV"
-            | "VARIANCE"
-            | "MIN"
-            | "MAX"
-            | "NONE"
-            | "CUSTOM"
-            | "DEFAULT";
-        attributeDimensions: any[];
-        attributeValueDimension: D2TrackedEntityAttributeSchema;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        categoryDimensions: D2CategoryDimensionSchema[];
-        categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema[];
-        code: Id;
-        colSubTotals: boolean;
-        colTotals: boolean;
-        collapseDataDimensions: boolean;
-        columnDimensions: string[];
-        columns: any[];
-        completedOnly: boolean;
-        created: string;
-        dataDimensionItems: any[];
-        dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
-        dataElementGroupSetDimensions: D2DataElementGroupSetDimensionSchema[];
-        dataElementValueDimension: D2DataElementSchema;
-        dataType: "AGGREGATED_VALUES" | "EVENTS";
-        description: string;
-        digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
-        displayDensity: "COMFORTABLE" | "NORMAL" | "COMPACT" | "NONE";
-        displayDescription: string;
-        displayFormName: string;
-        displayName: string;
-        displayShortName: string;
-        endDate: string;
-        eventStatus: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        filterDimensions: string[];
-        filters: any[];
-        fontSize: "LARGE" | "NORMAL" | "SMALL";
-        formName: string;
-        hideEmptyRows: boolean;
-        hideNaData: boolean;
-        hideSubtitle: boolean;
-        hideTitle: boolean;
-        href: string;
-        id: Id;
-        interpretations: D2InterpretationSchema[];
-        itemOrganisationUnitGroups: D2OrganisationUnitGroupSchema[];
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        orgUnitField: string;
-        organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimensionSchema[];
-        organisationUnitLevels: number[];
-        organisationUnits: D2OrganisationUnitSchema[];
-        outputType: "EVENT" | "ENROLLMENT" | "TRACKED_ENTITY_INSTANCE";
-        parentGraphMap: D2MapSchema;
-        periods: any[];
-        program: D2ProgramSchema;
-        programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
-        programStage: D2ProgramStageSchema;
-        programStatus: "ACTIVE" | "COMPLETED" | "CANCELLED";
-        publicAccess: string;
-        relativePeriods: any;
-        rowDimensions: string[];
-        rowSubTotals: boolean;
-        rowTotals: boolean;
-        rows: any[];
-        shortName: string;
-        showDimensionLabels: boolean;
-        showHierarchy: boolean;
-        sortOrder: number;
-        startDate: string;
-        subscribed: boolean;
-        subscribers: string[];
-        subtitle: string;
-        timeField: string;
-        title: string;
-        topLimit: number;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-        userOrganisationUnit: boolean;
-        userOrganisationUnitChildren: boolean;
-        userOrganisationUnitGrandChildren: boolean;
-        value: any;
-    };
-    fieldPresets: {
-        $all: Preset<D2EventReport, keyof D2EventReport>;
-        $identifiable: Preset<D2EventReport, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2EventReport, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2EventReport,
-            | "orgUnitField"
-            | "endDate"
-            | "publicAccess"
-            | "userOrganisationUnitChildren"
-            | "program"
-            | "lastUpdated"
-            | "hideEmptyRows"
-            | "attributeDimensions"
-            | "translations"
-            | "userOrganisationUnit"
-            | "filterDimensions"
-            | "id"
-            | "rowSubTotals"
-            | "hideNaData"
-            | "interpretations"
-            | "itemOrganisationUnitGroups"
-            | "displayDensity"
-            | "attributeValueDimension"
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "programIndicatorDimensions"
-            | "created"
-            | "subscribers"
-            | "dataType"
-            | "columnDimensions"
-            | "completedOnly"
-            | "colTotals"
-            | "showDimensionLabels"
-            | "subtitle"
-            | "sortOrder"
-            | "userAccesses"
-            | "name"
-            | "fontSize"
-            | "topLimit"
-            | "startDate"
-            | "collapseDataDimensions"
-            | "programStatus"
-            | "favorites"
-            | "aggregationType"
-            | "code"
-            | "categoryOptionGroupSetDimensions"
-            | "userOrganisationUnitGrandChildren"
-            | "hideSubtitle"
-            | "outputType"
-            | "description"
-            | "organisationUnitGroupSetDimensions"
-            | "title"
-            | "organisationUnitLevels"
-            | "externalAccess"
-            | "colSubTotals"
-            | "dataElementValueDimension"
-            | "relativePeriods"
-            | "dataElementDimensions"
-            | "periods"
-            | "organisationUnits"
-            | "categoryDimensions"
-            | "showHierarchy"
-            | "programStage"
-            | "rowTotals"
-            | "timeField"
-            | "digitGroupSeparator"
-            | "hideTitle"
-            | "rowDimensions"
-            | "eventStatus"
-            | "user"
-        >;
-        $owner: Preset<
-            D2EventReport,
-            | "orgUnitField"
-            | "endDate"
-            | "publicAccess"
-            | "userOrganisationUnitChildren"
-            | "program"
-            | "lastUpdated"
-            | "hideEmptyRows"
-            | "attributeDimensions"
-            | "translations"
-            | "userOrganisationUnit"
-            | "filterDimensions"
-            | "id"
-            | "rowSubTotals"
-            | "hideNaData"
-            | "itemOrganisationUnitGroups"
-            | "displayDensity"
-            | "attributeValueDimension"
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "programIndicatorDimensions"
-            | "created"
-            | "subscribers"
-            | "dataType"
-            | "columnDimensions"
-            | "completedOnly"
-            | "colTotals"
-            | "showDimensionLabels"
-            | "subtitle"
-            | "sortOrder"
-            | "userAccesses"
-            | "name"
-            | "fontSize"
-            | "topLimit"
-            | "startDate"
-            | "collapseDataDimensions"
-            | "programStatus"
-            | "favorites"
-            | "aggregationType"
-            | "code"
-            | "categoryOptionGroupSetDimensions"
-            | "userOrganisationUnitGrandChildren"
-            | "hideSubtitle"
-            | "outputType"
-            | "description"
-            | "organisationUnitGroupSetDimensions"
-            | "title"
-            | "organisationUnitLevels"
-            | "externalAccess"
-            | "colSubTotals"
-            | "dataElementValueDimension"
-            | "relativePeriods"
-            | "dataElementDimensions"
-            | "periods"
-            | "organisationUnits"
-            | "categoryDimensions"
-            | "showHierarchy"
-            | "programStage"
-            | "rowTotals"
-            | "timeField"
-            | "digitGroupSeparator"
-            | "hideTitle"
-            | "rowDimensions"
-            | "eventStatus"
-            | "user"
-        >;
-    };
-}
-
 export interface D2EventChartSchema {
     name: "D2EventChart";
     model: D2EventChart;
@@ -9906,8 +9415,6 @@ export interface D2EventChartSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -9918,7 +9425,7 @@ export interface D2EventChartSchema {
             | "DEFAULT";
         attributeDimensions: any[];
         attributeValueDimension: D2TrackedEntityAttributeSchema;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         baseLineLabel: string;
         baseLineValue: number;
         categoryDimensions: D2CategoryDimensionSchema[];
@@ -9938,7 +9445,6 @@ export interface D2EventChartSchema {
         description: string;
         digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         domainAxisLabel: string;
@@ -9949,7 +9455,6 @@ export interface D2EventChartSchema {
         favorites: string[];
         filterDimensions: string[];
         filters: any[];
-        formName: string;
         hideEmptyRowItems:
             | "NONE"
             | "BEFORE_FIRST"
@@ -9970,7 +9475,6 @@ export interface D2EventChartSchema {
         legendSet: D2LegendSetSchema;
         name: string;
         noSpaceBetweenColumns: boolean;
-        orgUnitField: string;
         organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimensionSchema[];
         organisationUnitLevels: number[];
         organisationUnits: D2OrganisationUnitSchema[];
@@ -10016,8 +9520,7 @@ export interface D2EventChartSchema {
             | "RADAR"
             | "GAUGE"
             | "YEAR_OVER_YEAR_LINE"
-            | "YEAR_OVER_YEAR_COLUMN"
-            | "SINGLE_VALUE";
+            | "YEAR_OVER_YEAR_COLUMN";
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
         userGroupAccesses: D2UserGroupAccessSchema[];
@@ -10033,7 +9536,7 @@ export interface D2EventChartSchema {
         $nameable: Preset<D2EventChart, FieldPresets["nameable"]>;
         $persisted: Preset<
             D2EventChart,
-            | "orgUnitField"
+            | "showData"
             | "endDate"
             | "baseLineValue"
             | "publicAccess"
@@ -10046,45 +9549,35 @@ export interface D2EventChartSchema {
             | "userOrganisationUnit"
             | "filterDimensions"
             | "id"
-            | "interpretations"
-            | "attributeValueDimension"
-            | "userGroupAccesses"
-            | "domainAxisLabel"
-            | "subscribers"
-            | "cumulativeValues"
-            | "subtitle"
-            | "sortOrder"
-            | "rangeAxisDecimals"
-            | "startDate"
-            | "collapseDataDimensions"
-            | "userOrganisationUnitGrandChildren"
-            | "percentStackedValues"
-            | "noSpaceBetweenColumns"
-            | "dataElementDimensions"
-            | "rangeAxisSteps"
-            | "periods"
-            | "categoryDimensions"
-            | "hideTitle"
-            | "rowDimensions"
-            | "eventStatus"
-            | "showData"
             | "hideNaData"
+            | "interpretations"
             | "itemOrganisationUnitGroups"
+            | "attributeValueDimension"
             | "lastUpdatedBy"
+            | "userGroupAccesses"
             | "programIndicatorDimensions"
+            | "domainAxisLabel"
             | "created"
+            | "subscribers"
             | "rangeAxisLabel"
             | "regressionType"
             | "columnDimensions"
             | "completedOnly"
+            | "cumulativeValues"
+            | "subtitle"
+            | "sortOrder"
             | "userAccesses"
             | "name"
+            | "rangeAxisDecimals"
+            | "startDate"
+            | "collapseDataDimensions"
             | "hideEmptyRowItems"
             | "programStatus"
             | "favorites"
             | "aggregationType"
             | "code"
             | "categoryOptionGroupSetDimensions"
+            | "userOrganisationUnitGrandChildren"
             | "hideSubtitle"
             | "outputType"
             | "description"
@@ -10094,20 +9587,29 @@ export interface D2EventChartSchema {
             | "organisationUnitLevels"
             | "externalAccess"
             | "rangeAxisMinValue"
+            | "percentStackedValues"
+            | "noSpaceBetweenColumns"
             | "dataElementValueDimension"
             | "relativePeriods"
+            | "dataElementDimensions"
+            | "rangeAxisSteps"
             | "targetLineLabel"
+            | "periods"
             | "organisationUnits"
+            | "categoryDimensions"
             | "programStage"
             | "timeField"
             | "targetLineValue"
             | "baseLineLabel"
+            | "hideTitle"
+            | "rowDimensions"
+            | "eventStatus"
             | "rangeAxisMaxValue"
             | "user"
         >;
         $owner: Preset<
             D2EventChart,
-            | "orgUnitField"
+            | "showData"
             | "endDate"
             | "baseLineValue"
             | "publicAccess"
@@ -10120,44 +9622,34 @@ export interface D2EventChartSchema {
             | "userOrganisationUnit"
             | "filterDimensions"
             | "id"
-            | "attributeValueDimension"
-            | "userGroupAccesses"
-            | "domainAxisLabel"
-            | "subscribers"
-            | "cumulativeValues"
-            | "subtitle"
-            | "sortOrder"
-            | "rangeAxisDecimals"
-            | "startDate"
-            | "collapseDataDimensions"
-            | "userOrganisationUnitGrandChildren"
-            | "percentStackedValues"
-            | "noSpaceBetweenColumns"
-            | "dataElementDimensions"
-            | "rangeAxisSteps"
-            | "periods"
-            | "categoryDimensions"
-            | "hideTitle"
-            | "rowDimensions"
-            | "eventStatus"
-            | "showData"
             | "hideNaData"
             | "itemOrganisationUnitGroups"
+            | "attributeValueDimension"
             | "lastUpdatedBy"
+            | "userGroupAccesses"
             | "programIndicatorDimensions"
+            | "domainAxisLabel"
             | "created"
+            | "subscribers"
             | "rangeAxisLabel"
             | "regressionType"
             | "columnDimensions"
             | "completedOnly"
+            | "cumulativeValues"
+            | "subtitle"
+            | "sortOrder"
             | "userAccesses"
             | "name"
+            | "rangeAxisDecimals"
+            | "startDate"
+            | "collapseDataDimensions"
             | "hideEmptyRowItems"
             | "programStatus"
             | "favorites"
             | "aggregationType"
             | "code"
             | "categoryOptionGroupSetDimensions"
+            | "userOrganisationUnitGrandChildren"
             | "hideSubtitle"
             | "outputType"
             | "description"
@@ -10167,15 +9659,262 @@ export interface D2EventChartSchema {
             | "organisationUnitLevels"
             | "externalAccess"
             | "rangeAxisMinValue"
+            | "percentStackedValues"
+            | "noSpaceBetweenColumns"
             | "dataElementValueDimension"
             | "relativePeriods"
+            | "dataElementDimensions"
+            | "rangeAxisSteps"
             | "targetLineLabel"
+            | "periods"
             | "organisationUnits"
+            | "categoryDimensions"
             | "programStage"
             | "timeField"
             | "targetLineValue"
             | "baseLineLabel"
+            | "hideTitle"
+            | "rowDimensions"
+            | "eventStatus"
             | "rangeAxisMaxValue"
+            | "user"
+        >;
+    };
+}
+
+export interface D2EventReportSchema {
+    name: "D2EventReport";
+    model: D2EventReport;
+    fields: {
+        access: D2Access;
+        aggregationType:
+            | "SUM"
+            | "AVERAGE"
+            | "AVERAGE_SUM_ORG_UNIT"
+            | "LAST"
+            | "LAST_AVERAGE_ORG_UNIT"
+            | "COUNT"
+            | "STDDEV"
+            | "VARIANCE"
+            | "MIN"
+            | "MAX"
+            | "NONE"
+            | "CUSTOM"
+            | "DEFAULT";
+        attributeDimensions: any[];
+        attributeValueDimension: D2TrackedEntityAttributeSchema;
+        attributeValues: D2AttributeValueSchema[];
+        categoryDimensions: D2CategoryDimensionSchema[];
+        categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema[];
+        code: Id;
+        colSubTotals: boolean;
+        colTotals: boolean;
+        collapseDataDimensions: boolean;
+        columnDimensions: string[];
+        columns: any[];
+        completedOnly: boolean;
+        created: string;
+        dataDimensionItems: any[];
+        dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
+        dataElementGroupSetDimensions: D2DataElementGroupSetDimensionSchema[];
+        dataElementValueDimension: D2DataElementSchema;
+        dataType: "AGGREGATED_VALUES" | "EVENTS";
+        description: string;
+        digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
+        displayDensity: "COMFORTABLE" | "NORMAL" | "COMPACT" | "NONE";
+        displayDescription: string;
+        displayName: string;
+        displayShortName: string;
+        endDate: string;
+        eventStatus: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        filterDimensions: string[];
+        filters: any[];
+        fontSize: "LARGE" | "NORMAL" | "SMALL";
+        hideEmptyRows: boolean;
+        hideNaData: boolean;
+        hideSubtitle: boolean;
+        hideTitle: boolean;
+        href: string;
+        id: Id;
+        interpretations: D2InterpretationSchema[];
+        itemOrganisationUnitGroups: D2OrganisationUnitGroupSchema[];
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimensionSchema[];
+        organisationUnitLevels: number[];
+        organisationUnits: D2OrganisationUnitSchema[];
+        outputType: "EVENT" | "ENROLLMENT" | "TRACKED_ENTITY_INSTANCE";
+        parentGraphMap: D2MapSchema;
+        periods: any[];
+        program: D2ProgramSchema;
+        programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
+        programStage: D2ProgramStageSchema;
+        programStatus: "ACTIVE" | "COMPLETED" | "CANCELLED";
+        publicAccess: string;
+        relativePeriods: any;
+        rowDimensions: string[];
+        rowSubTotals: boolean;
+        rowTotals: boolean;
+        rows: any[];
+        shortName: string;
+        showDimensionLabels: boolean;
+        showHierarchy: boolean;
+        sortOrder: number;
+        startDate: string;
+        subscribed: boolean;
+        subscribers: string[];
+        subtitle: string;
+        timeField: string;
+        title: string;
+        topLimit: number;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+        userOrganisationUnit: boolean;
+        userOrganisationUnitChildren: boolean;
+        userOrganisationUnitGrandChildren: boolean;
+        value: any;
+    };
+    fieldPresets: {
+        $all: Preset<D2EventReport, keyof D2EventReport>;
+        $identifiable: Preset<D2EventReport, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2EventReport, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2EventReport,
+            | "endDate"
+            | "publicAccess"
+            | "userOrganisationUnitChildren"
+            | "program"
+            | "lastUpdated"
+            | "hideEmptyRows"
+            | "attributeDimensions"
+            | "translations"
+            | "userOrganisationUnit"
+            | "filterDimensions"
+            | "id"
+            | "rowSubTotals"
+            | "hideNaData"
+            | "interpretations"
+            | "itemOrganisationUnitGroups"
+            | "displayDensity"
+            | "attributeValueDimension"
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "programIndicatorDimensions"
+            | "created"
+            | "subscribers"
+            | "dataType"
+            | "columnDimensions"
+            | "completedOnly"
+            | "colTotals"
+            | "showDimensionLabels"
+            | "subtitle"
+            | "sortOrder"
+            | "userAccesses"
+            | "name"
+            | "fontSize"
+            | "topLimit"
+            | "startDate"
+            | "collapseDataDimensions"
+            | "programStatus"
+            | "favorites"
+            | "aggregationType"
+            | "code"
+            | "categoryOptionGroupSetDimensions"
+            | "userOrganisationUnitGrandChildren"
+            | "hideSubtitle"
+            | "outputType"
+            | "description"
+            | "organisationUnitGroupSetDimensions"
+            | "title"
+            | "organisationUnitLevels"
+            | "externalAccess"
+            | "colSubTotals"
+            | "dataElementValueDimension"
+            | "relativePeriods"
+            | "dataElementDimensions"
+            | "periods"
+            | "organisationUnits"
+            | "categoryDimensions"
+            | "showHierarchy"
+            | "programStage"
+            | "rowTotals"
+            | "timeField"
+            | "digitGroupSeparator"
+            | "hideTitle"
+            | "rowDimensions"
+            | "eventStatus"
+            | "user"
+        >;
+        $owner: Preset<
+            D2EventReport,
+            | "endDate"
+            | "publicAccess"
+            | "userOrganisationUnitChildren"
+            | "program"
+            | "lastUpdated"
+            | "hideEmptyRows"
+            | "attributeDimensions"
+            | "translations"
+            | "userOrganisationUnit"
+            | "filterDimensions"
+            | "id"
+            | "rowSubTotals"
+            | "hideNaData"
+            | "itemOrganisationUnitGroups"
+            | "displayDensity"
+            | "attributeValueDimension"
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "programIndicatorDimensions"
+            | "created"
+            | "subscribers"
+            | "dataType"
+            | "columnDimensions"
+            | "completedOnly"
+            | "colTotals"
+            | "showDimensionLabels"
+            | "subtitle"
+            | "sortOrder"
+            | "userAccesses"
+            | "name"
+            | "fontSize"
+            | "topLimit"
+            | "startDate"
+            | "collapseDataDimensions"
+            | "programStatus"
+            | "favorites"
+            | "aggregationType"
+            | "code"
+            | "categoryOptionGroupSetDimensions"
+            | "userOrganisationUnitGrandChildren"
+            | "hideSubtitle"
+            | "outputType"
+            | "description"
+            | "organisationUnitGroupSetDimensions"
+            | "title"
+            | "organisationUnitLevels"
+            | "externalAccess"
+            | "colSubTotals"
+            | "dataElementValueDimension"
+            | "relativePeriods"
+            | "dataElementDimensions"
+            | "periods"
+            | "organisationUnits"
+            | "categoryDimensions"
+            | "showHierarchy"
+            | "programStage"
+            | "rowTotals"
+            | "timeField"
+            | "digitGroupSeparator"
+            | "hideTitle"
+            | "rowDimensions"
+            | "eventStatus"
             | "user"
         >;
     };
@@ -10186,14 +9925,11 @@ export interface D2ProgramSectionSchema {
     model: D2ProgramSection;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
-        displayDescription: string;
-        displayFormName: string;
         displayName: string;
-        displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
@@ -10204,12 +9940,11 @@ export interface D2ProgramSectionSchema {
         lastUpdatedBy: D2UserSchema;
         name: string;
         program: D2ProgramSchema;
+        programTrackedEntityAttribute: D2TrackedEntityAttributeSchema[];
         publicAccess: string;
         renderType: any;
-        shortName: string;
         sortOrder: number;
         style: D2Style;
-        trackedEntityAttributes: D2TrackedEntityAttributeSchema[];
         translations: D2Translation[];
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
@@ -10224,6 +9959,7 @@ export interface D2ProgramSectionSchema {
             | "code"
             | "description"
             | "program"
+            | "programTrackedEntityAttribute"
             | "lastUpdated"
             | "translations"
             | "formName"
@@ -10233,7 +9969,6 @@ export interface D2ProgramSectionSchema {
             | "created"
             | "sortOrder"
             | "name"
-            | "trackedEntityAttributes"
             | "style"
         >;
         $owner: Preset<
@@ -10241,6 +9976,7 @@ export interface D2ProgramSectionSchema {
             | "code"
             | "description"
             | "program"
+            | "programTrackedEntityAttribute"
             | "lastUpdated"
             | "translations"
             | "formName"
@@ -10250,7 +9986,6 @@ export interface D2ProgramSectionSchema {
             | "created"
             | "sortOrder"
             | "name"
-            | "trackedEntityAttributes"
             | "style"
         >;
     };
@@ -10269,8 +10004,6 @@ export interface D2ProgramIndicatorSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -10281,7 +10014,7 @@ export interface D2ProgramIndicatorSchema {
             | "DEFAULT";
         analyticsPeriodBoundaries: D2AnalyticsPeriodBoundarySchema[];
         analyticsType: "EVENT" | "ENROLLMENT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         decimals: number;
@@ -10303,7 +10036,6 @@ export interface D2ProgramIndicatorSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayInForm: boolean;
         displayName: string;
         displayShortName: string;
@@ -10398,76 +10130,12 @@ export interface D2ProgramIndicatorSchema {
     };
 }
 
-export interface D2ProgramIndicatorGroupSchema {
-    name: "D2ProgramIndicatorGroup";
-    model: D2ProgramIndicatorGroup;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        description: string;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        programIndicators: D2ProgramIndicatorSchema[];
-        publicAccess: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2ProgramIndicatorGroup, keyof D2ProgramIndicatorGroup>;
-        $identifiable: Preset<D2ProgramIndicatorGroup, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ProgramIndicatorGroup, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2ProgramIndicatorGroup,
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "code"
-            | "created"
-            | "publicAccess"
-            | "description"
-            | "programIndicators"
-            | "lastUpdated"
-            | "translations"
-            | "userAccesses"
-            | "name"
-            | "id"
-            | "user"
-        >;
-        $owner: Preset<
-            D2ProgramIndicatorGroup,
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "code"
-            | "created"
-            | "publicAccess"
-            | "description"
-            | "programIndicators"
-            | "lastUpdated"
-            | "translations"
-            | "userAccesses"
-            | "name"
-            | "id"
-            | "user"
-        >;
-    };
-}
-
 export interface D2ProgramRuleVariableSchema {
     name: "D2ProgramRuleVariable";
     model: D2ProgramRuleVariable;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         dataElement: D2DataElementSchema;
@@ -10539,19 +10207,15 @@ export interface D2RelationshipTypeSchema {
     model: D2RelationshipType;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        bidirectional: boolean;
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
-        displayFromToName: string;
         displayName: string;
-        displayToFromName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
         fromConstraint: D2RelationshipConstraint;
-        fromToName: string;
         href: string;
         id: Id;
         lastUpdated: string;
@@ -10559,7 +10223,6 @@ export interface D2RelationshipTypeSchema {
         name: string;
         publicAccess: string;
         toConstraint: D2RelationshipConstraint;
-        toFromName: string;
         translations: D2Translation[];
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
@@ -10571,42 +10234,102 @@ export interface D2RelationshipTypeSchema {
         $nameable: Preset<D2RelationshipType, FieldPresets["nameable"]>;
         $persisted: Preset<
             D2RelationshipType,
-            | "bidirectional"
-            | "code"
-            | "publicAccess"
-            | "description"
-            | "fromToName"
-            | "lastUpdated"
-            | "translations"
-            | "toConstraint"
-            | "id"
             | "lastUpdatedBy"
             | "userGroupAccesses"
+            | "code"
             | "created"
-            | "toFromName"
+            | "publicAccess"
+            | "description"
+            | "lastUpdated"
             | "fromConstraint"
+            | "translations"
             | "userAccesses"
             | "name"
+            | "toConstraint"
+            | "id"
             | "user"
         >;
         $owner: Preset<
             D2RelationshipType,
-            | "bidirectional"
-            | "code"
-            | "publicAccess"
-            | "description"
-            | "fromToName"
-            | "lastUpdated"
-            | "translations"
-            | "toConstraint"
-            | "id"
             | "lastUpdatedBy"
             | "userGroupAccesses"
+            | "code"
             | "created"
-            | "toFromName"
+            | "publicAccess"
+            | "description"
+            | "lastUpdated"
             | "fromConstraint"
+            | "translations"
             | "userAccesses"
             | "name"
+            | "toConstraint"
+            | "id"
+            | "user"
+        >;
+    };
+}
+
+export interface D2ProgramIndicatorGroupSchema {
+    name: "D2ProgramIndicatorGroup";
+    model: D2ProgramIndicatorGroup;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        created: string;
+        description: string;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        programIndicators: D2ProgramIndicatorSchema[];
+        publicAccess: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2ProgramIndicatorGroup, keyof D2ProgramIndicatorGroup>;
+        $identifiable: Preset<D2ProgramIndicatorGroup, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2ProgramIndicatorGroup, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2ProgramIndicatorGroup,
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "code"
+            | "created"
+            | "publicAccess"
+            | "attributeValues"
+            | "description"
+            | "programIndicators"
+            | "lastUpdated"
+            | "translations"
+            | "userAccesses"
+            | "name"
+            | "id"
+            | "user"
+        >;
+        $owner: Preset<
+            D2ProgramIndicatorGroup,
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "code"
+            | "created"
+            | "publicAccess"
+            | "attributeValues"
+            | "description"
+            | "programIndicators"
+            | "lastUpdated"
+            | "translations"
+            | "userAccesses"
+            | "name"
+            | "id"
             | "user"
         >;
     };
@@ -10617,7 +10340,7 @@ export interface D2ProgramRuleActionSchema {
     model: D2ProgramRuleAction;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         content: string;
         created: string;
@@ -10719,7 +10442,7 @@ export interface D2ProgramRuleSchema {
     model: D2ProgramRule;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         condition: string;
         created: string;
@@ -10793,8 +10516,6 @@ export interface D2MapViewSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -10805,7 +10526,7 @@ export interface D2MapViewSchema {
             | "DEFAULT";
         areaRadius: number;
         attributeDimensions: any[];
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryDimensions: D2CategoryDimensionSchema[];
         categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema[];
         classes: number;
@@ -10824,7 +10545,6 @@ export interface D2MapViewSchema {
         description: string;
         digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         endDate: string;
@@ -10835,10 +10555,8 @@ export interface D2MapViewSchema {
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        filterDimensions: string[];
         filters: any[];
         followUp: boolean;
-        formName: string;
         hidden: boolean;
         hideSubtitle: boolean;
         hideTitle: boolean;
@@ -10858,7 +10576,6 @@ export interface D2MapViewSchema {
         method: number;
         name: string;
         opacity: number;
-        orgUnitField: string;
         organisationUnitGroupSet: D2OrganisationUnitGroupSetSchema;
         organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimensionSchema[];
         organisationUnitLevels: number[];
@@ -10882,7 +10599,6 @@ export interface D2MapViewSchema {
         radiusHigh: number;
         radiusLow: number;
         relativePeriods: any;
-        renderingStrategy: "SINGLE" | "SPLIT_BY_PERIOD" | "TIMELINE";
         rows: any[];
         shortName: string;
         sortOrder: number;
@@ -10911,121 +10627,196 @@ export interface D2MapViewSchema {
             D2MapView,
             | "endDate"
             | "userOrganisationUnitChildren"
+            | "colorScale"
             | "program"
             | "lastUpdated"
             | "attributeDimensions"
             | "translations"
             | "eventCoordinateField"
             | "userOrganisationUnit"
-            | "filterDimensions"
             | "id"
             | "organisationUnitSelectionMode"
-            | "method"
-            | "renderingStrategy"
-            | "labels"
-            | "startDate"
-            | "userOrganisationUnitGrandChildren"
-            | "styleDataItem"
-            | "labelFontColor"
-            | "layer"
-            | "dataElementDimensions"
-            | "periods"
-            | "categoryDimensions"
-            | "labelFontStyle"
-            | "radiusHigh"
-            | "eventClustering"
-            | "colorLow"
-            | "opacity"
-            | "config"
-            | "colorScale"
             | "itemOrganisationUnitGroups"
             | "lastUpdatedBy"
+            | "method"
             | "labelFontSize"
             | "created"
             | "colorHigh"
             | "columnDimensions"
             | "eventPointRadius"
             | "areaRadius"
+            | "labels"
+            | "startDate"
             | "programStatus"
             | "dataDimensionItems"
             | "aggregationType"
             | "code"
-            | "categoryOptionGroupSetDimensions"
+            | "userOrganisationUnitGrandChildren"
             | "hidden"
             | "classes"
+            | "styleDataItem"
             | "description"
-            | "organisationUnitGroupSetDimensions"
+            | "labelFontColor"
+            | "layer"
             | "organisationUnitLevels"
             | "organisationUnitGroupSet"
             | "followUp"
             | "relativePeriods"
+            | "dataElementDimensions"
+            | "periods"
             | "organisationUnits"
             | "eventPointColor"
+            | "labelFontStyle"
             | "programStage"
             | "labelFontWeight"
             | "radiusLow"
+            | "radiusHigh"
+            | "eventClustering"
+            | "colorLow"
             | "trackedEntityType"
             | "legendSet"
+            | "opacity"
+            | "config"
         >;
         $owner: Preset<
             D2MapView,
             | "endDate"
             | "userOrganisationUnitChildren"
+            | "colorScale"
             | "program"
             | "lastUpdated"
             | "attributeDimensions"
             | "translations"
             | "eventCoordinateField"
             | "userOrganisationUnit"
-            | "filterDimensions"
             | "id"
             | "organisationUnitSelectionMode"
-            | "method"
-            | "renderingStrategy"
-            | "labels"
-            | "startDate"
-            | "userOrganisationUnitGrandChildren"
-            | "styleDataItem"
-            | "labelFontColor"
-            | "layer"
-            | "dataElementDimensions"
-            | "periods"
-            | "categoryDimensions"
-            | "labelFontStyle"
-            | "radiusHigh"
-            | "eventClustering"
-            | "colorLow"
-            | "opacity"
-            | "config"
-            | "colorScale"
             | "itemOrganisationUnitGroups"
             | "lastUpdatedBy"
+            | "method"
             | "labelFontSize"
             | "created"
             | "colorHigh"
             | "columnDimensions"
             | "eventPointRadius"
             | "areaRadius"
+            | "labels"
+            | "startDate"
             | "programStatus"
             | "dataDimensionItems"
             | "aggregationType"
             | "code"
-            | "categoryOptionGroupSetDimensions"
+            | "userOrganisationUnitGrandChildren"
             | "hidden"
             | "classes"
+            | "styleDataItem"
             | "description"
-            | "organisationUnitGroupSetDimensions"
+            | "labelFontColor"
+            | "layer"
             | "organisationUnitLevels"
             | "organisationUnitGroupSet"
             | "followUp"
             | "relativePeriods"
+            | "dataElementDimensions"
+            | "periods"
             | "organisationUnits"
             | "eventPointColor"
+            | "labelFontStyle"
             | "programStage"
             | "labelFontWeight"
             | "radiusLow"
+            | "radiusHigh"
+            | "eventClustering"
+            | "colorLow"
             | "trackedEntityType"
             | "legendSet"
+            | "opacity"
+            | "config"
+        >;
+    };
+}
+
+export interface D2ReportSchema {
+    name: "D2Report";
+    model: D2Report;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        cacheStrategy:
+            | "NO_CACHE"
+            | "CACHE_15_MINUTES"
+            | "CACHE_30_MINUTES"
+            | "CACHE_1_HOUR"
+            | "CACHE_6AM_TOMORROW"
+            | "CACHE_TWO_WEEKS"
+            | "RESPECT_SYSTEM_SETTING";
+        code: Id;
+        created: string;
+        designContent: string;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        publicAccess: string;
+        relativePeriods: any;
+        reportParams: any;
+        reportTable: D2ReportTableSchema;
+        translations: D2Translation[];
+        type: "JASPER_REPORT_TABLE" | "JASPER_JDBC" | "HTML";
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2Report, keyof D2Report>;
+        $identifiable: Preset<D2Report, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Report, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2Report,
+            | "designContent"
+            | "code"
+            | "publicAccess"
+            | "type"
+            | "externalAccess"
+            | "reportTable"
+            | "lastUpdated"
+            | "relativePeriods"
+            | "reportParams"
+            | "translations"
+            | "id"
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "created"
+            | "userAccesses"
+            | "name"
+            | "cacheStrategy"
+            | "user"
+        >;
+        $owner: Preset<
+            D2Report,
+            | "designContent"
+            | "code"
+            | "publicAccess"
+            | "type"
+            | "externalAccess"
+            | "reportTable"
+            | "lastUpdated"
+            | "relativePeriods"
+            | "reportParams"
+            | "translations"
+            | "id"
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "created"
+            | "userAccesses"
+            | "name"
+            | "cacheStrategy"
+            | "user"
         >;
     };
 }
@@ -11035,7 +10826,7 @@ export interface D2ExternalMapLayerSchema {
     model: D2ExternalMapLayer;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         attribution: string;
         code: Id;
         created: string;
@@ -11110,6 +10901,456 @@ export interface D2ExternalMapLayerSchema {
     };
 }
 
+export interface D2ChartSchema {
+    name: "D2Chart";
+    model: D2Chart;
+    fields: {
+        access: D2Access;
+        aggregationType:
+            | "SUM"
+            | "AVERAGE"
+            | "AVERAGE_SUM_ORG_UNIT"
+            | "LAST"
+            | "LAST_AVERAGE_ORG_UNIT"
+            | "COUNT"
+            | "STDDEV"
+            | "VARIANCE"
+            | "MIN"
+            | "MAX"
+            | "NONE"
+            | "CUSTOM"
+            | "DEFAULT";
+        attributeDimensions: any[];
+        attributeValues: D2AttributeValueSchema[];
+        baseLineLabel: string;
+        baseLineValue: number;
+        category: string;
+        categoryDimensions: D2CategoryDimensionSchema[];
+        categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema[];
+        code: Id;
+        colorSet: D2ColorSetSchema;
+        columns: any[];
+        completedOnly: boolean;
+        created: string;
+        cumulativeValues: boolean;
+        dataDimensionItems: any[];
+        dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
+        dataElementGroupSetDimensions: D2DataElementGroupSetDimensionSchema[];
+        description: string;
+        digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
+        displayDescription: string;
+        displayName: string;
+        displayShortName: string;
+        domainAxisLabel: string;
+        endDate: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        filterDimensions: string[];
+        filters: any[];
+        hideEmptyRowItems:
+            | "NONE"
+            | "BEFORE_FIRST"
+            | "AFTER_LAST"
+            | "BEFORE_FIRST_AFTER_LAST"
+            | "ALL";
+        hideLegend: boolean;
+        hideSubtitle: boolean;
+        hideTitle: boolean;
+        href: string;
+        id: Id;
+        interpretations: D2InterpretationSchema[];
+        itemOrganisationUnitGroups: D2OrganisationUnitGroupSchema[];
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
+        legendSet: D2LegendSetSchema;
+        name: string;
+        noSpaceBetweenColumns: boolean;
+        organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimensionSchema[];
+        organisationUnitLevels: number[];
+        organisationUnits: D2OrganisationUnitSchema[];
+        parentGraphMap: D2MapSchema;
+        percentStackedValues: boolean;
+        periods: any[];
+        programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
+        publicAccess: string;
+        rangeAxisDecimals: number;
+        rangeAxisLabel: string;
+        rangeAxisMaxValue: number;
+        rangeAxisMinValue: number;
+        rangeAxisSteps: number;
+        regressionType: "NONE" | "LINEAR" | "POLYNOMIAL" | "LOESS";
+        relativePeriods: any;
+        rows: any[];
+        series: string;
+        shortName: string;
+        showData: boolean;
+        sortOrder: number;
+        startDate: string;
+        subscribed: boolean;
+        subscribers: string[];
+        subtitle: string;
+        targetLineLabel: string;
+        targetLineValue: number;
+        timeField: string;
+        title: string;
+        topLimit: number;
+        translations: D2Translation[];
+        type:
+            | "COLUMN"
+            | "STACKED_COLUMN"
+            | "BAR"
+            | "STACKED_BAR"
+            | "LINE"
+            | "AREA"
+            | "PIE"
+            | "RADAR"
+            | "GAUGE"
+            | "YEAR_OVER_YEAR_LINE"
+            | "YEAR_OVER_YEAR_COLUMN";
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+        userOrganisationUnit: boolean;
+        userOrganisationUnitChildren: boolean;
+        userOrganisationUnitGrandChildren: boolean;
+        yearlySeries: string[];
+    };
+    fieldPresets: {
+        $all: Preset<D2Chart, keyof D2Chart>;
+        $identifiable: Preset<D2Chart, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Chart, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2Chart,
+            | "dataElementGroupSetDimensions"
+            | "showData"
+            | "endDate"
+            | "baseLineValue"
+            | "publicAccess"
+            | "userOrganisationUnitChildren"
+            | "type"
+            | "lastUpdated"
+            | "translations"
+            | "yearlySeries"
+            | "userOrganisationUnit"
+            | "filterDimensions"
+            | "id"
+            | "interpretations"
+            | "itemOrganisationUnitGroups"
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "domainAxisLabel"
+            | "created"
+            | "subscribers"
+            | "rangeAxisLabel"
+            | "regressionType"
+            | "completedOnly"
+            | "cumulativeValues"
+            | "subtitle"
+            | "sortOrder"
+            | "userAccesses"
+            | "name"
+            | "rangeAxisDecimals"
+            | "startDate"
+            | "hideEmptyRowItems"
+            | "favorites"
+            | "dataDimensionItems"
+            | "aggregationType"
+            | "code"
+            | "categoryOptionGroupSetDimensions"
+            | "userOrganisationUnitGrandChildren"
+            | "hideSubtitle"
+            | "description"
+            | "organisationUnitGroupSetDimensions"
+            | "title"
+            | "hideLegend"
+            | "organisationUnitLevels"
+            | "externalAccess"
+            | "rangeAxisMinValue"
+            | "percentStackedValues"
+            | "legendDisplayStrategy"
+            | "noSpaceBetweenColumns"
+            | "relativePeriods"
+            | "rangeAxisSteps"
+            | "targetLineLabel"
+            | "periods"
+            | "organisationUnits"
+            | "categoryDimensions"
+            | "targetLineValue"
+            | "baseLineLabel"
+            | "hideTitle"
+            | "series"
+            | "legendSet"
+            | "rangeAxisMaxValue"
+            | "colorSet"
+            | "category"
+            | "user"
+        >;
+        $owner: Preset<
+            D2Chart,
+            | "dataElementGroupSetDimensions"
+            | "showData"
+            | "endDate"
+            | "baseLineValue"
+            | "publicAccess"
+            | "userOrganisationUnitChildren"
+            | "type"
+            | "lastUpdated"
+            | "translations"
+            | "yearlySeries"
+            | "userOrganisationUnit"
+            | "filterDimensions"
+            | "id"
+            | "itemOrganisationUnitGroups"
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "domainAxisLabel"
+            | "created"
+            | "subscribers"
+            | "rangeAxisLabel"
+            | "regressionType"
+            | "completedOnly"
+            | "cumulativeValues"
+            | "subtitle"
+            | "sortOrder"
+            | "userAccesses"
+            | "name"
+            | "rangeAxisDecimals"
+            | "startDate"
+            | "hideEmptyRowItems"
+            | "favorites"
+            | "dataDimensionItems"
+            | "aggregationType"
+            | "code"
+            | "categoryOptionGroupSetDimensions"
+            | "userOrganisationUnitGrandChildren"
+            | "hideSubtitle"
+            | "description"
+            | "organisationUnitGroupSetDimensions"
+            | "title"
+            | "hideLegend"
+            | "organisationUnitLevels"
+            | "externalAccess"
+            | "rangeAxisMinValue"
+            | "percentStackedValues"
+            | "legendDisplayStrategy"
+            | "noSpaceBetweenColumns"
+            | "relativePeriods"
+            | "rangeAxisSteps"
+            | "targetLineLabel"
+            | "periods"
+            | "organisationUnits"
+            | "categoryDimensions"
+            | "targetLineValue"
+            | "baseLineLabel"
+            | "hideTitle"
+            | "series"
+            | "legendSet"
+            | "rangeAxisMaxValue"
+            | "colorSet"
+            | "category"
+            | "user"
+        >;
+    };
+}
+
+export interface D2MapSchema {
+    name: "D2Map";
+    model: D2Map;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        basemap: string;
+        code: Id;
+        created: string;
+        description: string;
+        displayDescription: string;
+        displayName: string;
+        displayShortName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        interpretations: D2InterpretationSchema[];
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        latitude: number;
+        longitude: number;
+        mapViews: D2MapViewSchema[];
+        name: string;
+        publicAccess: string;
+        shortName: string;
+        subscribed: boolean;
+        subscribers: string[];
+        title: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+        zoom: number;
+    };
+    fieldPresets: {
+        $all: Preset<D2Map, keyof D2Map>;
+        $identifiable: Preset<D2Map, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Map, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2Map,
+            | "favorites"
+            | "code"
+            | "publicAccess"
+            | "basemap"
+            | "latitude"
+            | "description"
+            | "title"
+            | "externalAccess"
+            | "lastUpdated"
+            | "translations"
+            | "mapViews"
+            | "id"
+            | "interpretations"
+            | "longitude"
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "subscribers"
+            | "created"
+            | "zoom"
+            | "userAccesses"
+            | "name"
+            | "user"
+        >;
+        $owner: Preset<
+            D2Map,
+            | "favorites"
+            | "code"
+            | "publicAccess"
+            | "basemap"
+            | "latitude"
+            | "description"
+            | "title"
+            | "externalAccess"
+            | "lastUpdated"
+            | "translations"
+            | "mapViews"
+            | "id"
+            | "longitude"
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "subscribers"
+            | "created"
+            | "zoom"
+            | "userAccesses"
+            | "name"
+            | "user"
+        >;
+    };
+}
+
+export interface D2ValidationResultSchema {
+    name: "D2ValidationResult";
+    model: D2ValidationResult;
+    fields: {
+        attributeOptionCombo: D2CategoryOptionComboSchema;
+        created: string;
+        dayInPeriod: number;
+        id: number;
+        leftsideValue: number;
+        notificationSent: boolean;
+        organisationUnit: D2OrganisationUnitSchema;
+        period: any;
+        rightsideValue: number;
+        validationRule: D2ValidationRuleSchema;
+    };
+    fieldPresets: {
+        $all: Preset<D2ValidationResult, keyof D2ValidationResult>;
+        $identifiable: Preset<D2ValidationResult, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2ValidationResult, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2ValidationResult,
+            "created" | "rightsideValue" | "leftsideValue" | "notificationSent"
+        >;
+        $owner: Preset<
+            D2ValidationResult,
+            "created" | "rightsideValue" | "leftsideValue" | "notificationSent"
+        >;
+    };
+}
+
+export interface D2DocumentSchema {
+    name: "D2Document";
+    model: D2Document;
+    fields: {
+        access: D2Access;
+        attachment: boolean;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        contentType: string;
+        created: string;
+        displayName: string;
+        external: boolean;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        publicAccess: string;
+        translations: D2Translation[];
+        url: string;
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2Document, keyof D2Document>;
+        $identifiable: Preset<D2Document, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Document, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2Document,
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "code"
+            | "created"
+            | "publicAccess"
+            | "attributeValues"
+            | "url"
+            | "externalAccess"
+            | "lastUpdated"
+            | "external"
+            | "attachment"
+            | "translations"
+            | "userAccesses"
+            | "name"
+            | "id"
+            | "user"
+            | "contentType"
+        >;
+        $owner: Preset<
+            D2Document,
+            | "lastUpdatedBy"
+            | "userGroupAccesses"
+            | "code"
+            | "created"
+            | "publicAccess"
+            | "attributeValues"
+            | "url"
+            | "externalAccess"
+            | "lastUpdated"
+            | "external"
+            | "attachment"
+            | "translations"
+            | "userAccesses"
+            | "name"
+            | "id"
+            | "user"
+            | "contentType"
+        >;
+    };
+}
+
 export interface D2ReportTableSchema {
     name: "D2ReportTable";
     model: D2ReportTable;
@@ -11121,8 +11362,6 @@ export interface D2ReportTableSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -11132,7 +11371,7 @@ export interface D2ReportTableSchema {
             | "CUSTOM"
             | "DEFAULT";
         attributeDimensions: any[];
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         categoryDimensions: D2CategoryDimensionSchema[];
         categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema[];
         code: Id;
@@ -11150,7 +11389,6 @@ export interface D2ReportTableSchema {
         digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
         displayDensity: "COMFORTABLE" | "NORMAL" | "COMPACT" | "NONE";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         endDate: string;
@@ -11160,7 +11398,6 @@ export interface D2ReportTableSchema {
         filterDimensions: string[];
         filters: any[];
         fontSize: "LARGE" | "NORMAL" | "SMALL";
-        formName: string;
         hideEmptyColumns: boolean;
         hideEmptyRows: boolean;
         hideSubtitle: boolean;
@@ -11177,7 +11414,6 @@ export interface D2ReportTableSchema {
         measureCriteria: string;
         name: string;
         numberType: "VALUE" | "ROW_PERCENTAGE" | "COLUMN_PERCENTAGE";
-        orgUnitField: string;
         organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimensionSchema[];
         organisationUnitLevels: number[];
         organisationUnits: D2OrganisationUnitSchema[];
@@ -11348,570 +11584,22 @@ export interface D2ReportTableSchema {
     };
 }
 
-export interface D2DocumentSchema {
-    name: "D2Document";
-    model: D2Document;
-    fields: {
-        access: D2Access;
-        attachment: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        contentType: string;
-        created: string;
-        displayName: string;
-        external: boolean;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        publicAccess: string;
-        translations: D2Translation[];
-        url: string;
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2Document, keyof D2Document>;
-        $identifiable: Preset<D2Document, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Document, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Document,
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "code"
-            | "created"
-            | "publicAccess"
-            | "attributeValues"
-            | "url"
-            | "externalAccess"
-            | "lastUpdated"
-            | "external"
-            | "attachment"
-            | "translations"
-            | "userAccesses"
-            | "name"
-            | "id"
-            | "user"
-            | "contentType"
-        >;
-        $owner: Preset<
-            D2Document,
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "code"
-            | "created"
-            | "publicAccess"
-            | "attributeValues"
-            | "url"
-            | "externalAccess"
-            | "lastUpdated"
-            | "external"
-            | "attachment"
-            | "translations"
-            | "userAccesses"
-            | "name"
-            | "id"
-            | "user"
-            | "contentType"
-        >;
-    };
-}
-
-export interface D2ReportSchema {
-    name: "D2Report";
-    model: D2Report;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        cacheStrategy:
-            | "NO_CACHE"
-            | "CACHE_15_MINUTES"
-            | "CACHE_30_MINUTES"
-            | "CACHE_1_HOUR"
-            | "CACHE_6AM_TOMORROW"
-            | "CACHE_TWO_WEEKS"
-            | "RESPECT_SYSTEM_SETTING";
-        code: Id;
-        created: string;
-        designContent: string;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        publicAccess: string;
-        relativePeriods: any;
-        reportParams: any;
-        reportTable: D2ReportTableSchema;
-        translations: D2Translation[];
-        type: "JASPER_REPORT_TABLE" | "JASPER_JDBC" | "HTML";
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2Report, keyof D2Report>;
-        $identifiable: Preset<D2Report, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Report, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Report,
-            | "designContent"
-            | "code"
-            | "publicAccess"
-            | "type"
-            | "externalAccess"
-            | "reportTable"
-            | "lastUpdated"
-            | "relativePeriods"
-            | "reportParams"
-            | "translations"
-            | "id"
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "created"
-            | "userAccesses"
-            | "name"
-            | "cacheStrategy"
-            | "user"
-        >;
-        $owner: Preset<
-            D2Report,
-            | "designContent"
-            | "code"
-            | "publicAccess"
-            | "type"
-            | "externalAccess"
-            | "reportTable"
-            | "lastUpdated"
-            | "relativePeriods"
-            | "reportParams"
-            | "translations"
-            | "id"
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "created"
-            | "userAccesses"
-            | "name"
-            | "cacheStrategy"
-            | "user"
-        >;
-    };
-}
-
-export interface D2ValidationResultSchema {
-    name: "D2ValidationResult";
-    model: D2ValidationResult;
-    fields: {
-        attributeOptionCombo: D2CategoryOptionComboSchema;
-        created: string;
-        dayInPeriod: number;
-        id: string;
-        leftsideValue: number;
-        notificationSent: boolean;
-        organisationUnit: D2OrganisationUnitSchema;
-        period: any;
-        rightsideValue: number;
-        validationRule: D2ValidationRuleSchema;
-    };
-    fieldPresets: {
-        $all: Preset<D2ValidationResult, keyof D2ValidationResult>;
-        $identifiable: Preset<D2ValidationResult, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ValidationResult, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2ValidationResult,
-            "created" | "rightsideValue" | "leftsideValue" | "notificationSent"
-        >;
-        $owner: Preset<
-            D2ValidationResult,
-            "created" | "rightsideValue" | "leftsideValue" | "notificationSent"
-        >;
-    };
-}
-
-export interface D2ChartSchema {
-    name: "D2Chart";
-    model: D2Chart;
-    fields: {
-        access: D2Access;
-        aggregationType:
-            | "SUM"
-            | "AVERAGE"
-            | "AVERAGE_SUM_ORG_UNIT"
-            | "LAST"
-            | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
-            | "COUNT"
-            | "STDDEV"
-            | "VARIANCE"
-            | "MIN"
-            | "MAX"
-            | "NONE"
-            | "CUSTOM"
-            | "DEFAULT";
-        attributeDimensions: any[];
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        baseLineLabel: string;
-        baseLineValue: number;
-        category: string;
-        categoryDimensions: D2CategoryDimensionSchema[];
-        categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema[];
-        code: Id;
-        colorSet: D2ColorSetSchema;
-        columns: any[];
-        completedOnly: boolean;
-        created: string;
-        cumulativeValues: boolean;
-        dataDimensionItems: any[];
-        dataElementDimensions: D2TrackedEntityDataElementDimensionSchema[];
-        dataElementGroupSetDimensions: D2DataElementGroupSetDimensionSchema[];
-        description: string;
-        digitGroupSeparator: "COMMA" | "SPACE" | "NONE";
-        displayDescription: string;
-        displayFormName: string;
-        displayName: string;
-        displayShortName: string;
-        domainAxisLabel: string;
-        endDate: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        filterDimensions: string[];
-        filters: any[];
-        formName: string;
-        hideEmptyRowItems:
-            | "NONE"
-            | "BEFORE_FIRST"
-            | "AFTER_LAST"
-            | "BEFORE_FIRST_AFTER_LAST"
-            | "ALL";
-        hideLegend: boolean;
-        hideSubtitle: boolean;
-        hideTitle: boolean;
-        href: string;
-        id: Id;
-        interpretations: D2InterpretationSchema[];
-        itemOrganisationUnitGroups: D2OrganisationUnitGroupSchema[];
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        legendDisplayStrategy: "FIXED" | "BY_DATA_ITEM";
-        legendSet: D2LegendSetSchema;
-        name: string;
-        noSpaceBetweenColumns: boolean;
-        orgUnitField: string;
-        organisationUnitGroupSetDimensions: D2OrganisationUnitGroupSetDimensionSchema[];
-        organisationUnitLevels: number[];
-        organisationUnits: D2OrganisationUnitSchema[];
-        parentGraphMap: D2MapSchema;
-        percentStackedValues: boolean;
-        periods: any[];
-        programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
-        publicAccess: string;
-        rangeAxisDecimals: number;
-        rangeAxisLabel: string;
-        rangeAxisMaxValue: number;
-        rangeAxisMinValue: number;
-        rangeAxisSteps: number;
-        regressionType: "NONE" | "LINEAR" | "POLYNOMIAL" | "LOESS";
-        relativePeriods: any;
-        rows: any[];
-        series: string;
-        seriesItems: any[];
-        shortName: string;
-        showData: boolean;
-        sortOrder: number;
-        startDate: string;
-        subscribed: boolean;
-        subscribers: string[];
-        subtitle: string;
-        targetLineLabel: string;
-        targetLineValue: number;
-        timeField: string;
-        title: string;
-        topLimit: number;
-        translations: D2Translation[];
-        type:
-            | "COLUMN"
-            | "STACKED_COLUMN"
-            | "BAR"
-            | "STACKED_BAR"
-            | "LINE"
-            | "AREA"
-            | "PIE"
-            | "RADAR"
-            | "GAUGE"
-            | "YEAR_OVER_YEAR_LINE"
-            | "YEAR_OVER_YEAR_COLUMN"
-            | "SINGLE_VALUE";
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-        userOrganisationUnit: boolean;
-        userOrganisationUnitChildren: boolean;
-        userOrganisationUnitGrandChildren: boolean;
-        yearlySeries: string[];
-    };
-    fieldPresets: {
-        $all: Preset<D2Chart, keyof D2Chart>;
-        $identifiable: Preset<D2Chart, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Chart, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Chart,
-            | "dataElementGroupSetDimensions"
-            | "showData"
-            | "endDate"
-            | "baseLineValue"
-            | "publicAccess"
-            | "userOrganisationUnitChildren"
-            | "type"
-            | "lastUpdated"
-            | "translations"
-            | "yearlySeries"
-            | "userOrganisationUnit"
-            | "filterDimensions"
-            | "id"
-            | "interpretations"
-            | "itemOrganisationUnitGroups"
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "domainAxisLabel"
-            | "created"
-            | "subscribers"
-            | "rangeAxisLabel"
-            | "regressionType"
-            | "completedOnly"
-            | "cumulativeValues"
-            | "subtitle"
-            | "sortOrder"
-            | "userAccesses"
-            | "name"
-            | "rangeAxisDecimals"
-            | "startDate"
-            | "hideEmptyRowItems"
-            | "favorites"
-            | "dataDimensionItems"
-            | "aggregationType"
-            | "code"
-            | "categoryOptionGroupSetDimensions"
-            | "userOrganisationUnitGrandChildren"
-            | "hideSubtitle"
-            | "description"
-            | "organisationUnitGroupSetDimensions"
-            | "title"
-            | "hideLegend"
-            | "organisationUnitLevels"
-            | "externalAccess"
-            | "rangeAxisMinValue"
-            | "percentStackedValues"
-            | "seriesItems"
-            | "legendDisplayStrategy"
-            | "noSpaceBetweenColumns"
-            | "relativePeriods"
-            | "rangeAxisSteps"
-            | "targetLineLabel"
-            | "periods"
-            | "organisationUnits"
-            | "categoryDimensions"
-            | "targetLineValue"
-            | "baseLineLabel"
-            | "hideTitle"
-            | "series"
-            | "legendSet"
-            | "rangeAxisMaxValue"
-            | "colorSet"
-            | "category"
-            | "user"
-        >;
-        $owner: Preset<
-            D2Chart,
-            | "dataElementGroupSetDimensions"
-            | "showData"
-            | "endDate"
-            | "baseLineValue"
-            | "publicAccess"
-            | "userOrganisationUnitChildren"
-            | "type"
-            | "lastUpdated"
-            | "translations"
-            | "yearlySeries"
-            | "userOrganisationUnit"
-            | "filterDimensions"
-            | "id"
-            | "itemOrganisationUnitGroups"
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "domainAxisLabel"
-            | "created"
-            | "subscribers"
-            | "rangeAxisLabel"
-            | "regressionType"
-            | "completedOnly"
-            | "cumulativeValues"
-            | "subtitle"
-            | "sortOrder"
-            | "userAccesses"
-            | "name"
-            | "rangeAxisDecimals"
-            | "startDate"
-            | "hideEmptyRowItems"
-            | "favorites"
-            | "dataDimensionItems"
-            | "aggregationType"
-            | "code"
-            | "categoryOptionGroupSetDimensions"
-            | "userOrganisationUnitGrandChildren"
-            | "hideSubtitle"
-            | "description"
-            | "organisationUnitGroupSetDimensions"
-            | "title"
-            | "hideLegend"
-            | "organisationUnitLevels"
-            | "externalAccess"
-            | "rangeAxisMinValue"
-            | "percentStackedValues"
-            | "seriesItems"
-            | "legendDisplayStrategy"
-            | "noSpaceBetweenColumns"
-            | "relativePeriods"
-            | "rangeAxisSteps"
-            | "targetLineLabel"
-            | "periods"
-            | "organisationUnits"
-            | "categoryDimensions"
-            | "targetLineValue"
-            | "baseLineLabel"
-            | "hideTitle"
-            | "series"
-            | "legendSet"
-            | "rangeAxisMaxValue"
-            | "colorSet"
-            | "category"
-            | "user"
-        >;
-    };
-}
-
-export interface D2MapSchema {
-    name: "D2Map";
-    model: D2Map;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        basemap: string;
-        code: Id;
-        created: string;
-        description: string;
-        displayDescription: string;
-        displayFormName: string;
-        displayName: string;
-        displayShortName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        formName: string;
-        href: string;
-        id: Id;
-        interpretations: D2InterpretationSchema[];
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        latitude: number;
-        longitude: number;
-        mapViews: D2MapViewSchema[];
-        name: string;
-        publicAccess: string;
-        shortName: string;
-        subscribed: boolean;
-        subscribers: string[];
-        title: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-        zoom: number;
-    };
-    fieldPresets: {
-        $all: Preset<D2Map, keyof D2Map>;
-        $identifiable: Preset<D2Map, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Map, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Map,
-            | "favorites"
-            | "code"
-            | "publicAccess"
-            | "basemap"
-            | "latitude"
-            | "description"
-            | "title"
-            | "externalAccess"
-            | "lastUpdated"
-            | "translations"
-            | "mapViews"
-            | "id"
-            | "interpretations"
-            | "longitude"
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "subscribers"
-            | "created"
-            | "zoom"
-            | "userAccesses"
-            | "name"
-            | "user"
-        >;
-        $owner: Preset<
-            D2Map,
-            | "favorites"
-            | "code"
-            | "publicAccess"
-            | "basemap"
-            | "latitude"
-            | "description"
-            | "title"
-            | "externalAccess"
-            | "lastUpdated"
-            | "translations"
-            | "mapViews"
-            | "id"
-            | "longitude"
-            | "lastUpdatedBy"
-            | "userGroupAccesses"
-            | "subscribers"
-            | "created"
-            | "zoom"
-            | "userAccesses"
-            | "name"
-            | "user"
-        >;
-    };
-}
-
 export interface D2PredictorSchema {
     name: "D2Predictor";
     model: D2Predictor;
     fields: {
         access: D2Access;
         annualSampleCount: number;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         generator: D2ExpressionSchema;
         href: string;
         id: Id;
@@ -11984,7 +11672,7 @@ export interface D2PredictorGroupSchema {
     model: D2PredictorGroup;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
@@ -12049,7 +11737,7 @@ export interface D2DashboardItemSchema {
     fields: {
         access: D2Access;
         appKey: string;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         chart: D2ChartSchema;
         code: Id;
         contentCount: number;
@@ -12159,19 +11847,17 @@ export interface D2DashboardSchema {
     model: D2Dashboard;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         dashboardItems: D2DashboardItemSchema[];
         description: string;
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         itemCount: number;
@@ -12228,72 +11914,12 @@ export interface D2DashboardSchema {
     };
 }
 
-export interface D2PushAnalysisSchema {
-    name: "D2PushAnalysis";
-    model: D2PushAnalysis;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        dashboard: D2DashboardSchema;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        message: string;
-        name: string;
-        publicAccess: string;
-        recipientUserGroups: D2UserGroupSchema[];
-        title: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2PushAnalysis, keyof D2PushAnalysis>;
-        $identifiable: Preset<D2PushAnalysis, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2PushAnalysis, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2PushAnalysis,
-            | "lastUpdatedBy"
-            | "code"
-            | "created"
-            | "recipientUserGroups"
-            | "message"
-            | "title"
-            | "lastUpdated"
-            | "name"
-            | "id"
-            | "dashboard"
-        >;
-        $owner: Preset<
-            D2PushAnalysis,
-            | "lastUpdatedBy"
-            | "code"
-            | "created"
-            | "recipientUserGroups"
-            | "message"
-            | "title"
-            | "lastUpdated"
-            | "name"
-            | "id"
-            | "dashboard"
-        >;
-    };
-}
-
 export interface D2KeyJsonValueSchema {
     name: "D2KeyJsonValue";
     model: D2KeyJsonValue;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
@@ -12349,6 +11975,81 @@ export interface D2KeyJsonValueSchema {
     };
 }
 
+export interface D2ReportingRateSchema {
+    name: "D2ReportingRate";
+    model: D2ReportingRate;
+    fields: {
+        access: D2Access;
+        aggregationType:
+            | "SUM"
+            | "AVERAGE"
+            | "AVERAGE_SUM_ORG_UNIT"
+            | "LAST"
+            | "LAST_AVERAGE_ORG_UNIT"
+            | "COUNT"
+            | "STDDEV"
+            | "VARIANCE"
+            | "MIN"
+            | "MAX"
+            | "NONE"
+            | "CUSTOM"
+            | "DEFAULT";
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        created: string;
+        dataSet: D2DataSetSchema;
+        description: string;
+        dimensionItem: string;
+        dimensionItemType:
+            | "DATA_ELEMENT"
+            | "DATA_ELEMENT_OPERAND"
+            | "INDICATOR"
+            | "REPORTING_RATE"
+            | "PROGRAM_DATA_ELEMENT"
+            | "PROGRAM_ATTRIBUTE"
+            | "PROGRAM_INDICATOR"
+            | "PERIOD"
+            | "ORGANISATION_UNIT"
+            | "CATEGORY_OPTION"
+            | "OPTION_GROUP"
+            | "DATA_ELEMENT_GROUP"
+            | "ORGANISATION_UNIT_GROUP"
+            | "CATEGORY_OPTION_GROUP";
+        displayDescription: string;
+        displayName: string;
+        displayShortName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        legendSet: D2LegendSetSchema;
+        legendSets: D2LegendSetSchema[];
+        metric:
+            | "REPORTING_RATE"
+            | "REPORTING_RATE_ON_TIME"
+            | "ACTUAL_REPORTS"
+            | "ACTUAL_REPORTS_ON_TIME"
+            | "EXPECTED_REPORTS";
+        name: string;
+        publicAccess: string;
+        shortName: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2ReportingRate, keyof D2ReportingRate>;
+        $identifiable: Preset<D2ReportingRate, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2ReportingRate, FieldPresets["nameable"]>;
+        $persisted: Preset<D2ReportingRate, never>;
+        $owner: Preset<D2ReportingRate, never>;
+    };
+}
+
 export interface D2MinMaxDataElementSchema {
     name: "D2MinMaxDataElement";
     model: D2MinMaxDataElement;
@@ -12375,198 +12076,250 @@ export interface D2MinMaxDataElementSchema {
     };
 }
 
-export interface D2ProgramStageInstanceSchema {
-    name: "D2ProgramStageInstance";
-    model: D2ProgramStageInstance;
+export interface D2DataElementGroupSetDimensionSchema {
+    name: "D2DataElementGroupSetDimension";
+    model: D2DataElementGroupSetDimension;
+    fields: {
+        dataElementGroupSet: D2DataElementGroupSetSchema;
+        dataElementGroups: D2DataElementGroupSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2DataElementGroupSetDimension, keyof D2DataElementGroupSetDimension>;
+        $identifiable: Preset<D2DataElementGroupSetDimension, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2DataElementGroupSetDimension, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2DataElementGroupSetDimension,
+            "dataElementGroups" | "dataElementGroupSet"
+        >;
+        $owner: Preset<D2DataElementGroupSetDimension, "dataElementGroups" | "dataElementGroupSet">;
+    };
+}
+
+export interface D2RelationshipSchema {
+    name: "D2Relationship";
+    model: D2Relationship;
     fields: {
         access: D2Access;
-        assignedUser: D2UserSchema;
-        attributeOptionCombo: D2CategoryOptionComboSchema;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
-        comments: any[];
-        completed: boolean;
-        completedBy: string;
-        completedDate: string;
-        creatableInSearchScope: boolean;
         created: string;
-        createdAtClient: string;
-        deleted: boolean;
+        description: string;
         displayName: string;
-        dueDate: string;
-        eventDataValues: any[];
-        eventDate: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        geometry: D2Geometry;
+        formName: string;
+        from: any;
         href: string;
         id: Id;
         lastUpdated: string;
-        lastUpdatedAtClient: string;
         lastUpdatedBy: D2UserSchema;
-        messageConversations: D2MessageConversationSchema[];
+        name: string;
+        publicAccess: string;
+        relationshipType: D2RelationshipTypeSchema;
+        style: D2Style;
+        to: any;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2Relationship, keyof D2Relationship>;
+        $identifiable: Preset<D2Relationship, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Relationship, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2Relationship,
+            | "code"
+            | "description"
+            | "lastUpdated"
+            | "formName"
+            | "from"
+            | "id"
+            | "lastUpdatedBy"
+            | "relationshipType"
+            | "created"
+            | "style"
+            | "to"
+        >;
+        $owner: Preset<
+            D2Relationship,
+            | "code"
+            | "description"
+            | "lastUpdated"
+            | "formName"
+            | "from"
+            | "id"
+            | "lastUpdatedBy"
+            | "relationshipType"
+            | "created"
+            | "style"
+            | "to"
+        >;
+    };
+}
+
+export interface D2InterpretationSchema {
+    name: "D2Interpretation";
+    model: D2Interpretation;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        chart: D2ChartSchema;
+        code: Id;
+        comments: D2InterpretationCommentSchema[];
+        created: string;
+        dataSet: D2DataSetSchema;
+        displayName: string;
+        eventChart: D2EventChartSchema;
+        eventReport: D2EventReportSchema;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        likedBy: D2UserSchema[];
+        likes: number;
+        map: D2MapSchema;
+        mentions: any[];
         name: string;
         organisationUnit: D2OrganisationUnitSchema;
-        programInstance: D2ProgramInstanceSchema;
-        programStage: D2ProgramStageSchema;
+        period: any;
         publicAccess: string;
-        relationshipItems: any[];
-        status: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
-        storedBy: string;
+        reportTable: D2ReportTableSchema;
+        text: string;
         translations: D2Translation[];
+        type: "REPORT_TABLE" | "CHART" | "MAP" | "EVENT_REPORT" | "EVENT_CHART" | "DATASET_REPORT";
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
         userGroupAccesses: D2UserGroupAccessSchema[];
     };
     fieldPresets: {
-        $all: Preset<D2ProgramStageInstance, keyof D2ProgramStageInstance>;
-        $identifiable: Preset<D2ProgramStageInstance, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ProgramStageInstance, FieldPresets["nameable"]>;
+        $all: Preset<D2Interpretation, keyof D2Interpretation>;
+        $identifiable: Preset<D2Interpretation, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Interpretation, FieldPresets["nameable"]>;
         $persisted: Preset<
-            D2ProgramStageInstance,
-            | "code"
-            | "storedBy"
+            D2Interpretation,
+            | "likedBy"
             | "organisationUnit"
-            | "dueDate"
-            | "createdAtClient"
-            | "messageConversations"
+            | "publicAccess"
+            | "reportTable"
             | "lastUpdated"
-            | "eventDataValues"
-            | "relationshipItems"
             | "id"
-            | "assignedUser"
-            | "programStage"
+            | "text"
+            | "map"
+            | "dataSet"
+            | "likes"
+            | "period"
+            | "userGroupAccesses"
             | "comments"
             | "created"
-            | "completedDate"
-            | "programInstance"
-            | "deleted"
-            | "attributeOptionCombo"
-            | "geometry"
-            | "completedBy"
-            | "status"
-            | "lastUpdatedAtClient"
-            | "eventDate"
+            | "eventReport"
+            | "userAccesses"
+            | "mentions"
+            | "eventChart"
+            | "user"
+            | "chart"
         >;
         $owner: Preset<
-            D2ProgramStageInstance,
-            | "code"
-            | "storedBy"
+            D2Interpretation,
+            | "likedBy"
             | "organisationUnit"
-            | "dueDate"
-            | "createdAtClient"
-            | "messageConversations"
+            | "publicAccess"
+            | "reportTable"
             | "lastUpdated"
-            | "eventDataValues"
             | "id"
-            | "assignedUser"
-            | "programStage"
+            | "text"
+            | "map"
+            | "dataSet"
+            | "likes"
+            | "period"
+            | "userGroupAccesses"
             | "comments"
             | "created"
-            | "completedDate"
-            | "programInstance"
-            | "deleted"
-            | "attributeOptionCombo"
-            | "geometry"
-            | "completedBy"
-            | "status"
-            | "lastUpdatedAtClient"
-            | "eventDate"
+            | "eventReport"
+            | "userAccesses"
+            | "mentions"
+            | "eventChart"
+            | "user"
+            | "chart"
         >;
     };
 }
 
-export interface D2UserAccessSchema {
-    name: "D2UserAccess";
-    model: D2UserAccess;
-    fields: { access: string; displayName: string; id: string; userUid: string };
-    fieldPresets: {
-        $all: Preset<D2UserAccess, keyof D2UserAccess>;
-        $identifiable: Preset<D2UserAccess, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2UserAccess, FieldPresets["nameable"]>;
-        $persisted: Preset<D2UserAccess, "access">;
-        $owner: Preset<D2UserAccess, "access">;
-    };
-}
-
-export interface D2MessageConversationSchema {
-    name: "D2MessageConversation";
-    model: D2MessageConversation;
+export interface D2TrackedEntityProgramIndicatorDimensionSchema {
+    name: "D2TrackedEntityProgramIndicatorDimension";
+    model: D2TrackedEntityProgramIndicatorDimension;
     fields: {
-        access: D2Access;
-        assignee: D2UserSchema;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        followUp: boolean;
-        href: string;
-        id: Id;
-        lastMessage: string;
-        lastSender: D2UserSchema;
-        lastSenderFirstname: string;
-        lastSenderSurname: string;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        messageCount: number;
-        messageType: "PRIVATE" | "SYSTEM" | "VALIDATION_RESULT" | "TICKET";
-        messages: any[];
-        name: string;
-        priority: "NONE" | "LOW" | "MEDIUM" | "HIGH";
-        publicAccess: string;
-        read: boolean;
-        status: "NONE" | "OPEN" | "PENDING" | "INVALID" | "SOLVED";
-        subject: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userFirstname: string;
-        userGroupAccesses: D2UserGroupAccessSchema[];
-        userMessages: any[];
-        userSurname: string;
+        filter: string;
+        legendSet: D2LegendSetSchema;
+        programIndicator: D2ProgramIndicatorSchema;
     };
     fieldPresets: {
-        $all: Preset<D2MessageConversation, keyof D2MessageConversation>;
-        $identifiable: Preset<D2MessageConversation, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2MessageConversation, FieldPresets["nameable"]>;
+        $all: Preset<
+            D2TrackedEntityProgramIndicatorDimension,
+            keyof D2TrackedEntityProgramIndicatorDimension
+        >;
+        $identifiable: Preset<
+            D2TrackedEntityProgramIndicatorDimension,
+            FieldPresets["identifiable"]
+        >;
+        $nameable: Preset<D2TrackedEntityProgramIndicatorDimension, FieldPresets["nameable"]>;
         $persisted: Preset<
-            D2MessageConversation,
-            | "messageCount"
-            | "subject"
-            | "lastUpdated"
-            | "messageType"
-            | "userMessages"
-            | "id"
-            | "lastSender"
-            | "created"
-            | "lastMessage"
-            | "priority"
-            | "messages"
-            | "assignee"
-            | "user"
-            | "status"
+            D2TrackedEntityProgramIndicatorDimension,
+            "filter" | "legendSet" | "programIndicator"
         >;
         $owner: Preset<
-            D2MessageConversation,
-            | "messageCount"
-            | "subject"
-            | "lastUpdated"
-            | "messageType"
-            | "userMessages"
-            | "id"
-            | "lastSender"
-            | "created"
-            | "lastMessage"
-            | "priority"
-            | "messages"
-            | "assignee"
-            | "user"
-            | "status"
+            D2TrackedEntityProgramIndicatorDimension,
+            "filter" | "legendSet" | "programIndicator"
         >;
+    };
+}
+
+export interface D2TrackedEntityDataElementDimensionSchema {
+    name: "D2TrackedEntityDataElementDimension";
+    model: D2TrackedEntityDataElementDimension;
+    fields: { dataElement: D2DataElementSchema; filter: string; legendSet: D2LegendSetSchema };
+    fieldPresets: {
+        $all: Preset<
+            D2TrackedEntityDataElementDimension,
+            keyof D2TrackedEntityDataElementDimension
+        >;
+        $identifiable: Preset<D2TrackedEntityDataElementDimension, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2TrackedEntityDataElementDimension, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2TrackedEntityDataElementDimension,
+            "filter" | "legendSet" | "dataElement"
+        >;
+        $owner: Preset<D2TrackedEntityDataElementDimension, "filter" | "legendSet" | "dataElement">;
+    };
+}
+
+export interface D2IconSchema {
+    name: "D2Icon";
+    model: D2Icon;
+    fields: {};
+    fieldPresets: {
+        $all: Preset<D2Icon, keyof D2Icon>;
+        $identifiable: Preset<D2Icon, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Icon, FieldPresets["nameable"]>;
+        $persisted: Preset<D2Icon, never>;
+        $owner: Preset<D2Icon, never>;
+    };
+}
+
+export interface D2DataInputPeriodSchema {
+    name: "D2DataInputPeriod";
+    model: D2DataInputPeriod;
+    fields: { closingDate: string; openingDate: string; period: any };
+    fieldPresets: {
+        $all: Preset<D2DataInputPeriod, keyof D2DataInputPeriod>;
+        $identifiable: Preset<D2DataInputPeriod, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2DataInputPeriod, FieldPresets["nameable"]>;
+        $persisted: Preset<D2DataInputPeriod, "period" | "closingDate" | "openingDate">;
+        $owner: Preset<D2DataInputPeriod, "period" | "closingDate" | "openingDate">;
     };
 }
 
@@ -12595,12 +12348,52 @@ export interface D2OrganisationUnitGroupSetDimensionSchema {
     };
 }
 
+export interface D2InterpretationCommentSchema {
+    name: "D2InterpretationComment";
+    model: D2InterpretationComment;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        created: string;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        mentions: any[];
+        name: string;
+        publicAccess: string;
+        text: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2InterpretationComment, keyof D2InterpretationComment>;
+        $identifiable: Preset<D2InterpretationComment, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2InterpretationComment, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2InterpretationComment,
+            "created" | "lastUpdated" | "mentions" | "text" | "id" | "user"
+        >;
+        $owner: Preset<
+            D2InterpretationComment,
+            "created" | "lastUpdated" | "mentions" | "text" | "id" | "user"
+        >;
+    };
+}
+
 export interface D2UserCredentialsSchema {
     name: "D2UserCredentials";
     model: D2UserCredentials;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         catDimensionConstraints: D2CategorySchema[];
         code: Id;
         cogsDimensionConstraints: D2CategoryOptionGroupSetSchema[];
@@ -12688,149 +12481,203 @@ export interface D2UserCredentialsSchema {
     };
 }
 
-export interface D2RelationshipSchema {
-    name: "D2Relationship";
-    model: D2Relationship;
+export interface D2ProgramTrackedEntityAttributeDimensionItemSchema {
+    name: "D2ProgramTrackedEntityAttributeDimensionItem";
+    model: D2ProgramTrackedEntityAttributeDimensionItem;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        aggregationType:
+            | "SUM"
+            | "AVERAGE"
+            | "AVERAGE_SUM_ORG_UNIT"
+            | "LAST"
+            | "LAST_AVERAGE_ORG_UNIT"
+            | "COUNT"
+            | "STDDEV"
+            | "VARIANCE"
+            | "MIN"
+            | "MAX"
+            | "NONE"
+            | "CUSTOM"
+            | "DEFAULT";
+        attribute: D2TrackedEntityAttributeSchema;
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         description: string;
+        dimensionItem: string;
+        dimensionItemType:
+            | "DATA_ELEMENT"
+            | "DATA_ELEMENT_OPERAND"
+            | "INDICATOR"
+            | "REPORTING_RATE"
+            | "PROGRAM_DATA_ELEMENT"
+            | "PROGRAM_ATTRIBUTE"
+            | "PROGRAM_INDICATOR"
+            | "PERIOD"
+            | "ORGANISATION_UNIT"
+            | "CATEGORY_OPTION"
+            | "OPTION_GROUP"
+            | "DATA_ELEMENT_GROUP"
+            | "ORGANISATION_UNIT_GROUP"
+            | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
-        from: any;
         href: string;
         id: Id;
         lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
+        legendSet: D2LegendSetSchema;
+        legendSets: D2LegendSetSchema[];
         name: string;
+        program: D2ProgramSchema;
         publicAccess: string;
-        relationshipType: D2RelationshipTypeSchema;
         shortName: string;
-        style: D2Style;
-        to: any;
         translations: D2Translation[];
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
         userGroupAccesses: D2UserGroupAccessSchema[];
     };
     fieldPresets: {
-        $all: Preset<D2Relationship, keyof D2Relationship>;
-        $identifiable: Preset<D2Relationship, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Relationship, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Relationship,
-            | "code"
-            | "description"
-            | "lastUpdated"
-            | "formName"
-            | "from"
-            | "id"
-            | "lastUpdatedBy"
-            | "relationshipType"
-            | "created"
-            | "style"
-            | "to"
-        >;
-        $owner: Preset<
-            D2Relationship,
-            | "code"
-            | "description"
-            | "lastUpdated"
-            | "formName"
-            | "from"
-            | "id"
-            | "lastUpdatedBy"
-            | "relationshipType"
-            | "created"
-            | "style"
-            | "to"
-        >;
-    };
-}
-
-export interface D2TrackedEntityProgramIndicatorDimensionSchema {
-    name: "D2TrackedEntityProgramIndicatorDimension";
-    model: D2TrackedEntityProgramIndicatorDimension;
-    fields: {
-        filter: string;
-        legendSet: D2LegendSetSchema;
-        programIndicator: D2ProgramIndicatorSchema;
-    };
-    fieldPresets: {
         $all: Preset<
-            D2TrackedEntityProgramIndicatorDimension,
-            keyof D2TrackedEntityProgramIndicatorDimension
+            D2ProgramTrackedEntityAttributeDimensionItem,
+            keyof D2ProgramTrackedEntityAttributeDimensionItem
         >;
         $identifiable: Preset<
-            D2TrackedEntityProgramIndicatorDimension,
+            D2ProgramTrackedEntityAttributeDimensionItem,
             FieldPresets["identifiable"]
         >;
-        $nameable: Preset<D2TrackedEntityProgramIndicatorDimension, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2TrackedEntityProgramIndicatorDimension,
-            "filter" | "legendSet" | "programIndicator"
-        >;
-        $owner: Preset<
-            D2TrackedEntityProgramIndicatorDimension,
-            "filter" | "legendSet" | "programIndicator"
-        >;
+        $nameable: Preset<D2ProgramTrackedEntityAttributeDimensionItem, FieldPresets["nameable"]>;
+        $persisted: Preset<D2ProgramTrackedEntityAttributeDimensionItem, never>;
+        $owner: Preset<D2ProgramTrackedEntityAttributeDimensionItem, never>;
     };
 }
 
-export interface D2DataElementGroupSetDimensionSchema {
-    name: "D2DataElementGroupSetDimension";
-    model: D2DataElementGroupSetDimension;
-    fields: {
-        dataElementGroupSet: D2DataElementGroupSetSchema;
-        dataElementGroups: D2DataElementGroupSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2DataElementGroupSetDimension, keyof D2DataElementGroupSetDimension>;
-        $identifiable: Preset<D2DataElementGroupSetDimension, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2DataElementGroupSetDimension, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2DataElementGroupSetDimension,
-            "dataElementGroups" | "dataElementGroupSet"
-        >;
-        $owner: Preset<D2DataElementGroupSetDimension, "dataElementGroups" | "dataElementGroupSet">;
-    };
-}
-
-export interface D2UserGroupAccessSchema {
-    name: "D2UserGroupAccess";
-    model: D2UserGroupAccess;
-    fields: { access: string; displayName: string; id: string; userGroupUid: string };
-    fieldPresets: {
-        $all: Preset<D2UserGroupAccess, keyof D2UserGroupAccess>;
-        $identifiable: Preset<D2UserGroupAccess, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2UserGroupAccess, FieldPresets["nameable"]>;
-        $persisted: Preset<D2UserGroupAccess, "access">;
-        $owner: Preset<D2UserGroupAccess, "access">;
-    };
-}
-
-export interface D2ProgramStageDataElementSchema {
-    name: "D2ProgramStageDataElement";
-    model: D2ProgramStageDataElement;
+export interface D2TrackedEntityInstanceSchema {
+    name: "D2TrackedEntityInstance";
+    model: D2TrackedEntityInstance;
     fields: {
         access: D2Access;
-        allowFutureDate: boolean;
-        allowProvidedElsewhere: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
-        compulsory: boolean;
+        created: string;
+        createdAtClient: string;
+        deleted: boolean;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        geometry: D2Geometry;
+        href: string;
+        id: Id;
+        inactive: boolean;
+        lastUpdated: string;
+        lastUpdatedAtClient: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        organisationUnit: D2OrganisationUnitSchema;
+        programInstances: D2ProgramInstanceSchema[];
+        programOwners: any[];
+        publicAccess: string;
+        relationshipItems: any[];
+        representative: D2TrackedEntityInstanceSchema;
+        trackedEntityAttributeValues: any[];
+        trackedEntityType: D2TrackedEntityTypeSchema;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2TrackedEntityInstance, keyof D2TrackedEntityInstance>;
+        $identifiable: Preset<D2TrackedEntityInstance, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2TrackedEntityInstance, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2TrackedEntityInstance,
+            | "programOwners"
+            | "code"
+            | "programInstances"
+            | "organisationUnit"
+            | "createdAtClient"
+            | "lastUpdated"
+            | "inactive"
+            | "relationshipItems"
+            | "id"
+            | "representative"
+            | "lastUpdatedBy"
+            | "created"
+            | "deleted"
+            | "trackedEntityType"
+            | "geometry"
+            | "trackedEntityAttributeValues"
+            | "lastUpdatedAtClient"
+        >;
+        $owner: Preset<
+            D2TrackedEntityInstance,
+            | "code"
+            | "organisationUnit"
+            | "createdAtClient"
+            | "lastUpdated"
+            | "inactive"
+            | "id"
+            | "representative"
+            | "lastUpdatedBy"
+            | "created"
+            | "deleted"
+            | "trackedEntityType"
+            | "geometry"
+            | "lastUpdatedAtClient"
+        >;
+    };
+}
+
+export interface D2ProgramDataElementDimensionItemSchema {
+    name: "D2ProgramDataElementDimensionItem";
+    model: D2ProgramDataElementDimensionItem;
+    fields: {
+        access: D2Access;
+        aggregationType:
+            | "SUM"
+            | "AVERAGE"
+            | "AVERAGE_SUM_ORG_UNIT"
+            | "LAST"
+            | "LAST_AVERAGE_ORG_UNIT"
+            | "COUNT"
+            | "STDDEV"
+            | "VARIANCE"
+            | "MIN"
+            | "MAX"
+            | "NONE"
+            | "CUSTOM"
+            | "DEFAULT";
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
         created: string;
         dataElement: D2DataElementSchema;
-        displayInReports: boolean;
+        description: string;
+        dimensionItem: string;
+        dimensionItemType:
+            | "DATA_ELEMENT"
+            | "DATA_ELEMENT_OPERAND"
+            | "INDICATOR"
+            | "REPORTING_RATE"
+            | "PROGRAM_DATA_ELEMENT"
+            | "PROGRAM_ATTRIBUTE"
+            | "PROGRAM_INDICATOR"
+            | "PERIOD"
+            | "ORGANISATION_UNIT"
+            | "CATEGORY_OPTION"
+            | "OPTION_GROUP"
+            | "DATA_ELEMENT_GROUP"
+            | "ORGANISATION_UNIT_GROUP"
+            | "CATEGORY_OPTION_GROUP";
+        displayDescription: string;
         displayName: string;
+        displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
@@ -12838,58 +12685,66 @@ export interface D2ProgramStageDataElementSchema {
         id: Id;
         lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
+        legendSet: D2LegendSetSchema;
+        legendSets: D2LegendSetSchema[];
         name: string;
-        programStage: D2ProgramStageSchema;
+        program: D2ProgramSchema;
         publicAccess: string;
-        renderOptionsAsRadio: boolean;
-        renderType: any;
-        skipSynchronization: boolean;
-        sortOrder: number;
+        shortName: string;
         translations: D2Translation[];
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
         userGroupAccesses: D2UserGroupAccessSchema[];
+        valueType:
+            | "TEXT"
+            | "LONG_TEXT"
+            | "LETTER"
+            | "PHONE_NUMBER"
+            | "EMAIL"
+            | "BOOLEAN"
+            | "TRUE_ONLY"
+            | "DATE"
+            | "DATETIME"
+            | "TIME"
+            | "NUMBER"
+            | "UNIT_INTERVAL"
+            | "PERCENTAGE"
+            | "INTEGER"
+            | "INTEGER_POSITIVE"
+            | "INTEGER_NEGATIVE"
+            | "INTEGER_ZERO_OR_POSITIVE"
+            | "TRACKER_ASSOCIATE"
+            | "USERNAME"
+            | "COORDINATE"
+            | "ORGANISATION_UNIT"
+            | "AGE"
+            | "URL"
+            | "FILE_RESOURCE"
+            | "IMAGE";
     };
     fieldPresets: {
-        $all: Preset<D2ProgramStageDataElement, keyof D2ProgramStageDataElement>;
-        $identifiable: Preset<D2ProgramStageDataElement, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ProgramStageDataElement, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2ProgramStageDataElement,
-            | "displayInReports"
-            | "code"
-            | "skipSynchronization"
-            | "lastUpdated"
-            | "renderOptionsAsRadio"
-            | "id"
-            | "allowFutureDate"
-            | "renderType"
-            | "lastUpdatedBy"
-            | "programStage"
-            | "created"
-            | "dataElement"
-            | "compulsory"
-            | "allowProvidedElsewhere"
-            | "sortOrder"
-        >;
-        $owner: Preset<
-            D2ProgramStageDataElement,
-            | "displayInReports"
-            | "code"
-            | "skipSynchronization"
-            | "lastUpdated"
-            | "renderOptionsAsRadio"
-            | "id"
-            | "allowFutureDate"
-            | "renderType"
-            | "lastUpdatedBy"
-            | "programStage"
-            | "created"
-            | "dataElement"
-            | "compulsory"
-            | "allowProvidedElsewhere"
-            | "sortOrder"
-        >;
+        $all: Preset<D2ProgramDataElementDimensionItem, keyof D2ProgramDataElementDimensionItem>;
+        $identifiable: Preset<D2ProgramDataElementDimensionItem, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2ProgramDataElementDimensionItem, FieldPresets["nameable"]>;
+        $persisted: Preset<D2ProgramDataElementDimensionItem, never>;
+        $owner: Preset<D2ProgramDataElementDimensionItem, never>;
+    };
+}
+
+export interface D2DataSetElementSchema {
+    name: "D2DataSetElement";
+    model: D2DataSetElement;
+    fields: {
+        categoryCombo: D2CategoryComboSchema;
+        dataElement: D2DataElementSchema;
+        dataSet: D2DataSetSchema;
+    };
+    fieldPresets: {
+        $all: Preset<D2DataSetElement, keyof D2DataSetElement>;
+        $identifiable: Preset<D2DataSetElement, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2DataSetElement, FieldPresets["nameable"]>;
+        $persisted: Preset<D2DataSetElement, "dataElement" | "categoryCombo" | "dataSet">;
+        $owner: Preset<D2DataSetElement, "dataElement" | "categoryCombo" | "dataSet">;
     };
 }
 
@@ -12898,7 +12753,7 @@ export interface D2LegendSchema {
     model: D2Legend;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         color: string;
         created: string;
@@ -12955,81 +12810,9 @@ export interface D2LegendSchema {
     };
 }
 
-export interface D2TrackedEntityInstanceFilterSchema {
-    name: "D2TrackedEntityInstanceFilter";
-    model: D2TrackedEntityInstanceFilter;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        description: string;
-        displayName: string;
-        enrollmentCreatedPeriod: any;
-        enrollmentStatus: "ACTIVE" | "COMPLETED" | "CANCELLED";
-        eventFilters: any[];
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        followup: boolean;
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        program: D2ProgramSchema;
-        publicAccess: string;
-        sortOrder: number;
-        style: D2Style;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2TrackedEntityInstanceFilter, keyof D2TrackedEntityInstanceFilter>;
-        $identifiable: Preset<D2TrackedEntityInstanceFilter, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2TrackedEntityInstanceFilter, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2TrackedEntityInstanceFilter,
-            | "code"
-            | "description"
-            | "program"
-            | "enrollmentCreatedPeriod"
-            | "lastUpdated"
-            | "id"
-            | "lastUpdatedBy"
-            | "created"
-            | "followup"
-            | "eventFilters"
-            | "enrollmentStatus"
-            | "sortOrder"
-            | "name"
-            | "style"
-        >;
-        $owner: Preset<
-            D2TrackedEntityInstanceFilter,
-            | "code"
-            | "description"
-            | "program"
-            | "enrollmentCreatedPeriod"
-            | "lastUpdated"
-            | "id"
-            | "lastUpdatedBy"
-            | "created"
-            | "followup"
-            | "eventFilters"
-            | "enrollmentStatus"
-            | "sortOrder"
-            | "name"
-            | "style"
-        >;
-    };
-}
-
-export interface D2ProgramDataElementDimensionItemSchema {
-    name: "D2ProgramDataElementDimensionItem";
-    model: D2ProgramDataElementDimensionItem;
+export interface D2DataElementOperandSchema {
+    name: "D2DataElementOperand";
+    model: D2DataElementOperand;
     fields: {
         access: D2Access;
         aggregationType:
@@ -13038,8 +12821,6 @@ export interface D2ProgramDataElementDimensionItemSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
             | "STDDEV"
             | "VARIANCE"
@@ -13048,7 +12829,9 @@ export interface D2ProgramDataElementDimensionItemSchema {
             | "NONE"
             | "CUSTOM"
             | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeOptionCombo: D2CategoryOptionComboSchema;
+        attributeValues: D2AttributeValueSchema[];
+        categoryOptionCombo: D2CategoryOptionComboSchema;
         code: Id;
         created: string;
         dataElement: D2DataElementSchema;
@@ -13070,13 +12853,11 @@ export interface D2ProgramDataElementDimensionItemSchema {
             | "ORGANISATION_UNIT_GROUP"
             | "CATEGORY_OPTION_GROUP";
         displayDescription: string;
-        displayFormName: string;
         displayName: string;
         displayShortName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        formName: string;
         href: string;
         id: Id;
         lastUpdated: string;
@@ -13084,46 +12865,178 @@ export interface D2ProgramDataElementDimensionItemSchema {
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
         name: string;
-        program: D2ProgramSchema;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
         userGroupAccesses: D2UserGroupAccessSchema[];
-        valueType:
-            | "TEXT"
-            | "LONG_TEXT"
-            | "LETTER"
-            | "PHONE_NUMBER"
-            | "EMAIL"
-            | "BOOLEAN"
-            | "TRUE_ONLY"
-            | "DATE"
-            | "DATETIME"
-            | "TIME"
-            | "NUMBER"
-            | "UNIT_INTERVAL"
-            | "PERCENTAGE"
-            | "INTEGER"
-            | "INTEGER_POSITIVE"
-            | "INTEGER_NEGATIVE"
-            | "INTEGER_ZERO_OR_POSITIVE"
-            | "TRACKER_ASSOCIATE"
-            | "USERNAME"
-            | "COORDINATE"
-            | "ORGANISATION_UNIT"
-            | "AGE"
-            | "URL"
-            | "FILE_RESOURCE"
-            | "IMAGE";
     };
     fieldPresets: {
-        $all: Preset<D2ProgramDataElementDimensionItem, keyof D2ProgramDataElementDimensionItem>;
-        $identifiable: Preset<D2ProgramDataElementDimensionItem, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ProgramDataElementDimensionItem, FieldPresets["nameable"]>;
-        $persisted: Preset<D2ProgramDataElementDimensionItem, never>;
-        $owner: Preset<D2ProgramDataElementDimensionItem, never>;
+        $all: Preset<D2DataElementOperand, keyof D2DataElementOperand>;
+        $identifiable: Preset<D2DataElementOperand, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2DataElementOperand, FieldPresets["nameable"]>;
+        $persisted: Preset<D2DataElementOperand, "categoryOptionCombo" | "dataElement">;
+        $owner: Preset<D2DataElementOperand, "categoryOptionCombo" | "dataElement">;
+    };
+}
+
+export interface D2UserGroupAccessSchema {
+    name: "D2UserGroupAccess";
+    model: D2UserGroupAccess;
+    fields: { access: string; displayName: string; id: string; userGroupUid: string };
+    fieldPresets: {
+        $all: Preset<D2UserGroupAccess, keyof D2UserGroupAccess>;
+        $identifiable: Preset<D2UserGroupAccess, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2UserGroupAccess, FieldPresets["nameable"]>;
+        $persisted: Preset<D2UserGroupAccess, "access">;
+        $owner: Preset<D2UserGroupAccess, "access">;
+    };
+}
+
+export interface D2CategoryDimensionSchema {
+    name: "D2CategoryDimension";
+    model: D2CategoryDimension;
+    fields: { category: D2CategorySchema; categoryOptions: D2CategoryOptionSchema[] };
+    fieldPresets: {
+        $all: Preset<D2CategoryDimension, keyof D2CategoryDimension>;
+        $identifiable: Preset<D2CategoryDimension, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2CategoryDimension, FieldPresets["nameable"]>;
+        $persisted: Preset<D2CategoryDimension, "categoryOptions" | "category">;
+        $owner: Preset<D2CategoryDimension, "categoryOptions" | "category">;
+    };
+}
+
+export interface D2UserAccessSchema {
+    name: "D2UserAccess";
+    model: D2UserAccess;
+    fields: { access: string; displayName: string; id: string; userUid: string };
+    fieldPresets: {
+        $all: Preset<D2UserAccess, keyof D2UserAccess>;
+        $identifiable: Preset<D2UserAccess, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2UserAccess, FieldPresets["nameable"]>;
+        $persisted: Preset<D2UserAccess, "access">;
+        $owner: Preset<D2UserAccess, "access">;
+    };
+}
+
+export interface D2FileResourceSchema {
+    name: "D2FileResource";
+    model: D2FileResource;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        contentLength: string;
+        contentMd5: string;
+        contentType: string;
+        created: string;
+        displayName: string;
+        domain: "DATA_VALUE" | "PUSH_ANALYSIS" | "DOCUMENT" | "MESSAGE_ATTACHMENT" | "USER_AVATAR";
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        publicAccess: string;
+        storageStatus: "NONE" | "PENDING" | "FAILED" | "STORED";
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2FileResource, keyof D2FileResource>;
+        $identifiable: Preset<D2FileResource, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2FileResource, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2FileResource,
+            | "contentMd5"
+            | "code"
+            | "lastUpdated"
+            | "id"
+            | "contentType"
+            | "lastUpdatedBy"
+            | "created"
+            | "domain"
+            | "name"
+            | "contentLength"
+            | "user"
+        >;
+        $owner: Preset<
+            D2FileResource,
+            | "contentMd5"
+            | "code"
+            | "lastUpdated"
+            | "id"
+            | "contentType"
+            | "lastUpdatedBy"
+            | "created"
+            | "domain"
+            | "name"
+            | "contentLength"
+            | "user"
+        >;
+    };
+}
+
+export interface D2MetadataVersionSchema {
+    name: "D2MetadataVersion";
+    model: D2MetadataVersion;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        created: string;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        hashCode: string;
+        href: string;
+        id: Id;
+        importDate: string;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        publicAccess: string;
+        translations: D2Translation[];
+        type: "BEST_EFFORT" | "ATOMIC";
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2MetadataVersion, keyof D2MetadataVersion>;
+        $identifiable: Preset<D2MetadataVersion, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2MetadataVersion, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2MetadataVersion,
+            | "lastUpdatedBy"
+            | "code"
+            | "created"
+            | "type"
+            | "lastUpdated"
+            | "importDate"
+            | "hashCode"
+            | "name"
+            | "id"
+        >;
+        $owner: Preset<
+            D2MetadataVersion,
+            | "lastUpdatedBy"
+            | "code"
+            | "created"
+            | "type"
+            | "lastUpdated"
+            | "importDate"
+            | "hashCode"
+            | "name"
+            | "id"
+        >;
     };
 }
 
@@ -13132,9 +13045,8 @@ export interface D2ProgramInstanceSchema {
     model: D2ProgramInstance;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
-        completedBy: string;
         created: string;
         createdAtClient: string;
         deleted: boolean;
@@ -13145,7 +13057,6 @@ export interface D2ProgramInstanceSchema {
         favorite: boolean;
         favorites: string[];
         followup: boolean;
-        geometry: D2Geometry;
         href: string;
         id: Id;
         incidentDate: string;
@@ -13190,9 +13101,7 @@ export interface D2ProgramInstanceSchema {
             | "trackedEntityInstance"
             | "followup"
             | "deleted"
-            | "geometry"
             | "incidentDate"
-            | "completedBy"
             | "status"
             | "lastUpdatedAtClient"
         >;
@@ -13213,401 +13122,10 @@ export interface D2ProgramInstanceSchema {
             | "trackedEntityInstance"
             | "followup"
             | "deleted"
-            | "geometry"
             | "incidentDate"
-            | "completedBy"
             | "status"
             | "lastUpdatedAtClient"
         >;
-    };
-}
-
-export interface D2DataElementOperandSchema {
-    name: "D2DataElementOperand";
-    model: D2DataElementOperand;
-    fields: {
-        access: D2Access;
-        aggregationType:
-            | "SUM"
-            | "AVERAGE"
-            | "AVERAGE_SUM_ORG_UNIT"
-            | "LAST"
-            | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
-            | "COUNT"
-            | "STDDEV"
-            | "VARIANCE"
-            | "MIN"
-            | "MAX"
-            | "NONE"
-            | "CUSTOM"
-            | "DEFAULT";
-        attributeOptionCombo: D2CategoryOptionComboSchema;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        categoryOptionCombo: D2CategoryOptionComboSchema;
-        code: Id;
-        created: string;
-        dataElement: D2DataElementSchema;
-        description: string;
-        dimensionItem: string;
-        dimensionItemType:
-            | "DATA_ELEMENT"
-            | "DATA_ELEMENT_OPERAND"
-            | "INDICATOR"
-            | "REPORTING_RATE"
-            | "PROGRAM_DATA_ELEMENT"
-            | "PROGRAM_ATTRIBUTE"
-            | "PROGRAM_INDICATOR"
-            | "PERIOD"
-            | "ORGANISATION_UNIT"
-            | "CATEGORY_OPTION"
-            | "OPTION_GROUP"
-            | "DATA_ELEMENT_GROUP"
-            | "ORGANISATION_UNIT_GROUP"
-            | "CATEGORY_OPTION_GROUP";
-        displayDescription: string;
-        displayFormName: string;
-        displayName: string;
-        displayShortName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        formName: string;
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        legendSet: D2LegendSetSchema;
-        legendSets: D2LegendSetSchema[];
-        name: string;
-        publicAccess: string;
-        shortName: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2DataElementOperand, keyof D2DataElementOperand>;
-        $identifiable: Preset<D2DataElementOperand, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2DataElementOperand, FieldPresets["nameable"]>;
-        $persisted: Preset<D2DataElementOperand, "categoryOptionCombo" | "dataElement">;
-        $owner: Preset<D2DataElementOperand, "categoryOptionCombo" | "dataElement">;
-    };
-}
-
-export interface D2ProgramStageInstanceFilterSchema {
-    name: "D2ProgramStageInstanceFilter";
-    model: D2ProgramStageInstanceFilter;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        description: string;
-        displayName: string;
-        eventQueryCriteria: any;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        program: Id;
-        programStage: Id;
-        publicAccess: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2ProgramStageInstanceFilter, keyof D2ProgramStageInstanceFilter>;
-        $identifiable: Preset<D2ProgramStageInstanceFilter, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ProgramStageInstanceFilter, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2ProgramStageInstanceFilter,
-            | "lastUpdatedBy"
-            | "programStage"
-            | "eventQueryCriteria"
-            | "userGroupAccesses"
-            | "created"
-            | "publicAccess"
-            | "description"
-            | "program"
-            | "lastUpdated"
-            | "userAccesses"
-            | "name"
-            | "id"
-            | "user"
-        >;
-        $owner: Preset<
-            D2ProgramStageInstanceFilter,
-            | "lastUpdatedBy"
-            | "programStage"
-            | "eventQueryCriteria"
-            | "userGroupAccesses"
-            | "created"
-            | "publicAccess"
-            | "description"
-            | "program"
-            | "lastUpdated"
-            | "userAccesses"
-            | "name"
-            | "id"
-            | "user"
-        >;
-    };
-}
-
-export interface D2InterpretationSchema {
-    name: "D2Interpretation";
-    model: D2Interpretation;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        chart: D2ChartSchema;
-        code: Id;
-        comments: D2InterpretationCommentSchema[];
-        created: string;
-        dataSet: D2DataSetSchema;
-        displayName: string;
-        eventChart: D2EventChartSchema;
-        eventReport: D2EventReportSchema;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        likedBy: D2UserSchema[];
-        likes: number;
-        map: D2MapSchema;
-        mentions: any[];
-        name: string;
-        organisationUnit: D2OrganisationUnitSchema;
-        period: any;
-        publicAccess: string;
-        reportTable: D2ReportTableSchema;
-        text: string;
-        translations: D2Translation[];
-        type: "REPORT_TABLE" | "CHART" | "MAP" | "EVENT_REPORT" | "EVENT_CHART" | "DATASET_REPORT";
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2Interpretation, keyof D2Interpretation>;
-        $identifiable: Preset<D2Interpretation, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Interpretation, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Interpretation,
-            | "likedBy"
-            | "organisationUnit"
-            | "publicAccess"
-            | "reportTable"
-            | "lastUpdated"
-            | "id"
-            | "text"
-            | "map"
-            | "dataSet"
-            | "likes"
-            | "period"
-            | "userGroupAccesses"
-            | "comments"
-            | "created"
-            | "eventReport"
-            | "userAccesses"
-            | "mentions"
-            | "eventChart"
-            | "user"
-            | "chart"
-        >;
-        $owner: Preset<
-            D2Interpretation,
-            | "likedBy"
-            | "organisationUnit"
-            | "publicAccess"
-            | "reportTable"
-            | "lastUpdated"
-            | "id"
-            | "text"
-            | "map"
-            | "dataSet"
-            | "likes"
-            | "period"
-            | "userGroupAccesses"
-            | "comments"
-            | "created"
-            | "eventReport"
-            | "userAccesses"
-            | "mentions"
-            | "eventChart"
-            | "user"
-            | "chart"
-        >;
-    };
-}
-
-export interface D2FileResourceSchema {
-    name: "D2FileResource";
-    model: D2FileResource;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        contentLength: string;
-        contentMd5: string;
-        contentType: string;
-        created: string;
-        displayName: string;
-        domain: "DATA_VALUE" | "PUSH_ANALYSIS" | "DOCUMENT" | "MESSAGE_ATTACHMENT" | "USER_AVATAR";
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        hasMultipleStorageFiles: boolean;
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        publicAccess: string;
-        storageStatus: "NONE" | "PENDING" | "FAILED" | "STORED";
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2FileResource, keyof D2FileResource>;
-        $identifiable: Preset<D2FileResource, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2FileResource, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2FileResource,
-            | "contentMd5"
-            | "code"
-            | "lastUpdated"
-            | "id"
-            | "contentType"
-            | "lastUpdatedBy"
-            | "created"
-            | "domain"
-            | "hasMultipleStorageFiles"
-            | "name"
-            | "contentLength"
-            | "user"
-        >;
-        $owner: Preset<
-            D2FileResource,
-            | "contentMd5"
-            | "code"
-            | "lastUpdated"
-            | "id"
-            | "contentType"
-            | "lastUpdatedBy"
-            | "created"
-            | "domain"
-            | "hasMultipleStorageFiles"
-            | "name"
-            | "contentLength"
-            | "user"
-        >;
-    };
-}
-
-export interface D2CategoryDimensionSchema {
-    name: "D2CategoryDimension";
-    model: D2CategoryDimension;
-    fields: { category: D2CategorySchema; categoryOptions: D2CategoryOptionSchema[] };
-    fieldPresets: {
-        $all: Preset<D2CategoryDimension, keyof D2CategoryDimension>;
-        $identifiable: Preset<D2CategoryDimension, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2CategoryDimension, FieldPresets["nameable"]>;
-        $persisted: Preset<D2CategoryDimension, "categoryOptions" | "category">;
-        $owner: Preset<D2CategoryDimension, "categoryOptions" | "category">;
-    };
-}
-
-export interface D2ReportingRateSchema {
-    name: "D2ReportingRate";
-    model: D2ReportingRate;
-    fields: {
-        access: D2Access;
-        aggregationType:
-            | "SUM"
-            | "AVERAGE"
-            | "AVERAGE_SUM_ORG_UNIT"
-            | "LAST"
-            | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
-            | "COUNT"
-            | "STDDEV"
-            | "VARIANCE"
-            | "MIN"
-            | "MAX"
-            | "NONE"
-            | "CUSTOM"
-            | "DEFAULT";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        dataSet: D2DataSetSchema;
-        description: string;
-        dimensionItem: string;
-        dimensionItemType:
-            | "DATA_ELEMENT"
-            | "DATA_ELEMENT_OPERAND"
-            | "INDICATOR"
-            | "REPORTING_RATE"
-            | "PROGRAM_DATA_ELEMENT"
-            | "PROGRAM_ATTRIBUTE"
-            | "PROGRAM_INDICATOR"
-            | "PERIOD"
-            | "ORGANISATION_UNIT"
-            | "CATEGORY_OPTION"
-            | "OPTION_GROUP"
-            | "DATA_ELEMENT_GROUP"
-            | "ORGANISATION_UNIT_GROUP"
-            | "CATEGORY_OPTION_GROUP";
-        displayDescription: string;
-        displayFormName: string;
-        displayName: string;
-        displayShortName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        formName: string;
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        legendSet: D2LegendSetSchema;
-        legendSets: D2LegendSetSchema[];
-        metric:
-            | "REPORTING_RATE"
-            | "REPORTING_RATE_ON_TIME"
-            | "ACTUAL_REPORTS"
-            | "ACTUAL_REPORTS_ON_TIME"
-            | "EXPECTED_REPORTS";
-        name: string;
-        publicAccess: string;
-        shortName: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2ReportingRate, keyof D2ReportingRate>;
-        $identifiable: Preset<D2ReportingRate, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ReportingRate, FieldPresets["nameable"]>;
-        $persisted: Preset<D2ReportingRate, never>;
-        $owner: Preset<D2ReportingRate, never>;
     };
 }
 
@@ -13617,7 +13135,7 @@ export interface D2ProgramTrackedEntityAttributeSchema {
     fields: {
         access: D2Access;
         allowFutureDate: boolean;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayInList: boolean;
@@ -13714,6 +13232,158 @@ export interface D2ProgramTrackedEntityAttributeSchema {
     };
 }
 
+export interface D2MessageConversationSchema {
+    name: "D2MessageConversation";
+    model: D2MessageConversation;
+    fields: {
+        access: D2Access;
+        assignee: D2UserSchema;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        created: string;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        followUp: boolean;
+        href: string;
+        id: Id;
+        lastMessage: string;
+        lastSender: D2UserSchema;
+        lastSenderFirstname: string;
+        lastSenderSurname: string;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        messageCount: number;
+        messageType: "PRIVATE" | "SYSTEM" | "VALIDATION_RESULT" | "TICKET";
+        messages: any[];
+        name: string;
+        priority: "NONE" | "LOW" | "MEDIUM" | "HIGH";
+        publicAccess: string;
+        read: boolean;
+        status: "NONE" | "OPEN" | "PENDING" | "INVALID" | "SOLVED";
+        subject: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userFirstname: string;
+        userGroupAccesses: D2UserGroupAccessSchema[];
+        userMessages: any[];
+        userSurname: string;
+    };
+    fieldPresets: {
+        $all: Preset<D2MessageConversation, keyof D2MessageConversation>;
+        $identifiable: Preset<D2MessageConversation, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2MessageConversation, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2MessageConversation,
+            | "messageCount"
+            | "subject"
+            | "lastUpdated"
+            | "messageType"
+            | "userMessages"
+            | "id"
+            | "lastSender"
+            | "created"
+            | "lastMessage"
+            | "priority"
+            | "messages"
+            | "assignee"
+            | "user"
+            | "status"
+        >;
+        $owner: Preset<
+            D2MessageConversation,
+            | "messageCount"
+            | "subject"
+            | "lastUpdated"
+            | "messageType"
+            | "userMessages"
+            | "id"
+            | "lastSender"
+            | "created"
+            | "lastMessage"
+            | "priority"
+            | "messages"
+            | "assignee"
+            | "user"
+            | "status"
+        >;
+    };
+}
+
+export interface D2TrackedEntityInstanceFilterSchema {
+    name: "D2TrackedEntityInstanceFilter";
+    model: D2TrackedEntityInstanceFilter;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        created: string;
+        description: string;
+        displayName: string;
+        enrollmentCreatedPeriod: any;
+        enrollmentStatus: "ACTIVE" | "COMPLETED" | "CANCELLED";
+        eventFilters: any[];
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        followup: boolean;
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        program: D2ProgramSchema;
+        publicAccess: string;
+        sortOrder: number;
+        style: D2Style;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2TrackedEntityInstanceFilter, keyof D2TrackedEntityInstanceFilter>;
+        $identifiable: Preset<D2TrackedEntityInstanceFilter, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2TrackedEntityInstanceFilter, FieldPresets["nameable"]>;
+        $persisted: Preset<
+            D2TrackedEntityInstanceFilter,
+            | "code"
+            | "description"
+            | "program"
+            | "enrollmentCreatedPeriod"
+            | "lastUpdated"
+            | "id"
+            | "lastUpdatedBy"
+            | "created"
+            | "followup"
+            | "eventFilters"
+            | "enrollmentStatus"
+            | "sortOrder"
+            | "name"
+            | "style"
+        >;
+        $owner: Preset<
+            D2TrackedEntityInstanceFilter,
+            | "code"
+            | "description"
+            | "program"
+            | "enrollmentCreatedPeriod"
+            | "lastUpdated"
+            | "id"
+            | "lastUpdatedBy"
+            | "created"
+            | "followup"
+            | "eventFilters"
+            | "enrollmentStatus"
+            | "sortOrder"
+            | "name"
+            | "style"
+        >;
+    };
+}
+
 export interface D2CategoryOptionGroupSetDimensionSchema {
     name: "D2CategoryOptionGroupSetDimension";
     model: D2CategoryOptionGroupSetDimension;
@@ -13736,184 +13406,104 @@ export interface D2CategoryOptionGroupSetDimensionSchema {
     };
 }
 
-export interface D2ProgramTrackedEntityAttributeDimensionItemSchema {
-    name: "D2ProgramTrackedEntityAttributeDimensionItem";
-    model: D2ProgramTrackedEntityAttributeDimensionItem;
+export interface D2ProgramStageInstanceSchema {
+    name: "D2ProgramStageInstance";
+    model: D2ProgramStageInstance;
     fields: {
         access: D2Access;
-        aggregationType:
-            | "SUM"
-            | "AVERAGE"
-            | "AVERAGE_SUM_ORG_UNIT"
-            | "LAST"
-            | "LAST_AVERAGE_ORG_UNIT"
-            | "FIRST"
-            | "FIRST_AVERAGE_ORG_UNIT"
-            | "COUNT"
-            | "STDDEV"
-            | "VARIANCE"
-            | "MIN"
-            | "MAX"
-            | "NONE"
-            | "CUSTOM"
-            | "DEFAULT";
-        attribute: D2TrackedEntityAttributeSchema;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        description: string;
-        dimensionItem: string;
-        dimensionItemType:
-            | "DATA_ELEMENT"
-            | "DATA_ELEMENT_OPERAND"
-            | "INDICATOR"
-            | "REPORTING_RATE"
-            | "PROGRAM_DATA_ELEMENT"
-            | "PROGRAM_ATTRIBUTE"
-            | "PROGRAM_INDICATOR"
-            | "PERIOD"
-            | "ORGANISATION_UNIT"
-            | "CATEGORY_OPTION"
-            | "OPTION_GROUP"
-            | "DATA_ELEMENT_GROUP"
-            | "ORGANISATION_UNIT_GROUP"
-            | "CATEGORY_OPTION_GROUP";
-        displayDescription: string;
-        displayFormName: string;
-        displayName: string;
-        displayShortName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        formName: string;
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        legendSet: D2LegendSetSchema;
-        legendSets: D2LegendSetSchema[];
-        name: string;
-        program: D2ProgramSchema;
-        publicAccess: string;
-        shortName: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<
-            D2ProgramTrackedEntityAttributeDimensionItem,
-            keyof D2ProgramTrackedEntityAttributeDimensionItem
-        >;
-        $identifiable: Preset<
-            D2ProgramTrackedEntityAttributeDimensionItem,
-            FieldPresets["identifiable"]
-        >;
-        $nameable: Preset<D2ProgramTrackedEntityAttributeDimensionItem, FieldPresets["nameable"]>;
-        $persisted: Preset<D2ProgramTrackedEntityAttributeDimensionItem, never>;
-        $owner: Preset<D2ProgramTrackedEntityAttributeDimensionItem, never>;
-    };
-}
-
-export interface D2TrackedEntityAttributeValueSchema {
-    name: "D2TrackedEntityAttributeValue";
-    model: D2TrackedEntityAttributeValue;
-    fields: {
-        created: string;
-        lastUpdated: string;
-        storedBy: string;
-        trackedEntityAttribute: D2TrackedEntityAttributeSchema;
-        trackedEntityInstance: D2TrackedEntityInstanceSchema;
-        value: string;
-    };
-    fieldPresets: {
-        $all: Preset<D2TrackedEntityAttributeValue, keyof D2TrackedEntityAttributeValue>;
-        $identifiable: Preset<D2TrackedEntityAttributeValue, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2TrackedEntityAttributeValue, FieldPresets["nameable"]>;
-        $persisted: Preset<D2TrackedEntityAttributeValue, "lastUpdated" | "storedBy" | "created">;
-        $owner: Preset<D2TrackedEntityAttributeValue, "lastUpdated" | "storedBy" | "created">;
-    };
-}
-
-export interface D2MetadataVersionSchema {
-    name: "D2MetadataVersion";
-    model: D2MetadataVersion;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
         created: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
-        hashCode: string;
         href: string;
         id: Id;
-        importDate: string;
         lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
         name: string;
         publicAccess: string;
         translations: D2Translation[];
-        type: "BEST_EFFORT" | "ATOMIC";
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
         userGroupAccesses: D2UserGroupAccessSchema[];
     };
     fieldPresets: {
-        $all: Preset<D2MetadataVersion, keyof D2MetadataVersion>;
-        $identifiable: Preset<D2MetadataVersion, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2MetadataVersion, FieldPresets["nameable"]>;
+        $all: Preset<D2ProgramStageInstance, keyof D2ProgramStageInstance>;
+        $identifiable: Preset<D2ProgramStageInstance, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2ProgramStageInstance, FieldPresets["nameable"]>;
+        $persisted: Preset<D2ProgramStageInstance, "code" | "created" | "lastUpdated" | "id">;
+        $owner: Preset<D2ProgramStageInstance, "code" | "created" | "lastUpdated" | "id">;
+    };
+}
+
+export interface D2ColorSchema {
+    name: "D2Color";
+    model: D2Color;
+    fields: {
+        access: D2Access;
+        attributeValues: D2AttributeValueSchema[];
+        code: Id;
+        color: string;
+        created: string;
+        displayName: string;
+        externalAccess: boolean;
+        favorite: boolean;
+        favorites: string[];
+        href: string;
+        id: Id;
+        lastUpdated: string;
+        lastUpdatedBy: D2UserSchema;
+        name: string;
+        publicAccess: string;
+        translations: D2Translation[];
+        user: D2UserSchema;
+        userAccesses: D2UserAccessSchema[];
+        userGroupAccesses: D2UserGroupAccessSchema[];
+    };
+    fieldPresets: {
+        $all: Preset<D2Color, keyof D2Color>;
+        $identifiable: Preset<D2Color, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2Color, FieldPresets["nameable"]>;
         $persisted: Preset<
-            D2MetadataVersion,
+            D2Color,
             | "lastUpdatedBy"
             | "code"
+            | "color"
             | "created"
-            | "type"
             | "lastUpdated"
-            | "importDate"
-            | "hashCode"
+            | "translations"
             | "name"
             | "id"
         >;
         $owner: Preset<
-            D2MetadataVersion,
+            D2Color,
             | "lastUpdatedBy"
             | "code"
+            | "color"
             | "created"
-            | "type"
             | "lastUpdated"
-            | "importDate"
-            | "hashCode"
+            | "translations"
             | "name"
             | "id"
         >;
     };
 }
 
-export interface D2DataInputPeriodSchema {
-    name: "D2DataInputPeriod";
-    model: D2DataInputPeriod;
-    fields: { closingDate: string; openingDate: string; period: any };
-    fieldPresets: {
-        $all: Preset<D2DataInputPeriod, keyof D2DataInputPeriod>;
-        $identifiable: Preset<D2DataInputPeriod, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2DataInputPeriod, FieldPresets["nameable"]>;
-        $persisted: Preset<D2DataInputPeriod, "period" | "closingDate" | "openingDate">;
-        $owner: Preset<D2DataInputPeriod, "period" | "closingDate" | "openingDate">;
-    };
-}
-
-export interface D2InterpretationCommentSchema {
-    name: "D2InterpretationComment";
-    model: D2InterpretationComment;
+export interface D2ProgramStageDataElementSchema {
+    name: "D2ProgramStageDataElement";
+    model: D2ProgramStageDataElement;
     fields: {
         access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        allowFutureDate: boolean;
+        allowProvidedElsewhere: boolean;
+        attributeValues: D2AttributeValueSchema[];
         code: Id;
+        compulsory: boolean;
         created: string;
+        dataElement: D2DataElementSchema;
+        displayInReports: boolean;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -13922,26 +13512,57 @@ export interface D2InterpretationCommentSchema {
         id: Id;
         lastUpdated: string;
         lastUpdatedBy: D2UserSchema;
-        mentions: any[];
         name: string;
+        programStage: D2ProgramStageSchema;
         publicAccess: string;
-        text: string;
+        renderOptionsAsRadio: boolean;
+        renderType: any;
+        skipSynchronization: boolean;
+        sortOrder: number;
         translations: D2Translation[];
         user: D2UserSchema;
         userAccesses: D2UserAccessSchema[];
         userGroupAccesses: D2UserGroupAccessSchema[];
     };
     fieldPresets: {
-        $all: Preset<D2InterpretationComment, keyof D2InterpretationComment>;
-        $identifiable: Preset<D2InterpretationComment, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2InterpretationComment, FieldPresets["nameable"]>;
+        $all: Preset<D2ProgramStageDataElement, keyof D2ProgramStageDataElement>;
+        $identifiable: Preset<D2ProgramStageDataElement, FieldPresets["identifiable"]>;
+        $nameable: Preset<D2ProgramStageDataElement, FieldPresets["nameable"]>;
         $persisted: Preset<
-            D2InterpretationComment,
-            "created" | "lastUpdated" | "mentions" | "text" | "id" | "user"
+            D2ProgramStageDataElement,
+            | "displayInReports"
+            | "code"
+            | "skipSynchronization"
+            | "lastUpdated"
+            | "renderOptionsAsRadio"
+            | "id"
+            | "allowFutureDate"
+            | "renderType"
+            | "lastUpdatedBy"
+            | "programStage"
+            | "created"
+            | "dataElement"
+            | "compulsory"
+            | "allowProvidedElsewhere"
+            | "sortOrder"
         >;
         $owner: Preset<
-            D2InterpretationComment,
-            "created" | "lastUpdated" | "mentions" | "text" | "id" | "user"
+            D2ProgramStageDataElement,
+            | "displayInReports"
+            | "code"
+            | "skipSynchronization"
+            | "lastUpdated"
+            | "renderOptionsAsRadio"
+            | "id"
+            | "allowFutureDate"
+            | "renderType"
+            | "lastUpdatedBy"
+            | "programStage"
+            | "created"
+            | "dataElement"
+            | "compulsory"
+            | "allowProvidedElsewhere"
+            | "sortOrder"
         >;
     };
 }
@@ -13956,7 +13577,7 @@ export interface D2AnalyticsPeriodBoundarySchema {
             | "BEFORE_END_OF_REPORTING_PERIOD"
             | "AFTER_START_OF_REPORTING_PERIOD"
             | "AFTER_END_OF_REPORTING_PERIOD";
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
+        attributeValues: D2AttributeValueSchema[];
         boundaryTarget: string;
         code: Id;
         created: string;
@@ -14008,196 +13629,12 @@ export interface D2AnalyticsPeriodBoundarySchema {
     };
 }
 
-export interface D2TrackedEntityDataElementDimensionSchema {
-    name: "D2TrackedEntityDataElementDimension";
-    model: D2TrackedEntityDataElementDimension;
-    fields: {
-        dataElement: D2DataElementSchema;
-        filter: string;
-        legendSet: D2LegendSetSchema;
-        programStage: D2ProgramStageSchema;
-    };
-    fieldPresets: {
-        $all: Preset<
-            D2TrackedEntityDataElementDimension,
-            keyof D2TrackedEntityDataElementDimension
-        >;
-        $identifiable: Preset<D2TrackedEntityDataElementDimension, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2TrackedEntityDataElementDimension, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2TrackedEntityDataElementDimension,
-            "filter" | "legendSet" | "programStage" | "dataElement"
-        >;
-        $owner: Preset<
-            D2TrackedEntityDataElementDimension,
-            "filter" | "legendSet" | "programStage" | "dataElement"
-        >;
-    };
-}
-
-export interface D2IconSchema {
-    name: "D2Icon";
-    model: D2Icon;
-    fields: {};
-    fieldPresets: {
-        $all: Preset<D2Icon, keyof D2Icon>;
-        $identifiable: Preset<D2Icon, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Icon, FieldPresets["nameable"]>;
-        $persisted: Preset<D2Icon, never>;
-        $owner: Preset<D2Icon, never>;
-    };
-}
-
-export interface D2TrackedEntityInstanceSchema {
-    name: "D2TrackedEntityInstance";
-    model: D2TrackedEntityInstance;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        created: string;
-        createdAtClient: string;
-        deleted: boolean;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        geometry: D2Geometry;
-        href: string;
-        id: Id;
-        inactive: boolean;
-        lastUpdated: string;
-        lastUpdatedAtClient: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        organisationUnit: D2OrganisationUnitSchema;
-        programInstances: D2ProgramInstanceSchema[];
-        programOwners: any[];
-        publicAccess: string;
-        relationshipItems: any[];
-        trackedEntityAttributeValues: D2TrackedEntityAttributeValueSchema[];
-        trackedEntityType: D2TrackedEntityTypeSchema;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2TrackedEntityInstance, keyof D2TrackedEntityInstance>;
-        $identifiable: Preset<D2TrackedEntityInstance, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2TrackedEntityInstance, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2TrackedEntityInstance,
-            | "programOwners"
-            | "code"
-            | "programInstances"
-            | "organisationUnit"
-            | "createdAtClient"
-            | "lastUpdated"
-            | "inactive"
-            | "relationshipItems"
-            | "id"
-            | "lastUpdatedBy"
-            | "created"
-            | "deleted"
-            | "trackedEntityType"
-            | "geometry"
-            | "trackedEntityAttributeValues"
-            | "lastUpdatedAtClient"
-        >;
-        $owner: Preset<
-            D2TrackedEntityInstance,
-            | "code"
-            | "organisationUnit"
-            | "createdAtClient"
-            | "lastUpdated"
-            | "inactive"
-            | "id"
-            | "lastUpdatedBy"
-            | "created"
-            | "deleted"
-            | "trackedEntityType"
-            | "geometry"
-            | "lastUpdatedAtClient"
-        >;
-    };
-}
-
-export interface D2ColorSchema {
-    name: "D2Color";
-    model: D2Color;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-        code: Id;
-        color: string;
-        created: string;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        publicAccess: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2Color, keyof D2Color>;
-        $identifiable: Preset<D2Color, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Color, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Color,
-            | "lastUpdatedBy"
-            | "code"
-            | "color"
-            | "created"
-            | "lastUpdated"
-            | "translations"
-            | "name"
-            | "id"
-        >;
-        $owner: Preset<
-            D2Color,
-            | "lastUpdatedBy"
-            | "code"
-            | "color"
-            | "created"
-            | "lastUpdated"
-            | "translations"
-            | "name"
-            | "id"
-        >;
-    };
-}
-
-export interface D2DataSetElementSchema {
-    name: "D2DataSetElement";
-    model: D2DataSetElement;
-    fields: {
-        categoryCombo: D2CategoryComboSchema;
-        dataElement: D2DataElementSchema;
-        dataSet: D2DataSetSchema;
-    };
-    fieldPresets: {
-        $all: Preset<D2DataSetElement, keyof D2DataSetElement>;
-        $identifiable: Preset<D2DataSetElement, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2DataSetElement, FieldPresets["nameable"]>;
-        $persisted: Preset<D2DataSetElement, "dataElement" | "categoryCombo" | "dataSet">;
-        $owner: Preset<D2DataSetElement, "dataElement" | "categoryCombo" | "dataSet">;
-    };
-}
-
 export type D2Model =
     | D2Predictor
     | D2AnalyticsPeriodBoundary
     | D2AnalyticsTableHook
     | D2Attribute
+    | D2AttributeValue
     | D2Category
     | D2CategoryCombo
     | D2CategoryDimension
@@ -14234,8 +13671,8 @@ export type D2Model =
     | D2ExternalFileResource
     | D2ValidationNotificationTemplate
     | D2KeyJsonValue
-    | D2ProgramStageInstance
     | D2FileResource
+    | D2ProgramStageInstance
     | D2Indicator
     | D2IndicatorGroup
     | D2IndicatorGroupSet
@@ -14275,7 +13712,6 @@ export type D2Model =
     | D2ProgramSection
     | D2ProgramStage
     | D2ProgramStageDataElement
-    | D2ProgramStageInstanceFilter
     | D2ProgramStageSection
     | D2ProgramTrackedEntityAttribute
     | D2ProgramTrackedEntityAttributeGroup
@@ -14289,7 +13725,6 @@ export type D2Model =
     | D2SMSCommand
     | D2SqlView
     | D2TrackedEntityAttribute
-    | D2TrackedEntityAttributeValue
     | D2TrackedEntityInstance
     | D2TrackedEntityInstanceFilter
     | D2TrackedEntityType
@@ -14417,12 +13852,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "sequentialSampleCount",
@@ -14484,12 +13913,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.predictor.PredictorGroup",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "periodType",
@@ -14928,12 +14351,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "trackedEntityAttributeAttribute",
                 fieldName: "trackedEntityAttributeAttribute",
                 propertyType: "BOOLEAN",
@@ -15102,12 +14519,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "categoryOptionGroupSetAttribute",
                 fieldName: "categoryOptionGroupSetAttribute",
                 propertyType: "BOOLEAN",
@@ -15154,6 +14565,42 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "optionAttribute",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
+            },
+        ],
+    },
+    attributeValues: {
+        klass: "org.hisp.dhis.attribute.AttributeValue",
+        shareable: false,
+        metadata: false,
+        plural: "attributeValues",
+        displayName: "Attribute Value",
+        collectionName: "attributeValues",
+        nameableObject: false,
+        translatable: false,
+        identifiableObject: false,
+        dataShareable: false,
+        name: "attributeValue",
+        persisted: true,
+        embeddedObject: false,
+        properties: [
+            {
+                name: "lastUpdated",
+                fieldName: "lastUpdated",
+                propertyType: "DATE",
+                klass: "java.util.Date",
+            },
+            {
+                name: "attribute",
+                fieldName: "attribute",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.attribute.Attribute",
+            },
+            { name: "value", fieldName: "value", propertyType: "TEXT", klass: "java.lang.String" },
+            {
+                name: "created",
+                fieldName: "created",
+                propertyType: "DATE",
+                klass: "java.util.Date",
             },
         ],
     },
@@ -15256,12 +14703,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
             {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "categoryCombo",
                 fieldName: "categoryCombos",
                 propertyType: "COLLECTION",
@@ -15293,12 +14734,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.user.User",
             },
             {
-                name: "programStage",
-                fieldName: "programStage",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.program.ProgramStage",
-            },
-            {
                 name: "userGroupAccess",
                 fieldName: "userGroupAccesses",
                 propertyType: "COLLECTION",
@@ -15325,18 +14760,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "dimensionalKeywords",
-                fieldName: "dimensionalKeywords",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.common.DimensionalKeywords",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "filter",
@@ -15656,12 +15079,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "category",
@@ -15714,12 +15131,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "categoryOptionCombo",
@@ -15891,12 +15302,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -15941,12 +15346,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -16083,12 +15482,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -16141,12 +15534,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.category.CategoryOptionGroupSet",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -16289,12 +15676,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             { name: "dimension", propertyType: "TEXT", klass: "java.lang.String" },
@@ -16309,12 +15690,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdatedBy",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "programStage",
-                fieldName: "programStage",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.program.ProgramStage",
             },
             {
                 name: "userGroupAccess",
@@ -16343,18 +15718,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "dimensionalKeywords",
-                fieldName: "dimensionalKeywords",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.common.DimensionalKeywords",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "filter",
@@ -16474,12 +15837,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "showData",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
-            },
-            {
-                name: "orgUnitField",
-                fieldName: "orgUnitField",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "endDate",
@@ -16661,12 +16018,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "subtitle",
                 fieldName: "subtitle",
                 propertyType: "TEXT",
@@ -16840,14 +16191,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
-                name: "seriesItem",
-                fieldName: "seriesItems",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.chart.Series",
-            },
-            {
                 name: "legendDisplayStrategy",
                 fieldName: "legendDisplayStrategy",
                 propertyType: "CONSTANT",
@@ -16882,12 +16225,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             {
                 name: "targetLineLabel",
                 fieldName: "targetLineLabel",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "formName",
-                fieldName: "formName",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -17319,12 +16656,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
@@ -17366,12 +16697,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -17422,16 +16747,16 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "java.lang.String",
             },
             {
-                name: "code",
-                fieldName: "code",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
                 name: "access",
                 fieldName: "access",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "code",
+                fieldName: "code",
+                propertyType: "IDENTIFIER",
+                klass: "java.lang.String",
             },
             {
                 name: "displayName",
@@ -17477,14 +16802,8 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
+            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "displayDescription",
                 fieldName: "displayDescription",
@@ -17518,12 +16837,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             { name: "itemCount", propertyType: "INTEGER", klass: "java.lang.Integer" },
             {
@@ -18157,7 +17470,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             },
             {
                 name: "categoryCombo",
-                fieldName: "categoryCombo",
+                fieldName: "dataElementCategoryCombo",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.category.CategoryCombo",
             },
@@ -18337,12 +17650,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.legend.LegendSet",
             },
             {
-                name: "programStage",
-                fieldName: "programStage",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.program.ProgramStage",
-            },
-            {
                 name: "dataElement",
                 fieldName: "dataElement",
                 propertyType: "REFERENCE",
@@ -18436,12 +17743,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -18494,12 +17795,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.dataelement.DataElementGroupSet",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -18569,12 +17864,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "java.lang.String",
             },
             {
-                name: "dataDimensionType",
-                fieldName: "dataDimensionType",
-                propertyType: "CONSTANT",
-                klass: "org.hisp.dhis.common.DataDimensionType",
-            },
-            {
                 name: "aggregationType",
                 fieldName: "aggregationType",
                 propertyType: "CONSTANT",
@@ -18642,12 +17931,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             { name: "dimension", propertyType: "TEXT", klass: "java.lang.String" },
@@ -18662,12 +17945,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdatedBy",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "programStage",
-                fieldName: "programStage",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.program.ProgramStage",
             },
             {
                 name: "userGroupAccess",
@@ -18704,18 +17981,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.List",
                 itemKlass: "org.hisp.dhis.dataelement.DataElementGroup",
-            },
-            {
-                name: "dimensionalKeywords",
-                fieldName: "dimensionalKeywords",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.common.DimensionalKeywords",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "filter",
@@ -18896,12 +18161,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -18944,12 +18203,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "dataElement",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.dataelement.DataElement",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -19311,12 +18564,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.indicator.Indicator",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "version",
                 fieldName: "version",
                 propertyType: "INTEGER",
@@ -19492,12 +18739,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "mobile",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
-            },
-            {
-                name: "openPeriodsAfterCoEndDate",
-                fieldName: "openPeriodsAfterCoEndDate",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
             },
             {
                 name: "periodType",
@@ -19911,10 +19152,10 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.dataelement.DataElementGroupSetDimension",
             },
             {
-                name: "orgUnitField",
-                fieldName: "orgUnitField",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
+                name: "showData",
+                fieldName: "showData",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
             },
             {
                 name: "endDate",
@@ -19984,6 +19225,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "java.lang.String",
             },
             {
+                name: "parentGraphMap",
+                fieldName: "parentGraphMap",
+                propertyType: "COMPLEX",
+                klass: "java.util.Map",
+            },
+            {
                 name: "userOrganisationUnit",
                 fieldName: "userOrganisationUnit",
                 propertyType: "BOOLEAN",
@@ -20000,12 +19247,26 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
+                name: "hideNaData",
+                fieldName: "hideNaData",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
                 name: "interpretation",
                 fieldName: "interpretations",
                 propertyType: "COLLECTION",
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.interpretation.Interpretation",
+            },
+            {
+                name: "itemOrganisationUnitGroup",
+                fieldName: "itemOrganisationUnitGroups",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnitGroup",
             },
             {
                 name: "displayDescription",
@@ -20020,213 +19281,18 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.trackedentity.TrackedEntityAttribute",
             },
             {
+                name: "lastUpdatedBy",
+                fieldName: "lastUpdatedBy",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.user.User",
+            },
+            {
                 name: "userGroupAccess",
                 fieldName: "userGroupAccesses",
                 propertyType: "COLLECTION",
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.user.UserGroupAccess",
-            },
-            {
-                name: "domainAxisLabel",
-                fieldName: "domainAxisLabel",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "subscriber",
-                fieldName: "subscribers",
-                propertyType: "COLLECTION",
-                itemPropertyType: "TEXT",
-                klass: "java.util.Set",
-                itemKlass: "java.lang.String",
-            },
-            {
-                name: "cumulativeValues",
-                fieldName: "cumulativeValues",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "subtitle",
-                fieldName: "subtitle",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "sortOrder",
-                fieldName: "sortOrder",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "rangeAxisDecimals",
-                fieldName: "rangeAxisDecimals",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "shortName",
-                fieldName: "shortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-            {
-                name: "topLimit",
-                fieldName: "topLimit",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "startDate",
-                fieldName: "startDate",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "collapseDataDimensions",
-                fieldName: "collapseDataDimensions",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "access",
-                fieldName: "access",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.security.acl.Access",
-            },
-            {
-                name: "userOrganisationUnitGrandChildren",
-                fieldName: "userOrganisationUnitGrandChildren",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "displayName",
-                fieldName: "displayName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "column",
-                fieldName: "columns",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.common.DimensionalObject",
-            },
-            {
-                name: "displayShortName",
-                fieldName: "displayShortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "percentStackedValues",
-                fieldName: "percentStackedValues",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "noSpaceBetweenColumns",
-                fieldName: "noSpaceBetweenColumns",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "dataElementDimension",
-                fieldName: "dataElementDimensions",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension",
-            },
-            {
-                name: "rangeAxisSteps",
-                fieldName: "rangeAxisSteps",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "period",
-                fieldName: "periods",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.period.Period",
-            },
-            {
-                name: "categoryDimension",
-                fieldName: "categoryDimensions",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.category.CategoryDimension",
-            },
-            {
-                name: "hideTitle",
-                fieldName: "hideTitle",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "rowDimension",
-                fieldName: "rowDimensions",
-                propertyType: "COLLECTION",
-                itemPropertyType: "TEXT",
-                klass: "java.util.List",
-                itemKlass: "java.lang.String",
-            },
-            {
-                name: "eventStatus",
-                fieldName: "eventStatus",
-                propertyType: "CONSTANT",
-                klass: "org.hisp.dhis.event.EventStatus",
-            },
-            {
-                name: "colorSet",
-                fieldName: "colorSet",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.color.ColorSet",
-            },
-            {
-                name: "showData",
-                fieldName: "showData",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "parentGraphMap",
-                fieldName: "parentGraphMap",
-                propertyType: "COMPLEX",
-                klass: "java.util.Map",
-            },
-            {
-                name: "hideNaData",
-                fieldName: "hideNaData",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "itemOrganisationUnitGroup",
-                fieldName: "itemOrganisationUnitGroups",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnitGroup",
-            },
-            {
-                name: "lastUpdatedBy",
-                fieldName: "lastUpdatedBy",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
             },
             {
                 name: "programIndicatorDimension",
@@ -20237,10 +19303,24 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityProgramIndicatorDimension",
             },
             {
+                name: "domainAxisLabel",
+                fieldName: "domainAxisLabel",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
                 name: "created",
                 fieldName: "created",
                 propertyType: "DATE",
                 klass: "java.util.Date",
+            },
+            {
+                name: "subscriber",
+                fieldName: "subscribers",
+                propertyType: "COLLECTION",
+                itemPropertyType: "TEXT",
+                klass: "java.util.Set",
+                itemKlass: "java.lang.String",
             },
             {
                 name: "rangeAxisLabel",
@@ -20277,10 +19357,22 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
+                name: "cumulativeValues",
+                fieldName: "cumulativeValues",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "subtitle",
+                fieldName: "subtitle",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
+            },
+            {
+                name: "sortOrder",
+                fieldName: "sortOrder",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "userAccess",
@@ -20291,6 +19383,37 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.user.UserAccess",
             },
             { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
+            {
+                name: "rangeAxisDecimals",
+                fieldName: "rangeAxisDecimals",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
+                name: "shortName",
+                fieldName: "shortName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
+            {
+                name: "topLimit",
+                fieldName: "topLimit",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
+                name: "startDate",
+                fieldName: "startDate",
+                propertyType: "DATE",
+                klass: "java.util.Date",
+            },
+            {
+                name: "collapseDataDimensions",
+                fieldName: "collapseDataDimensions",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
             {
                 name: "hideEmptyRowItems",
                 fieldName: "hideEmptyRowItems",
@@ -20340,6 +19463,32 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.category.CategoryOptionGroupSetDimension",
             },
             {
+                name: "access",
+                fieldName: "access",
+                propertyType: "COMPLEX",
+                klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "userOrganisationUnitGrandChildren",
+                fieldName: "userOrganisationUnitGrandChildren",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "displayName",
+                fieldName: "displayName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "column",
+                fieldName: "columns",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.common.DimensionalObject",
+            },
+            {
                 name: "hideSubtitle",
                 fieldName: "hideSubtitle",
                 propertyType: "BOOLEAN",
@@ -20373,6 +19522,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
+                name: "displayShortName",
+                fieldName: "displayShortName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
                 name: "organisationUnitLevel",
                 fieldName: "organisationUnitLevels",
                 propertyType: "COLLECTION",
@@ -20393,10 +19548,22 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Double",
             },
             {
+                name: "percentStackedValues",
+                fieldName: "percentStackedValues",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
                 name: "legendDisplayStrategy",
                 fieldName: "legendDisplayStrategy",
                 propertyType: "CONSTANT",
                 klass: "org.hisp.dhis.legend.LegendDisplayStrategy",
+            },
+            {
+                name: "noSpaceBetweenColumns",
+                fieldName: "noSpaceBetweenColumns",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
             },
             {
                 name: "dataElementValueDimension",
@@ -20411,10 +19578,32 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.period.RelativePeriods",
             },
             {
+                name: "dataElementDimension",
+                fieldName: "dataElementDimensions",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension",
+            },
+            {
+                name: "rangeAxisSteps",
+                fieldName: "rangeAxisSteps",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "targetLineLabel",
                 fieldName: "targetLineLabel",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
+            },
+            {
+                name: "period",
+                fieldName: "periods",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.period.Period",
             },
             {
                 name: "organisationUnit",
@@ -20429,6 +19618,14 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "value",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.common.DimensionalItemObject",
+            },
+            {
+                name: "categoryDimension",
+                fieldName: "categoryDimensions",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.category.CategoryDimension",
             },
             {
                 name: "programStage",
@@ -20477,6 +19674,26 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.common.DigitGroupSeparator",
             },
             {
+                name: "hideTitle",
+                fieldName: "hideTitle",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "rowDimension",
+                fieldName: "rowDimensions",
+                propertyType: "COLLECTION",
+                itemPropertyType: "TEXT",
+                klass: "java.util.List",
+                itemKlass: "java.lang.String",
+            },
+            {
+                name: "eventStatus",
+                fieldName: "eventStatus",
+                propertyType: "CONSTANT",
+                klass: "org.hisp.dhis.event.EventStatus",
+            },
+            {
                 name: "legendSet",
                 fieldName: "legendSet",
                 propertyType: "REFERENCE",
@@ -20487,6 +19704,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "rangeAxisMaxValue",
                 propertyType: "NUMBER",
                 klass: "java.lang.Double",
+            },
+            {
+                name: "colorSet",
+                fieldName: "colorSet",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.color.ColorSet",
             },
             {
                 name: "user",
@@ -20519,12 +19742,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.List",
                 itemKlass: "org.hisp.dhis.dataelement.DataElementGroupSetDimension",
-            },
-            {
-                name: "orgUnitField",
-                fieldName: "orgUnitField",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "endDate",
@@ -20716,12 +19933,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "colTotals",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "showDimensionLabels",
@@ -20921,12 +20132,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.List",
                 itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension",
-            },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "period",
@@ -21652,246 +20857,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             { name: "key", fieldName: "key", propertyType: "TEXT", klass: "java.lang.String" },
         ],
     },
-    programStageInstances: {
-        klass: "org.hisp.dhis.program.ProgramStageInstance",
-        shareable: false,
-        metadata: false,
-        relativeApiEndpoint: "/programStageInstances",
-        plural: "programStageInstances",
-        displayName: "Program Stage Instance",
-        collectionName: "programStageInstances",
-        nameableObject: false,
-        translatable: false,
-        identifiableObject: true,
-        dataShareable: false,
-        name: "identifiableObject",
-        persisted: true,
-        embeddedObject: false,
-        properties: [
-            {
-                name: "favorite",
-                fieldName: "favorites",
-                propertyType: "COLLECTION",
-                itemPropertyType: "TEXT",
-                klass: "java.util.Set",
-                itemKlass: "java.lang.String",
-            },
-            {
-                name: "code",
-                fieldName: "code",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
-                name: "storedBy",
-                fieldName: "storedBy",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "access",
-                fieldName: "access",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.security.acl.Access",
-            },
-            {
-                name: "organisationUnit",
-                fieldName: "organisationUnit",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.organisationunit.OrganisationUnit",
-            },
-            {
-                name: "displayName",
-                fieldName: "displayName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "publicAccess",
-                fieldName: "publicAccess",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "dueDate",
-                fieldName: "dueDate",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "createdAtClient",
-                fieldName: "createdAtClient",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "messageConversations",
-                fieldName: "messageConversations",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.message.MessageConversation",
-            },
-            {
-                name: "externalAccess",
-                fieldName: "externalAccess",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "lastUpdated",
-                fieldName: "lastUpdated",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "eventDataValues",
-                fieldName: "eventDataValues",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.eventdatavalue.EventDataValue",
-            },
-            {
-                name: "translation",
-                fieldName: "translations",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.translation.Translation",
-            },
-            {
-                name: "relationshipItem",
-                fieldName: "relationshipItems",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.relationship.RelationshipItem",
-            },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
-            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
-            {
-                name: "assignedUser",
-                fieldName: "assignedUser",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "lastUpdatedBy",
-                fieldName: "lastUpdatedBy",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "programStage",
-                fieldName: "programStage",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.program.ProgramStage",
-            },
-            {
-                name: "userGroupAccess",
-                fieldName: "userGroupAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
-            },
-            {
-                name: "comments",
-                fieldName: "comments",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.trackedentitycomment.TrackedEntityComment",
-            },
-            {
-                name: "created",
-                fieldName: "created",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            { name: "creatableInSearchScope", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-            {
-                name: "attributeValue",
-                fieldName: "attributeValues",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            { name: "completed", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-            {
-                name: "completedDate",
-                fieldName: "completedDate",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "programInstance",
-                fieldName: "programInstance",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.program.ProgramInstance",
-            },
-            {
-                name: "deleted",
-                fieldName: "deleted",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "userAccess",
-                fieldName: "userAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserAccess",
-            },
-            {
-                name: "attributeOptionCombo",
-                fieldName: "attributeOptionCombo",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.category.CategoryOptionCombo",
-            },
-            { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
-            {
-                name: "geometry",
-                fieldName: "geometry",
-                propertyType: "COMPLEX",
-                klass: "com.vividsolutions.jts.geom.Geometry",
-            },
-            {
-                name: "user",
-                fieldName: "user",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-            {
-                name: "completedBy",
-                fieldName: "completedBy",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "status",
-                fieldName: "status",
-                propertyType: "CONSTANT",
-                klass: "org.hisp.dhis.event.EventStatus",
-            },
-            {
-                name: "lastUpdatedAtClient",
-                fieldName: "lastUpdatedAtClient",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "eventDate",
-                fieldName: "executionDate",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-        ],
-    },
     fileResources: {
         klass: "org.hisp.dhis.fileresource.FileResource",
         shareable: false,
@@ -22022,12 +20987,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "CONSTANT",
                 klass: "org.hisp.dhis.fileresource.FileResourceDomain",
             },
-            {
-                name: "hasMultipleStorageFiles",
-                fieldName: "hasMultipleStorageFiles",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
             { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
             {
                 name: "contentLength",
@@ -22035,6 +20994,122 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "TEXT",
                 klass: "java.lang.Long",
             },
+            {
+                name: "user",
+                fieldName: "user",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.user.User",
+            },
+            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
+        ],
+    },
+    programStageInstances: {
+        klass: "org.hisp.dhis.program.ProgramStageInstance",
+        shareable: false,
+        metadata: false,
+        relativeApiEndpoint: "/programStageInstances",
+        plural: "programStageInstances",
+        displayName: "Program Stage Instance",
+        collectionName: "programStageInstances",
+        nameableObject: false,
+        translatable: false,
+        identifiableObject: true,
+        dataShareable: false,
+        name: "identifiableObject",
+        persisted: true,
+        embeddedObject: false,
+        properties: [
+            {
+                name: "favorite",
+                fieldName: "favorites",
+                propertyType: "COLLECTION",
+                itemPropertyType: "TEXT",
+                klass: "java.util.Set",
+                itemKlass: "java.lang.String",
+            },
+            {
+                name: "lastUpdatedBy",
+                fieldName: "lastUpdatedBy",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.user.User",
+            },
+            {
+                name: "access",
+                fieldName: "access",
+                propertyType: "COMPLEX",
+                klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "userGroupAccess",
+                fieldName: "userGroupAccesses",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
+            },
+            {
+                name: "code",
+                fieldName: "code",
+                propertyType: "IDENTIFIER",
+                klass: "java.lang.String",
+            },
+            {
+                name: "created",
+                fieldName: "created",
+                propertyType: "DATE",
+                klass: "java.util.Date",
+            },
+            {
+                name: "displayName",
+                fieldName: "displayName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "publicAccess",
+                fieldName: "publicAccess",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "attributeValue",
+                fieldName: "attributeValues",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
+            },
+            {
+                name: "externalAccess",
+                fieldName: "externalAccess",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "lastUpdated",
+                fieldName: "lastUpdated",
+                propertyType: "DATE",
+                klass: "java.util.Date",
+            },
+            {
+                name: "translation",
+                fieldName: "translations",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.translation.Translation",
+            },
+            {
+                name: "userAccess",
+                fieldName: "userAccesses",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.user.UserAccess",
+            },
+            { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
+            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
+            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "user",
                 fieldName: "user",
@@ -22123,12 +21198,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
-                name: "displayNumeratorDescription",
-                fieldName: "displayNumeratorDescription",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "lastUpdated",
                 fieldName: "lastUpdated",
                 propertyType: "DATE",
@@ -22162,12 +21231,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
-            {
-                name: "displayDenominatorDescription",
-                fieldName: "displayDenominatorDescription",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             {
                 name: "numeratorDescription",
                 fieldName: "numeratorDescription",
@@ -22216,12 +21279,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.indicator.IndicatorGroup",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             { name: "url", fieldName: "url", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -23572,12 +22629,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
             {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "mapView",
                 fieldName: "mapViews",
                 propertyType: "COLLECTION",
@@ -23650,12 +22701,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Integer",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "userAccess",
                 fieldName: "userAccesses",
                 propertyType: "COLLECTION",
@@ -23693,7 +22738,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         dataShareable: false,
         name: "mapView",
         persisted: true,
-        embeddedObject: true,
+        embeddedObject: false,
         properties: [
             {
                 name: "dataElementGroupSetDimension",
@@ -23702,12 +22747,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.List",
                 itemKlass: "org.hisp.dhis.dataelement.DataElementGroupSetDimension",
-            },
-            {
-                name: "orgUnitField",
-                fieldName: "orgUnitField",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "endDate",
@@ -23726,6 +22765,18 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "userOrganisationUnitChildren",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
+            },
+            {
+                name: "colorScale",
+                fieldName: "colorScale",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "parentLevel",
+                fieldName: "parentLevel",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "program",
@@ -23757,6 +22808,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
             {
+                name: "parentGraphMap",
+                fieldName: "parentGraphMap",
+                propertyType: "COMPLEX",
+                klass: "java.util.Map",
+            },
+            {
                 name: "eventCoordinateField",
                 fieldName: "eventCoordinateField",
                 propertyType: "TEXT",
@@ -23767,14 +22824,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "userOrganisationUnit",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
-            },
-            {
-                name: "filterDimension",
-                fieldName: "filterDimensions",
-                propertyType: "COLLECTION",
-                itemPropertyType: "TEXT",
-                klass: "java.util.List",
-                itemKlass: "java.lang.String",
             },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
@@ -23793,10 +22842,24 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.interpretation.Interpretation",
             },
             {
+                name: "itemOrganisationUnitGroup",
+                fieldName: "itemOrganisationUnitGroups",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnitGroup",
+            },
+            {
                 name: "displayDescription",
                 fieldName: "displayDescription",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
+            },
+            {
+                name: "lastUpdatedBy",
+                fieldName: "lastUpdatedBy",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.user.User",
             },
             {
                 name: "userGroupAccess",
@@ -23807,218 +22870,18 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.user.UserGroupAccess",
             },
             {
-                name: "method",
-                fieldName: "method",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "subscriber",
-                fieldName: "subscribers",
-                propertyType: "COLLECTION",
-                itemPropertyType: "TEXT",
-                klass: "java.util.Set",
-                itemKlass: "java.lang.String",
-            },
-            {
-                name: "renderingStrategy",
-                fieldName: "renderingStrategy",
-                propertyType: "CONSTANT",
-                klass: "org.hisp.dhis.mapping.MapViewRenderingStrategy",
-            },
-            {
-                name: "labels",
-                fieldName: "labels",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "subtitle",
-                fieldName: "subtitle",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "sortOrder",
-                fieldName: "sortOrder",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "shortName",
-                fieldName: "shortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-            {
-                name: "topLimit",
-                fieldName: "topLimit",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "startDate",
-                fieldName: "startDate",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "access",
-                fieldName: "access",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.security.acl.Access",
-            },
-            {
-                name: "userOrganisationUnitGrandChildren",
-                fieldName: "userOrganisationUnitGrandChildren",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "displayName",
-                fieldName: "displayName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "column",
-                fieldName: "columns",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.common.DimensionalObject",
-            },
-            {
-                name: "styleDataItem",
-                fieldName: "styleDataItem",
-                propertyType: "COMPLEX",
-                klass: "java.lang.Object",
-            },
-            {
-                name: "labelFontColor",
-                fieldName: "labelFontColor",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            { name: "layer", fieldName: "layer", propertyType: "TEXT", klass: "java.lang.String" },
-            {
-                name: "displayShortName",
-                fieldName: "displayShortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "dataElementDimension",
-                fieldName: "dataElementDimensions",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension",
-            },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "period",
-                fieldName: "periods",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.period.Period",
-            },
-            {
-                name: "categoryDimension",
-                fieldName: "categoryDimensions",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.category.CategoryDimension",
-            },
-            {
-                name: "labelFontStyle",
-                fieldName: "labelFontStyle",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "radiusHigh",
-                fieldName: "radiusHigh",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "hideTitle",
-                fieldName: "hideTitle",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "eventClustering",
-                fieldName: "eventClustering",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "colorLow",
-                fieldName: "colorLow",
-                propertyType: "COLOR",
-                klass: "java.lang.String",
-            },
-            {
-                name: "opacity",
-                fieldName: "opacity",
-                propertyType: "NUMBER",
-                klass: "java.lang.Double",
-            },
-            {
-                name: "config",
-                fieldName: "config",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "colorScale",
-                fieldName: "colorScale",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "parentLevel",
-                fieldName: "parentLevel",
-                propertyType: "INTEGER",
-                klass: "java.lang.Integer",
-            },
-            {
-                name: "parentGraphMap",
-                fieldName: "parentGraphMap",
-                propertyType: "COMPLEX",
-                klass: "java.util.Map",
-            },
-            {
-                name: "itemOrganisationUnitGroup",
-                fieldName: "itemOrganisationUnitGroups",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnitGroup",
-            },
-            {
-                name: "lastUpdatedBy",
-                fieldName: "lastUpdatedBy",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            {
                 name: "programIndicatorDimension",
                 fieldName: "programIndicatorDimensions",
                 propertyType: "COLLECTION",
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.List",
                 itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityProgramIndicatorDimension",
+            },
+            {
+                name: "method",
+                fieldName: "method",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "labelFontSize",
@@ -24031,6 +22894,14 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "created",
                 propertyType: "DATE",
                 klass: "java.util.Date",
+            },
+            {
+                name: "subscriber",
+                fieldName: "subscribers",
+                propertyType: "COLLECTION",
+                itemPropertyType: "TEXT",
+                klass: "java.util.Set",
+                itemKlass: "java.lang.String",
             },
             {
                 name: "colorHigh",
@@ -24073,10 +22944,22 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Integer",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
+                name: "labels",
+                fieldName: "labels",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "subtitle",
+                fieldName: "subtitle",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
+            },
+            {
+                name: "sortOrder",
+                fieldName: "sortOrder",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "userAccess",
@@ -24087,6 +22970,25 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.user.UserAccess",
             },
             { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
+            {
+                name: "shortName",
+                fieldName: "shortName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
+            {
+                name: "topLimit",
+                fieldName: "topLimit",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
+                name: "startDate",
+                fieldName: "startDate",
+                propertyType: "DATE",
+                klass: "java.util.Date",
+            },
             {
                 name: "programStatus",
                 fieldName: "programStatus",
@@ -24130,10 +23032,36 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.category.CategoryOptionGroupSetDimension",
             },
             {
+                name: "access",
+                fieldName: "access",
+                propertyType: "COMPLEX",
+                klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "userOrganisationUnitGrandChildren",
+                fieldName: "userOrganisationUnitGrandChildren",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
                 name: "hidden",
                 fieldName: "hidden",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
+            },
+            {
+                name: "displayName",
+                fieldName: "displayName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "column",
+                fieldName: "columns",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.common.DimensionalObject",
             },
             {
                 name: "classes",
@@ -24148,8 +23076,20 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
+                name: "styleDataItem",
+                fieldName: "styleDataItem",
+                propertyType: "COMPLEX",
+                klass: "java.lang.Object",
+            },
+            {
                 name: "description",
                 fieldName: "description",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "labelFontColor",
+                fieldName: "labelFontColor",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -24162,6 +23102,13 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnitGroupSetDimension",
             },
             { name: "title", fieldName: "title", propertyType: "TEXT", klass: "java.lang.String" },
+            { name: "layer", fieldName: "layer", propertyType: "TEXT", klass: "java.lang.String" },
+            {
+                name: "displayShortName",
+                fieldName: "displayShortName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
             {
                 name: "organisationUnitLevel",
                 fieldName: "organisationUnitLevels",
@@ -24195,6 +23142,22 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.period.RelativePeriods",
             },
             {
+                name: "dataElementDimension",
+                fieldName: "dataElementDimensions",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension",
+            },
+            {
+                name: "period",
+                fieldName: "periods",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.period.Period",
+            },
+            {
                 name: "organisationUnit",
                 fieldName: "organisationUnits",
                 propertyType: "COLLECTION",
@@ -24203,8 +23166,22 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnit",
             },
             {
+                name: "categoryDimension",
+                fieldName: "categoryDimensions",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.category.CategoryDimension",
+            },
+            {
                 name: "eventPointColor",
                 fieldName: "eventPointColor",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "labelFontStyle",
+                fieldName: "labelFontStyle",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -24255,10 +23232,34 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Integer",
             },
             {
+                name: "radiusHigh",
+                fieldName: "radiusHigh",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "digitGroupSeparator",
                 fieldName: "digitGroupSeparator",
                 propertyType: "CONSTANT",
                 klass: "org.hisp.dhis.common.DigitGroupSeparator",
+            },
+            {
+                name: "hideTitle",
+                fieldName: "hideTitle",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "eventClustering",
+                fieldName: "eventClustering",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "colorLow",
+                fieldName: "colorLow",
+                propertyType: "COLOR",
+                klass: "java.lang.String",
             },
             {
                 name: "trackedEntityType",
@@ -24273,17 +23274,29 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.legend.LegendSet",
             },
             {
+                name: "opacity",
+                fieldName: "opacity",
+                propertyType: "NUMBER",
+                klass: "java.lang.Double",
+            },
+            {
                 name: "user",
                 fieldName: "user",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.user.User",
+            },
+            {
+                name: "config",
+                fieldName: "config",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
             },
         ],
     },
     messageConversations: {
         klass: "org.hisp.dhis.message.MessageConversation",
         shareable: false,
-        metadata: false,
+        metadata: true,
         relativeApiEndpoint: "/messageConversations",
         plural: "messageConversations",
         displayName: "Message Conversation",
@@ -24826,7 +23839,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         plural: "options",
         displayName: "Option",
         collectionName: "options",
-        nameableObject: true,
+        nameableObject: false,
         translatable: true,
         identifiableObject: true,
         dataShareable: false,
@@ -24842,13 +23855,13 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "java.lang.String",
             },
-            { name: "code", fieldName: "code", propertyType: "TEXT", klass: "java.lang.String" },
             {
                 name: "access",
                 fieldName: "access",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.security.acl.Access",
             },
+            { name: "code", fieldName: "code", propertyType: "TEXT", klass: "java.lang.String" },
             {
                 name: "displayName",
                 fieldName: "displayName",
@@ -24864,12 +23877,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             {
                 name: "description",
                 fieldName: "description",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "displayShortName",
-                fieldName: "displayShortName",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -24905,14 +23912,8 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
-            {
-                name: "displayDescription",
-                fieldName: "displayDescription",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
+            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "lastUpdatedBy",
                 fieldName: "lastUpdatedBy",
@@ -24942,12 +23943,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "sortOrder",
                 fieldName: "sortOrder",
                 propertyType: "INTEGER",
@@ -24967,12 +23962,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "style",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.common.ObjectStyle",
-            },
-            {
-                name: "shortName",
-                fieldName: "shortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "user",
@@ -25076,12 +24065,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
             {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "option",
                 fieldName: "members",
                 propertyType: "COLLECTION",
@@ -25125,12 +24108,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -25198,12 +24175,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "TEXT",
                 klass: "java.util.Set",
                 itemKlass: "java.lang.String",
-            },
-            {
-                name: "dataDimensionType",
-                fieldName: "dataDimensionType",
-                propertyType: "CONSTANT",
-                klass: "org.hisp.dhis.common.DataDimensionType",
             },
             {
                 name: "aggregationType",
@@ -25287,12 +24258,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             { name: "dimension", propertyType: "TEXT", klass: "java.lang.String" },
@@ -25307,12 +24272,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdatedBy",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "programStage",
-                fieldName: "programStage",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.program.ProgramStage",
             },
             {
                 name: "userGroupAccess",
@@ -25341,18 +24300,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "dimensionalKeywords",
-                fieldName: "dimensionalKeywords",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.common.DimensionalKeywords",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "filter",
@@ -25595,19 +24542,19 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
+                name: "organisationUnit",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnit",
+            },
+            {
                 name: "organisationUnitGroup",
                 fieldName: "groups",
                 propertyType: "COLLECTION",
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnitGroup",
-            },
-            {
-                name: "organisationUnit",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnit",
             },
             {
                 name: "displayDescription",
@@ -25643,12 +24590,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userItem",
@@ -25767,10 +24708,10 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
+                name: "featureType",
+                fieldName: "featureType",
+                propertyType: "CONSTANT",
+                klass: "org.hisp.dhis.organisationunit.FeatureType",
             },
             {
                 name: "openingDate",
@@ -25792,6 +24733,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "INTEGER",
                 klass: "java.lang.Integer",
             },
+            {
+                name: "coordinates",
+                fieldName: "coordinates",
+                propertyType: "GEOLOCATION",
+                klass: "java.lang.String",
+            },
             { name: "leaf", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
             { name: "url", fieldName: "url", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -25804,12 +24751,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 name: "legendSet",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.legend.LegendSet",
-            },
-            {
-                name: "geometry",
-                fieldName: "geometry",
-                propertyType: "COMPLEX",
-                klass: "com.vividsolutions.jts.geom.Geometry",
             },
             {
                 name: "comment",
@@ -25919,13 +24860,8 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
             {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "featureType",
+                fieldName: "featureType",
                 propertyType: "CONSTANT",
                 klass: "org.hisp.dhis.organisationunit.FeatureType",
             },
@@ -25967,6 +24903,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
+                name: "coordinates",
+                fieldName: "coordinates",
+                propertyType: "GEOLOCATION",
+                klass: "java.lang.String",
+            },
+            {
                 name: "attributeValue",
                 fieldName: "attributeValues",
                 propertyType: "COLLECTION",
@@ -25981,12 +24923,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.organisationunit.OrganisationUnitGroupSet",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -26009,12 +24945,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "REFERENCE",
                 klass: "java.util.List",
                 itemKlass: "org.hisp.dhis.legend.LegendSet",
-            },
-            {
-                name: "geometry",
-                fieldName: "geometry",
-                propertyType: "COMPLEX",
-                klass: "com.vividsolutions.jts.geom.Geometry",
             },
             {
                 name: "shortName",
@@ -26060,12 +24990,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "TEXT",
                 klass: "java.util.Set",
                 itemKlass: "java.lang.String",
-            },
-            {
-                name: "dataDimensionType",
-                fieldName: "dataDimensionType",
-                propertyType: "CONSTANT",
-                klass: "org.hisp.dhis.common.DataDimensionType",
             },
             {
                 name: "aggregationType",
@@ -26135,12 +25059,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -26163,12 +25081,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdatedBy",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "programStage",
-                fieldName: "programStage",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.program.ProgramStage",
             },
             {
                 name: "userGroupAccess",
@@ -26197,18 +25109,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "dimensionalKeywords",
-                fieldName: "dimensionalKeywords",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.common.DimensionalKeywords",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "filter",
@@ -26664,6 +25564,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.user.UserGroupAccess",
             },
             {
+                name: "workflow",
+                fieldName: "workflow",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.dataapproval.DataApprovalWorkflow",
+            },
+            {
                 name: "created",
                 fieldName: "created",
                 propertyType: "DATE",
@@ -26676,12 +25582,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "version",
@@ -27014,12 +25914,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "attribute",
@@ -27062,12 +25956,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -27209,12 +26097,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "CONSTANT",
                 klass: "org.hisp.dhis.common.ValueType",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -27257,12 +26139,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "dataElement",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.dataelement.DataElement",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -27475,12 +26351,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "filter",
@@ -27751,16 +26621,16 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.String",
             },
             {
-                name: "storedBy",
-                fieldName: "storedBy",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "access",
                 fieldName: "access",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "storedBy",
+                fieldName: "storedBy",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
             },
             {
                 name: "endDate",
@@ -27841,7 +26711,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
             {
-                name: "relationshipItem",
+                name: "relationshipItems",
                 fieldName: "relationshipItems",
                 propertyType: "COLLECTION",
                 itemPropertyType: "COMPLEX",
@@ -27914,12 +26784,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             },
             { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
             {
-                name: "geometry",
-                fieldName: "geometry",
-                propertyType: "COMPLEX",
-                klass: "com.vividsolutions.jts.geom.Geometry",
-            },
-            {
                 name: "incidentDate",
                 fieldName: "incidentDate",
                 propertyType: "DATE",
@@ -27932,12 +26796,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.user.User",
             },
             { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-            {
-                name: "completedBy",
-                fieldName: "completedBy",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             {
                 name: "status",
                 fieldName: "status",
@@ -28639,7 +27497,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         plural: "programSections",
         displayName: "Program Section",
         collectionName: "programSections",
-        nameableObject: true,
+        nameableObject: false,
         translatable: true,
         identifiableObject: true,
         dataShareable: false,
@@ -28656,16 +27514,16 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "java.lang.String",
             },
             {
-                name: "code",
-                fieldName: "code",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
                 name: "access",
                 fieldName: "access",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "code",
+                fieldName: "code",
+                propertyType: "IDENTIFIER",
+                klass: "java.lang.String",
             },
             {
                 name: "displayName",
@@ -28692,16 +27550,18 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.program.Program",
             },
             {
-                name: "displayShortName",
-                fieldName: "displayShortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "externalAccess",
                 fieldName: "externalAccess",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
+            },
+            {
+                name: "programTrackedEntityAttribute",
+                fieldName: "attributes",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityAttribute",
             },
             {
                 name: "lastUpdated",
@@ -28723,19 +27583,13 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
+            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "renderType",
                 fieldName: "renderType",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.render.DeviceRenderTypeMap",
-            },
-            {
-                name: "displayDescription",
-                fieldName: "displayDescription",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "lastUpdatedBy",
@@ -28766,12 +27620,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "sortOrder",
                 fieldName: "sortOrder",
                 propertyType: "INTEGER",
@@ -28787,24 +27635,10 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             },
             { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
             {
-                name: "trackedEntityAttributes",
-                fieldName: "trackedEntityAttributes",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityAttribute",
-            },
-            {
                 name: "style",
                 fieldName: "style",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.common.ObjectStyle",
-            },
-            {
-                name: "shortName",
-                fieldName: "shortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "user",
@@ -28823,7 +27657,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         plural: "programStages",
         displayName: "Program Stage",
         collectionName: "programStages",
-        nameableObject: true,
+        nameableObject: false,
         translatable: true,
         identifiableObject: true,
         dataShareable: true,
@@ -28832,16 +27666,16 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         embeddedObject: false,
         properties: [
             {
-                name: "dataEntryForm",
-                fieldName: "dataEntryForm",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.dataentryform.DataEntryForm",
-            },
-            {
                 name: "allowGenerateNextVisit",
                 fieldName: "allowGenerateNextVisit",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
+            },
+            {
+                name: "dataEntryForm",
+                fieldName: "dataEntryForm",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.dataentryform.DataEntryForm",
             },
             {
                 name: "publicAccess",
@@ -28927,12 +27761,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "sortOrder",
                 fieldName: "sortOrder",
                 propertyType: "INTEGER",
@@ -28954,22 +27782,10 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
-                name: "enableUserAssignment",
-                fieldName: "enableUserAssignment",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
                 name: "style",
                 fieldName: "style",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.common.ObjectStyle",
-            },
-            {
-                name: "shortName",
-                fieldName: "shortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "minDaysFromStart",
@@ -28977,13 +27793,13 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "INTEGER",
                 klass: "java.lang.Integer",
             },
-            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
             {
                 name: "standardInterval",
                 fieldName: "standardInterval",
                 propertyType: "INTEGER",
                 klass: "java.lang.Integer",
             },
+            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
             {
                 name: "dueDateLabel",
                 fieldName: "dueDateLabel",
@@ -29011,16 +27827,16 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.String",
             },
             {
-                name: "preGenerateUID",
-                fieldName: "preGenerateUID",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
                 name: "access",
                 fieldName: "access",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "preGenerateUID",
+                fieldName: "preGenerateUID",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
             },
             {
                 name: "displayName",
@@ -29031,12 +27847,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             {
                 name: "description",
                 fieldName: "description",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "displayShortName",
-                fieldName: "displayShortName",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -29089,12 +27899,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "displayGenerateEventBox",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
-            },
-            {
-                name: "nextScheduleDate",
-                fieldName: "nextScheduleDate",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.dataelement.DataElement",
             },
             {
                 name: "validationStrategy",
@@ -29311,146 +28115,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
         ],
     },
-    eventFilters: {
-        klass: "org.hisp.dhis.programstagefilter.ProgramStageInstanceFilter",
-        shareable: true,
-        metadata: true,
-        relativeApiEndpoint: "/eventFilters",
-        plural: "eventFilters",
-        displayName: "Program Stage Instance Filter",
-        collectionName: "eventFilters",
-        nameableObject: false,
-        translatable: false,
-        identifiableObject: true,
-        dataShareable: false,
-        name: "programStageInstanceFilter",
-        persisted: true,
-        embeddedObject: false,
-        properties: [
-            {
-                name: "favorite",
-                fieldName: "favorites",
-                propertyType: "COLLECTION",
-                itemPropertyType: "TEXT",
-                klass: "java.util.Set",
-                itemKlass: "java.lang.String",
-            },
-            {
-                name: "lastUpdatedBy",
-                fieldName: "lastUpdatedBy",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "programStage",
-                fieldName: "programStage",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
-                name: "eventQueryCriteria",
-                fieldName: "eventQueryCriteria",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.programstagefilter.EventQueryCriteria",
-            },
-            {
-                name: "access",
-                fieldName: "access",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.security.acl.Access",
-            },
-            {
-                name: "userGroupAccess",
-                fieldName: "userGroupAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
-            },
-            {
-                name: "code",
-                fieldName: "code",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
-                name: "created",
-                fieldName: "created",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "displayName",
-                fieldName: "displayName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "publicAccess",
-                fieldName: "publicAccess",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "attributeValue",
-                fieldName: "attributeValues",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "description",
-                fieldName: "description",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "program",
-                fieldName: "program",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
-                name: "externalAccess",
-                fieldName: "externalAccess",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "lastUpdated",
-                fieldName: "lastUpdated",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "translation",
-                fieldName: "translations",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.translation.Translation",
-            },
-            {
-                name: "userAccess",
-                fieldName: "userAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserAccess",
-            },
-            { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
-            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
-            {
-                name: "user",
-                fieldName: "user",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-        ],
-    },
     programStageSections: {
         klass: "org.hisp.dhis.program.ProgramStageSection",
         shareable: false,
@@ -29459,7 +28123,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         plural: "programStageSections",
         displayName: "Program Stage Section",
         collectionName: "programStageSections",
-        nameableObject: true,
+        nameableObject: false,
         translatable: true,
         identifiableObject: true,
         dataShareable: false,
@@ -29502,12 +28166,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             {
                 name: "description",
                 fieldName: "description",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "displayShortName",
-                fieldName: "displayShortName",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -29562,12 +28220,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.dataelement.DataElement",
             },
             {
-                name: "displayDescription",
-                fieldName: "displayDescription",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "lastUpdatedBy",
                 fieldName: "lastUpdatedBy",
                 propertyType: "REFERENCE",
@@ -29602,12 +28254,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "sortOrder",
                 fieldName: "sortOrder",
                 propertyType: "INTEGER",
@@ -29627,12 +28273,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "style",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.common.ObjectStyle",
-            },
-            {
-                name: "shortName",
-                fieldName: "shortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "user",
@@ -29851,12 +28491,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "java.lang.String",
             },
             {
-                name: "code",
-                fieldName: "code",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
                 name: "access",
                 fieldName: "access",
                 propertyType: "COMPLEX",
@@ -29867,6 +28501,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "uniqunessType",
                 propertyType: "CONSTANT",
                 klass: "org.hisp.dhis.program.UniqunessType",
+            },
+            {
+                name: "code",
+                fieldName: "code",
+                propertyType: "IDENTIFIER",
+                klass: "java.lang.String",
             },
             {
                 name: "displayName",
@@ -29912,14 +28552,8 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
+            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "displayDescription",
                 fieldName: "displayDescription",
@@ -29953,12 +28587,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "userAccess",
@@ -30137,7 +28765,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         plural: "relationships",
         displayName: "Relationship",
         collectionName: "relationships",
-        nameableObject: true,
+        nameableObject: false,
         translatable: false,
         identifiableObject: true,
         dataShareable: false,
@@ -30154,16 +28782,16 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "java.lang.String",
             },
             {
-                name: "code",
-                fieldName: "code",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
                 name: "access",
                 fieldName: "access",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "code",
+                fieldName: "code",
+                propertyType: "IDENTIFIER",
+                klass: "java.lang.String",
             },
             {
                 name: "displayName",
@@ -30180,12 +28808,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             {
                 name: "description",
                 fieldName: "description",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "displayShortName",
-                fieldName: "displayShortName",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -30221,14 +28843,8 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.relationship.RelationshipItem",
             },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
-            {
-                name: "displayDescription",
-                fieldName: "displayDescription",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
+            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "lastUpdatedBy",
                 fieldName: "lastUpdatedBy",
@@ -30264,12 +28880,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "userAccess",
                 fieldName: "userAccesses",
                 propertyType: "COLLECTION",
@@ -30289,12 +28899,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "to",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.relationship.RelationshipItem",
-            },
-            {
-                name: "shortName",
-                fieldName: "shortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "user",
@@ -30330,10 +28934,24 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "java.lang.String",
             },
             {
-                name: "bidirectional",
-                fieldName: "bidirectional",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
+                name: "lastUpdatedBy",
+                fieldName: "lastUpdatedBy",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.user.User",
+            },
+            {
+                name: "access",
+                fieldName: "access",
+                propertyType: "COMPLEX",
+                klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "userGroupAccess",
+                fieldName: "userGroupAccesses",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
             },
             {
                 name: "code",
@@ -30342,10 +28960,10 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.String",
             },
             {
-                name: "access",
-                fieldName: "access",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.security.acl.Access",
+                name: "created",
+                fieldName: "created",
+                propertyType: "DATE",
+                klass: "java.util.Date",
             },
             {
                 name: "displayName",
@@ -30360,14 +28978,16 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.String",
             },
             {
-                name: "description",
-                fieldName: "description",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
+                name: "attributeValue",
+                fieldName: "attributeValues",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
             },
             {
-                name: "fromToName",
-                fieldName: "fromToName",
+                name: "description",
+                fieldName: "description",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -30384,10 +29004,10 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
-                name: "displayFromToName",
-                fieldName: "displayFromToName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
+                name: "fromConstraint",
+                fieldName: "fromConstraint",
+                propertyType: "COMPLEX",
+                klass: "org.hisp.dhis.relationship.RelationshipConstraint",
             },
             {
                 name: "translation",
@@ -30398,60 +29018,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
             {
-                name: "toConstraint",
-                fieldName: "toConstraint",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.relationship.RelationshipConstraint",
-            },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
-            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
-            {
-                name: "lastUpdatedBy",
-                fieldName: "lastUpdatedBy",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "userGroupAccess",
-                fieldName: "userGroupAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
-            },
-            {
-                name: "created",
-                fieldName: "created",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "attributeValue",
-                fieldName: "attributeValues",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "toFromName",
-                fieldName: "toFromName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "displayToFromName",
-                fieldName: "displayToFromName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "fromConstraint",
-                fieldName: "fromConstraint",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.relationship.RelationshipConstraint",
-            },
-            {
                 name: "userAccess",
                 fieldName: "userAccesses",
                 propertyType: "COLLECTION",
@@ -30460,6 +29026,14 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.user.UserAccess",
             },
             { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
+            {
+                name: "toConstraint",
+                fieldName: "toConstraint",
+                propertyType: "COMPLEX",
+                klass: "org.hisp.dhis.relationship.RelationshipConstraint",
+            },
+            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
+            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             {
                 name: "user",
                 fieldName: "user",
@@ -30644,12 +29218,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.List",
                 itemKlass: "org.hisp.dhis.dataelement.DataElementGroupSetDimension",
-            },
-            {
-                name: "orgUnitField",
-                fieldName: "orgUnitField",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "numberType",
@@ -30849,12 +29417,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "showDimensionLabels",
                 fieldName: "showDimensionLabels",
                 propertyType: "BOOLEAN",
@@ -31034,12 +29596,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.List",
                 itemKlass: "org.hisp.dhis.trackedentity.TrackedEntityDataElementDimension",
-            },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "period",
@@ -31236,12 +29792,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -31284,12 +29834,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "metric",
@@ -31910,6 +30454,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.analytics.AggregationType",
             },
             {
+                name: "programScope",
+                fieldName: "programScope",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
                 name: "code",
                 fieldName: "code",
                 propertyType: "IDENTIFIER",
@@ -32087,12 +30637,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
             },
             {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
                 name: "unique",
                 fieldName: "unique",
                 propertyType: "BOOLEAN",
@@ -32151,55 +30695,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "dimensionItemType",
                 propertyType: "CONSTANT",
                 klass: "org.hisp.dhis.common.DimensionItemType",
-            },
-        ],
-    },
-    trackedEntityAttributeValues: {
-        klass: "org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue",
-        shareable: false,
-        metadata: false,
-        relativeApiEndpoint: "/trackedEntityAttributeValues",
-        plural: "trackedEntityAttributeValues",
-        displayName: "Tracked Entity Attribute Value",
-        collectionName: "trackedEntityAttributeValues",
-        nameableObject: false,
-        translatable: false,
-        identifiableObject: false,
-        dataShareable: false,
-        name: "trackedEntityAttributeValue",
-        persisted: true,
-        embeddedObject: false,
-        properties: [
-            {
-                name: "lastUpdated",
-                fieldName: "lastUpdated",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "storedBy",
-                fieldName: "storedBy",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "created",
-                fieldName: "created",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            { name: "value", fieldName: "value", propertyType: "TEXT", klass: "java.lang.String" },
-            {
-                name: "trackedEntityAttribute",
-                fieldName: "attribute",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.trackedentity.TrackedEntityAttribute",
-            },
-            {
-                name: "trackedEntityInstance",
-                fieldName: "entityInstance",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.trackedentity.TrackedEntityInstance",
             },
         ],
     },
@@ -32306,7 +30801,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
             {
-                name: "relationshipItem",
+                name: "relationshipItems",
                 fieldName: "relationshipItems",
                 propertyType: "COLLECTION",
                 itemPropertyType: "COMPLEX",
@@ -32315,6 +30810,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
+            {
+                name: "representative",
+                fieldName: "representative",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.trackedentity.TrackedEntityInstance",
+            },
             {
                 name: "lastUpdatedBy",
                 fieldName: "lastUpdatedBy",
@@ -32607,7 +31108,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.String",
             },
             {
-                name: "trackedEntityTypeAttribute",
+                name: "trackedEntityTypeAttributes",
                 fieldName: "trackedEntityTypeAttributes",
                 propertyType: "COLLECTION",
                 itemPropertyType: "REFERENCE",
@@ -32705,12 +31206,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "maxTeiCountToReturn",
@@ -33761,7 +32256,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "NUMBER",
                 klass: "java.lang.Double",
             },
-            { name: "id", fieldName: "id", propertyType: "TEXT", klass: "java.lang.Long" },
+            { name: "id", fieldName: "id", propertyType: "INTEGER", klass: "java.lang.Integer" },
             {
                 name: "leftsideValue",
                 fieldName: "leftsideValue",
@@ -33916,12 +32411,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.translation.Translation",
             },
-            {
-                name: "formName",
-                fieldName: "formName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
             { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
             { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
@@ -33964,12 +32453,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "rightSide",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.expression.Expression",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "periodType",
@@ -34175,6 +32658,7 @@ export type D2ModelSchemas = {
     analyticsPeriodBoundaries: D2AnalyticsPeriodBoundarySchema;
     analyticsTableHooks: D2AnalyticsTableHookSchema;
     attributes: D2AttributeSchema;
+    attributeValues: D2AttributeValueSchema;
     categories: D2CategorySchema;
     categoryCombos: D2CategoryComboSchema;
     categoryDimensions: D2CategoryDimensionSchema;
@@ -34211,8 +32695,8 @@ export type D2ModelSchemas = {
     externalFileResources: D2ExternalFileResourceSchema;
     validationNotificationTemplates: D2ValidationNotificationTemplateSchema;
     dataStores: D2KeyJsonValueSchema;
-    programStageInstances: D2ProgramStageInstanceSchema;
     fileResources: D2FileResourceSchema;
+    programStageInstances: D2ProgramStageInstanceSchema;
     indicators: D2IndicatorSchema;
     indicatorGroups: D2IndicatorGroupSchema;
     indicatorGroupSets: D2IndicatorGroupSetSchema;
@@ -34252,7 +32736,6 @@ export type D2ModelSchemas = {
     programSections: D2ProgramSectionSchema;
     programStages: D2ProgramStageSchema;
     programStageDataElements: D2ProgramStageDataElementSchema;
-    eventFilters: D2ProgramStageInstanceFilterSchema;
     programStageSections: D2ProgramStageSectionSchema;
     programTrackedEntityAttributes: D2ProgramTrackedEntityAttributeSchema;
     programTrackedEntityAttributeGroups: D2ProgramTrackedEntityAttributeGroupSchema;
@@ -34266,7 +32749,6 @@ export type D2ModelSchemas = {
     smsCommands: D2SMSCommandSchema;
     sqlViews: D2SqlViewSchema;
     trackedEntityAttributes: D2TrackedEntityAttributeSchema;
-    trackedEntityAttributeValues: D2TrackedEntityAttributeValueSchema;
     trackedEntityInstances: D2TrackedEntityInstanceSchema;
     trackedEntityInstanceFilters: D2TrackedEntityInstanceFilterSchema;
     trackedEntityTypes: D2TrackedEntityTypeSchema;
