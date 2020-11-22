@@ -101,22 +101,43 @@ type GetTrueSelectionOnNonLiteral<SchemaValue> = SchemaValue extends Array<infer
     ? Ref
     : SchemaValue;
 
+type Function = {
+    rename: { name: "rename"; to: string };
+    size: { name: "size" };
+};
+
 export type SelectedPickFields<
     Model extends D2ModelSchemaBase,
     ModelSelector extends Selector<Model>
 > = GetValues<
     {
         [Key in keyof ModelSelector & keyof Model["fields"]]: ModelSelector[Key] extends {
-            $fn: { name: "rename"; to: string };
+            $fn: Function[keyof Function];
         }
-            ? {
-                  [K in ModelSelector[Key]["$fn"]["to"]]: SelectorKey<Model, ModelSelector, Key>;
-              }
+            ? ApplyFunction<Model, ModelSelector, Key>
             : {
                   [K in Key]: SelectorKey<Model, ModelSelector, K>;
               };
     }
 >;
+
+type ApplyFunction<
+    Model extends D2ModelSchemaBase,
+    ModelSelector extends Selector<Model>,
+    Key extends keyof ModelSelector & keyof Model["fields"]
+> = ModelSelector[Key] extends {
+    $fn: Function["rename"];
+}
+    ? {
+          [K in ModelSelector[Key]["$fn"]["to"]]: SelectorKey<Model, ModelSelector, Key>;
+      }
+    : ModelSelector[Key] extends {
+          $fn: Function["size"];
+      }
+    ? {
+          [K in Key]: number;
+      }
+    : never;
 
 export type Get<Obj, Key> = Key extends keyof Obj ? Obj[Key] : never;
 

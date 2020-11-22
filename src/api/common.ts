@@ -54,11 +54,18 @@ export interface FilterBase {
 
 function applyFieldTransformers(key: string, value: any) {
     if (value.hasOwnProperty("$fn")) {
+        const valueWithFn = _.omit(value, ["$fn"]);
+
         switch (value["$fn"]["name"]) {
             case "rename":
                 return {
                     key: `${key}~rename(${value["$fn"]["to"]})`,
-                    value: _.omit(value, ["$fn"]),
+                    value: valueWithFn,
+                };
+            case "size":
+                return {
+                    key: `${key}~size`,
+                    value: valueWithFn,
                 };
             default:
                 return { key, value };
