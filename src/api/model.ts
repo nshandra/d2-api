@@ -110,14 +110,14 @@ export class Model<
 
     post(
         payload: PartialModel<D2ModelSchema["model"]>,
-        options?: UpdateOptions
+        options?: Partial<UpdateOptions>
     ): D2ApiResponse<ModelResponse> {
         return this.d2Api.post(this.modelName, (options || {}) as Params, payload);
     }
 
     put(
         payload: PartialPersistedModel<D2ModelSchema["model"]>,
-        options?: UpdateOptions
+        options?: Partial<UpdateOptions>
     ): D2ApiResponse<ModelResponse> {
         return this.d2Api.put(
             [this.modelName, payload.id].join("/"),
