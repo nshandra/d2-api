@@ -1,14 +1,14 @@
-import MockAdapter from "axios-mock-adapter";
 import axios, { AxiosInstance } from "axios";
+import MockAdapter from "axios-mock-adapter";
 import qs from "qs";
-
+import { CancelableResponse } from "../repositories/CancelableResponse";
 import {
+    ConstructorOptions,
+    getBody,
     HttpClientRepository,
     HttpRequest,
     HttpResponse,
-    ConstructorOptions,
 } from "../repositories/HttpClientRepository";
-import { CancelableResponse } from "../repositories/CancelableResponse";
 
 export class AxiosHttpClientRepository implements HttpClientRepository {
     private instance: AxiosInstance;
@@ -19,7 +19,12 @@ export class AxiosHttpClientRepository implements HttpClientRepository {
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {
         const { token: cancelToken, cancel } = axios.CancelToken.source();
-        const axiosResponse = this.instance({ cancelToken, ...options });
+        const axiosResponse = this.instance({
+            ...options,
+            cancelToken,
+            data: getBody(options.dataType, options.data),
+        });
+
         const response: Promise<HttpResponse<Data>> = axiosResponse.then(res => ({
             status: res.status,
             data: res.data as Data,
@@ -37,7 +42,7 @@ export class AxiosHttpClientRepository implements HttpClientRepository {
         return axios.create({
             baseURL: options.baseUrl,
             auth: options.auth,
-            withCredentials: !options.auth,
+            withCredentials: options.credentials === "include" ? !options.auth : undefined,
             paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
             validateStatus: status => status >= 200 && status < 300,
             timeout: options.timeout,

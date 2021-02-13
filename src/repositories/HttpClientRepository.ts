@@ -15,8 +15,10 @@ export interface HttpRequest {
     url: string;
     params?: Record<string, ParamValue | ParamValue[]>;
     data?: unknown;
+    dataType?: "json" | "formData";
     validateStatus?(status: number): boolean;
     timeout?: number;
+    headers?: Record<string, string>;
 }
 
 export interface HttpResponse<Data> {
@@ -33,6 +35,7 @@ export interface Credentials {
 export interface ConstructorOptions {
     baseUrl?: string;
     auth?: Credentials;
+    credentials?: "include" | "ignore";
     timeout?: number;
 }
 
@@ -49,5 +52,25 @@ export class HttpError extends Error implements HttpErrorOptions {
         super(message);
         this.request = obj.request;
         this.response = obj.response;
+    }
+}
+
+export function getBody(dataType: HttpRequest["dataType"], data: any) {
+    switch (dataType) {
+        case "formData": {
+            const formData = new FormData();
+
+            for (const param in data) {
+                formData.append(param, String(data[param]));
+            }
+
+            return formData;
+        }
+        case "json": {
+            return JSON.stringify(data);
+        }
+        default: {
+            return data;
+        }
     }
 }

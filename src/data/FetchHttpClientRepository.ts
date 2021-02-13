@@ -8,6 +8,7 @@ import qs from "qs";
 import { CancelableResponse } from "../repositories/CancelableResponse";
 import {
     ConstructorOptions,
+    getBody,
     HttpClientRepository,
     HttpError,
     HttpRequest,
@@ -20,25 +21,34 @@ export class FetchHttpClientRepository implements HttpClientRepository {
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {
         const controller = new AbortController();
-        const { baseUrl = "", auth } = this.options;
+        const { baseUrl = "", auth, credentials = "include" } = this.options;
         const timeout = options.timeout || this.options.timeout;
-        const { method, url, params, data, validateStatus = validateStatus2xx } = options;
+        const {
+            method,
+            url,
+            params,
+            data,
+            dataType = "json",
+            headers: extraHeaders = {},
+            validateStatus = validateStatus2xx,
+        } = options;
 
         const baseHeaders: Record<string, string> = {
             Accept: "application/json, text/plain",
-            ...(data ? { "Content-Type": "application/json;charset=UTF-8" } : {}),
+            ...(dataType === "json" ? { "Content-Type": "application/json;charset=UTF-8" } : {}),
         };
 
         const authHeaders: Record<string, string> = auth
             ? { Authorization: "Basic " + btoa(auth.username + ":" + auth.password) }
             : {};
 
+        const credentialsStrategy = auth ? "omit" : "include";
         const fetchOptions: RequestInit = {
             method,
             signal: controller.signal,
-            ...(data ? { body: JSON.stringify(data) } : {}),
-            headers: { ...baseHeaders, ...authHeaders },
-            credentials: auth ? "omit" : ("include" as const),
+            body: getBody(dataType, data),
+            headers: { ...baseHeaders, ...authHeaders, ...extraHeaders },
+            credentials: credentials === "include" ? credentialsStrategy : undefined,
         };
 
         const fullUrl = joinPath(baseUrl, url) + getQueryStrings(params);
