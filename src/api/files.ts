@@ -1,5 +1,5 @@
 import { generateUid } from "../utils/uid";
-import { Id } from "./base";
+import { Id, MetadataResponse } from "./base";
 import { D2ApiResponse } from "./common";
 import { D2ApiGeneric } from "./d2Api";
 
@@ -19,28 +19,15 @@ interface PartialSaveResponse {
 }
 
 export interface FileUploadResult {
-    httpStatus: string;
-    httpStatusCode: number;
-    status: "OK" | "ERROR";
-    message?: string;
-    response: {
-        responseType: "ObjectReport";
-        klass: string;
-        uid: Id;
-        errorReports?: Array<{
-            message: string;
-            mainKlass: string;
-            errorCode: string;
-            errorProperties: string[];
-        }>;
-    };
+    id: string;
+    response: MetadataResponse;
 }
 
 export class Files {
     constructor(public d2Api: D2ApiGeneric) {}
 
     upload(params: FileUploadParameters): D2ApiResponse<FileUploadResult> {
-        const { id, name, data } = params;
+        const { id = generateUid(), name, data } = params;
 
         const formData = new FormData();
         formData.append("file", data, name);
@@ -60,21 +47,22 @@ export class Files {
                         ? data.response.fileResource.id
                         : undefined;
 
-                const method = id ? "put" : "post";
+                const document = { id, name, url: fileResourceId };
 
-                const { response } = this.d2Api[method]<FileUploadResult>(
-                    "/documents",
+                const { response } = this.d2Api.post<MetadataResponse>(
+                    "/metadata",
                     {},
-                    {
-                        id: id || generateUid(),
-                        name,
-                        url: fileResourceId,
-                    }
+                    { documents: [document] }
                 );
 
                 return response;
             });
 
-        return D2ApiResponse.build({ response });
+        return D2ApiResponse.build({
+            response: response.then(({ data, ...rest }) => ({
+                ...rest,
+                data: { id, response: data },
+            })),
+        });
     }
 }
