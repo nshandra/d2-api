@@ -33,15 +33,14 @@ export class Files {
         formData.append("file", data, name);
         formData.append("domain", "DOCUMENT");
 
-        const response = this.d2Api.apiConnection
+        return this.d2Api.apiConnection
             .request<PartialSaveResponse>({
                 method: "post",
                 url: "/fileResources",
                 data: formData,
                 dataType: "raw",
             })
-            .getData()
-            .then(data => {
+            .flatMap(({ data }) => {
                 const fileResourceId =
                     data.response && data.response.fileResource
                         ? data.response.fileResource.id
@@ -49,20 +48,9 @@ export class Files {
 
                 const document = { id, name, url: fileResourceId };
 
-                const { response } = this.d2Api.post<MetadataResponse>(
-                    "/metadata",
-                    {},
-                    { documents: [document] }
-                );
-
-                return response;
+                return this.d2Api
+                    .post<MetadataResponse>("/metadata", {}, { documents: [document] })
+                    .map(({ data }) => ({ id, response: data }));
             });
-
-        return D2ApiResponse.build({
-            response: response.then(({ data, ...rest }) => ({
-                ...rest,
-                data: { id, response: data },
-            })),
-        });
     }
 }
