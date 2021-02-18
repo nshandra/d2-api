@@ -16,31 +16,30 @@ export class AppHub {
 }
 
 export interface App {
-    appType: string;
-    created: Date;
+    appType: AppType;
+    created: string;
     description: string;
     developer: AppDeveloper;
     id: string;
     images: AppImage[];
-    lastUpdated: Date;
+    lastUpdated: string;
     name: string;
     owner: string;
     reviews: [];
     sourceUrl: string;
-    status: string;
+    status: AppStatus;
     versions: AppVersion[];
 }
 
 export interface AppVersion {
-    channel: string;
-    created: Date;
+    id: string;
+    version: string;
+    created: string;
     demoUrl: string;
     downloadUrl: string;
-    id: string;
-    lastUpdated: Date;
+    lastUpdated: string;
     maxDhisVersion: string;
     minDhisVersion: string;
-    version: string;
 }
 
 export interface AppDeveloper {
@@ -52,10 +51,28 @@ export interface AppDeveloper {
 
 export interface AppImage {
     caption: string;
-    created: Date;
+    created: string;
     description: string;
     id: string;
     imageUrl: string;
-    lastUpdated: Date;
+    lastUpdated: string;
     logo: boolean;
 }
+
+export type AppType = "APP" | "RESOURCE" | "DASHBOARD_WIDGET" | "TRACKER_DASHBOARD_WIDGET";
+
+export type AppStatus =
+    | "OK"
+    | "INVALID_BUNDLED_APP_OVERRIDE"
+    | "INVALID_CORE_APP"
+    | "NAMESPACE_TAKEN"
+    | "INVALID_ZIP_FORMAT"
+    | "MISSING_MANIFEST"
+    | "INVALID_MANIFEST_JSON"
+    | "INSTALLATION_FAILED"
+    | "NOT_FOUND"
+    | "MISSING_SYSTEM_BASE_URL"
+    | "APPROVED"
+    | "PENDING"
+    | "NOT_APPROVED"
+    | "DELETION_IN_PROGRESS";
