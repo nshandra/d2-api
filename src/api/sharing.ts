@@ -8,15 +8,15 @@ import { HttpResponse } from "../repositories/HttpClientRepository";
 export class Sharing {
     constructor(public d2Api: D2ApiGeneric) {}
 
-    search(options: SearchOptions): D2ApiResponse<void> {
-        return this.d2Api.get("/sharing/search", options);
+    search(options: SearchOptions): D2ApiResponse<SearchResponse> {
+        return this.d2Api.get<SearchResponse>("/sharing/search", options);
     }
 
-    get(params: SharingParams) {
+    get(params: SharingParams): D2ApiResponse<SharingGetResponse> {
         return this.d2Api.get<SharingGetResponse>("/sharing", params);
     }
 
-    post(params: SharingParams, data: SharingObjectUpdate) {
+    post(params: SharingParams, data: SharingObjectUpdate): D2ApiResponse<HttpResponse<undefined>> {
         return this.d2Api.post<HttpResponse<undefined>>("/sharing", params, data);
     }
 }
@@ -60,4 +60,17 @@ interface SharingSetting {
     access: string;
     displayName: string;
     name: string;
+}
+
+export interface SearchResponse {
+    users: Array<{
+        id: string;
+        displayName: string;
+        name: string;
+    }>;
+    userGroups: Array<{
+        id: string;
+        displayName: string;
+        name: string;
+    }>;
 }
