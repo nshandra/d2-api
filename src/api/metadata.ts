@@ -115,7 +115,7 @@ export class Metadata<D2ApiDefinition extends D2ApiDefinitionBase> {
     postAsync(
         data: Partial<MetadataPayloadBase<D2ApiDefinition["schemas"]>>,
         options: Partial<PostOptions> = {}
-    ): D2ApiResponse<AsyncPostResponse> {
+    ): D2ApiResponse<AsyncPostResponse<"METADATA_IMPORT">> {
         return this.d2Api.request({
             method: "post",
             url: "/metadata",

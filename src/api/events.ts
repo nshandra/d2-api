@@ -1,3 +1,4 @@
+import { RequireAtLeastOne } from "../utils/types";
 import { AsyncPostResponse, D2ApiResponse, HttpResponse } from "./common";
 import { D2ApiGeneric } from "./d2Api";
 import { Pager } from "./model";
@@ -66,9 +67,15 @@ export type EventsPostResponse = HttpResponse<{
     }>;
 }>;
 
-export interface EventsGetRequest {
-    program: string;
-    orgUnit: string;
+export type EventsGetRequest = RequireAtLeastOne<
+    EventsGetRequestFilters,
+    "orgUnit" | "program" | "trackedEntityInstance" | "event"
+>;
+
+export interface EventsGetRequestFilters {
+    program?: string;
+    orgUnit?: string;
+    event?: string;
     programStage?: string;
     programStatus?: "ACTIVE" | "COMPLETED" | "CANCELLED";
     followUp?: boolean;
@@ -77,6 +84,7 @@ export interface EventsGetRequest {
     startDate?: string;
     endDate?: string;
     status?: "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULED" | "OVERDUE" | "SKIPPED";
+    lastUpdated?: string;
     lastUpdatedStartDate?: string;
     lastUpdatedEndDate?: string;
     lastUpdatedDuration?: string;
@@ -92,7 +100,6 @@ export interface EventsGetRequest {
     programStageIdScheme?: IdScheme;
     idScheme?: IdScheme;
     order?: string;
-    event?: string;
     skipEventId?: boolean;
     attributeCc?: string;
     attributeCos?: string;
@@ -166,7 +173,11 @@ export class Events {
     postAsync(
         params: EventsPostParams,
         request: EventsPostRequest
-    ): D2ApiResponse<AsyncPostResponse> {
-        return this.d2Api.post<AsyncPostResponse>("/events", { ...params, async: true }, request);
+    ): D2ApiResponse<AsyncPostResponse<"EVENT_IMPORT">> {
+        return this.d2Api.post<AsyncPostResponse<"EVENT_IMPORT">>(
+            "/events",
+            { ...params, async: true },
+            request
+        );
     }
 }

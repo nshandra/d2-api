@@ -176,10 +176,10 @@ export interface D2ApiDefinitionBase {
 
 export { CancelableResponse as D2ApiResponse } from "../repositories/CancelableResponse";
 
-export type AsyncPostResponse = HttpResponse<{
+export type AsyncPostResponse<Type extends TaskCategory> = HttpResponse<{
     name: string;
     id: string;
     created: string;
-    jobType: TaskCategory;
+    jobType: Type;
     relativeNotifierEndpoint: string;
 }>;

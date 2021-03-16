@@ -37,11 +37,11 @@ export class System {
         });
     }
 
-    waitFor(
-        jobType: keyof WaitForResponse,
+    waitFor<Type extends keyof WaitForResponse>(
+        jobType: Type,
         id: string,
         options: { interval?: number; maxRetries?: number } = {}
-    ): D2ApiResponse<WaitForResponse[typeof jobType]> {
+    ): D2ApiResponse<WaitForResponse[Type] | null> {
         const { interval = 1000, maxRetries } = options;
 
         let isCancel = false;
@@ -68,7 +68,7 @@ export class System {
                 retries = retries + 1;
             }
 
-            const { response } = this.d2Api.get<WaitForResponse[typeof jobType]>(
+            const { response } = this.d2Api.get<WaitForResponse[typeof jobType] | null>(
                 `/system/taskSummaries/${jobType}/${id}`
             );
 

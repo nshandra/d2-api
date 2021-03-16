@@ -152,8 +152,8 @@ export class DataValues {
     postSetAsync(
         params: DataValueSetsPostParams,
         request: DataValueSetsPostRequest
-    ): D2ApiResponse<AsyncPostResponse> {
-        return this.d2Api.post<AsyncPostResponse>(
+    ): D2ApiResponse<AsyncPostResponse<"DATAVALUE_IMPORT">> {
+        return this.d2Api.post<AsyncPostResponse<"DATAVALUE_IMPORT">>(
             "/dataValueSets",
             { ...params, async: true },
             request
