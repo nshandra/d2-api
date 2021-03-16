@@ -11,6 +11,7 @@ import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
 import { DataValues } from "./dataValues";
 import { Email } from "./email";
+import { Events } from "./events";
 import { Files } from "./files";
 import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
@@ -128,6 +129,11 @@ export abstract class D2ApiVersioned<
     @cache()
     get dataValues() {
         return new DataValues(this);
+    }
+
+    @cache()
+    get events() {
+        return new Events(this);
     }
 
     @cache()

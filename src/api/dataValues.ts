@@ -1,6 +1,6 @@
-import { D2ApiResponse } from "./common";
-import { D2ApiGeneric } from "./d2Api";
 import { Id } from "../schemas";
+import { AsyncPostResponse, D2ApiResponse } from "./common";
+import { D2ApiGeneric } from "./d2Api";
 
 export interface DataValueSetsPostRequest {
     dataSet?: Id;
@@ -29,11 +29,18 @@ export type DataValueSetsPostParams = Partial<{
     importStrategy: ImportStrategy;
     skipExistingCheck: boolean;
     skipAudit: boolean;
-    async: boolean;
     force: boolean;
 }>;
 
-type ImportStrategy = "CREATE" | "UPDATE" | "CREATE_AND_UPDATE" | "DELETE";
+type ImportStrategy =
+    | "CREATE"
+    | "UPDATE"
+    | "CREATE_AND_UPDATE"
+    | "DELETE"
+    | "NEW_AND_UPDATES"
+    | "NEW"
+    | "UPDATES"
+    | "DELETES";
 
 export interface DataValueSetsPostResponse {
     responseType: "ImportSummary";
@@ -135,6 +142,21 @@ export class DataValues {
         params: DataValueSetsPostParams,
         request: DataValueSetsPostRequest
     ): D2ApiResponse<DataValueSetsPostResponse> {
-        return this.d2Api.post<DataValueSetsPostResponse>("/dataValueSets", params, request);
+        return this.d2Api.post<DataValueSetsPostResponse>(
+            "/dataValueSets",
+            { ...params, async: false },
+            request
+        );
+    }
+
+    postSetAsync(
+        params: DataValueSetsPostParams,
+        request: DataValueSetsPostRequest
+    ): D2ApiResponse<AsyncPostResponse> {
+        return this.d2Api.post<AsyncPostResponse>(
+            "/dataValueSets",
+            { ...params, async: true },
+            request
+        );
     }
 }

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { Ref } from "./../schemas/base";
 import { D2ModelSchemaBase, Selector } from "./inference";
+import { TaskCategory } from "./system";
 
 export interface GetOptionValue<
     D2ApiDefinition extends D2ApiDefinitionBase,
@@ -174,3 +175,11 @@ export interface D2ApiDefinitionBase {
 }
 
 export { CancelableResponse as D2ApiResponse } from "../repositories/CancelableResponse";
+
+export type AsyncPostResponse = HttpResponse<{
+    name: string;
+    id: string;
+    created: string;
+    jobType: TaskCategory;
+    relativeNotifierEndpoint: string;
+}>;

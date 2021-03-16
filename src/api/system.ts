@@ -1,8 +1,11 @@
 import _ from "lodash";
-
+import { Id } from "../schemas";
+import { timeout } from "../utils/promises";
 import { D2ApiResponse } from "./common";
 import { D2ApiGeneric } from "./d2Api";
-import { Id } from "../schemas";
+import { DataValueSetsPostResponse } from "./dataValues";
+import { EventsPostResponse } from "./events";
+import { MetadataResponse } from "./metadata";
 
 export class System {
     constructor(public d2Api: D2ApiGeneric) {}
@@ -31,6 +34,50 @@ export class System {
         return this.d2Api.request({
             method: "get",
             url: _.compact(["/system/tasks", selector.category, selector.id]).join("/"),
+        });
+    }
+
+    waitFor(
+        jobType: keyof WaitForResponse,
+        id: string,
+        options: { interval?: number; maxRetries?: number } = {}
+    ): D2ApiResponse<WaitForResponse[typeof jobType]> {
+        const { interval = 1000, maxRetries } = options;
+
+        let isCancel = false;
+        let retries = 0;
+
+        const checkTask = async () => {
+            const response = await this.d2Api
+                .get<{ message: string; completed?: boolean }[]>(`/system/tasks/${jobType}/${id}`)
+                .getData();
+
+            const result = response || [];
+
+            if (!result || !result[0]) return false;
+            return !result[0].completed;
+        };
+
+        const prepareResponse = async () => {
+            while (true) {
+                const isDone = await checkTask();
+                const hasReachedMaxRetries = maxRetries !== undefined && retries > maxRetries;
+                if (isDone || isCancel || hasReachedMaxRetries) break;
+
+                await timeout(interval);
+                retries = retries + 1;
+            }
+
+            const { response } = this.d2Api.get<WaitForResponse[typeof jobType]>(
+                `/system/taskSummaries/${jobType}/${id}`
+            );
+
+            return response;
+        };
+
+        return D2ApiResponse.build({
+            cancel: () => {},
+            response: prepareResponse(),
         });
     }
 
@@ -160,3 +207,9 @@ export interface SystemInfo {
     };
     metadataSyncEnabled?: boolean;
 }
+
+export type WaitForResponse = {
+    DATAVALUE_IMPORT: DataValueSetsPostResponse;
+    EVENT_IMPORT: EventsPostResponse;
+    METADATA_IMPORT: MetadataResponse;
+};

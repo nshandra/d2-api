@@ -1,15 +1,16 @@
 import _ from "lodash";
 import {
-    processFieldsFilterParams,
-    Params,
-    ErrorReport,
+    AsyncPostResponse,
+    D2ApiDefinitionBase,
     D2ApiResponse,
+    ErrorReport,
     GetOptionValue,
     MetadataPayloadBase,
-    D2ApiDefinitionBase,
+    Params,
+    processFieldsFilterParams,
 } from "./common";
 import { D2ApiGeneric } from "./d2Api";
-import { SelectedPick, GetFields } from "./inference";
+import { GetFields, SelectedPick } from "./inference";
 
 export interface PostOptions {
     importMode: "COMMIT" | "VALIDATE";
@@ -100,12 +101,25 @@ export class Metadata<D2ApiDefinition extends D2ApiDefinitionBase> {
 
     post(
         data: Partial<MetadataPayloadBase<D2ApiDefinition["schemas"]>>,
-        options?: Partial<PostOptions>
+        options: Partial<PostOptions> = {}
     ): D2ApiResponse<MetadataResponse> {
         return this.d2Api.request({
             method: "post",
             url: "/metadata",
-            params: (options || {}) as Params,
+            params: { ...options, async: false } as Params,
+            data,
+            validateStatus: (status: number) => status >= 200 && status < 300,
+        });
+    }
+
+    postAsync(
+        data: Partial<MetadataPayloadBase<D2ApiDefinition["schemas"]>>,
+        options: Partial<PostOptions> = {}
+    ): D2ApiResponse<AsyncPostResponse> {
+        return this.d2Api.request({
+            method: "post",
+            url: "/metadata",
+            params: { ...options, async: true } as Params,
             data,
             validateStatus: (status: number) => status >= 200 && status < 300,
         });
