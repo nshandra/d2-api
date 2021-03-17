@@ -32,6 +32,18 @@ export class DataStore {
             .map(response => (response.status === 404 ? undefined : response.data));
     }
 
+    getMetadata(key: string): D2ApiResponse<DataStoreKeyMetadata | undefined> {
+        const { d2Api, namespace } = this;
+
+        return d2Api
+            .request<DataStoreKeyMetadata>({
+                method: "get",
+                url: `/${this.endpoint}/${namespace}/${key}/metaData`,
+                validateStatus: validate404,
+            })
+            .map(response => (response.status === 404 ? undefined : response.data));
+    }
+
     save(key: string, value: object): D2ApiResponse<void> {
         const { d2Api, namespace } = this;
         const config = { url: `/${this.endpoint}/${namespace}/${key}`, data: value };
@@ -69,3 +81,25 @@ function validate404(status: number): boolean {
 }
 
 export type DataStoreType = "global" | "user";
+
+export interface DataStoreKeyMetadata {
+    created: Date;
+    user: { id: string };
+    lastUpdated: Date;
+    lastUpdatedBy: { id: string };
+    namespace: string;
+    key: string;
+    value: string;
+    favorite: boolean;
+    id: string;
+    publicAccess: string;
+    externalAccess: boolean;
+    userAccesses: SharingSetting[];
+    userGroupAccesses: SharingSetting[];
+}
+
+interface SharingSetting {
+    access: string;
+    displayName: string;
+    id: string;
+}

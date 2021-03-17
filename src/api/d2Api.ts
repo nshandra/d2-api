@@ -16,6 +16,7 @@ import { Files } from "./files";
 import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
+import { Sharing } from "./sharing";
 import { System } from "./system";
 import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
 
@@ -139,6 +140,11 @@ export abstract class D2ApiVersioned<
     @cache()
     get system() {
         return new System(this);
+    }
+
+    @cache()
+    get sharing() {
+        return new Sharing(this);
     }
 
     @cache()
