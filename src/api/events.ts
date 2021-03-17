@@ -47,24 +47,37 @@ export type EventsPostResponse = HttpResponse<{
     ignored: number;
     total: number;
     importOptions: object;
-    importSummaries?: Array<{
-        responseType: "ImportSummary";
-        status: "ERROR" | "SUCCESS";
-        description?: string; // Only on error
-        reference?: string; // Only on success
-        href?: string; // Only on success
-        importOptions: object;
-        conflicts?: Array<{
-            object: string;
-            value: string;
-        }>; // Only on error
-        importCount: {
-            imported: number;
-            updated: number;
-            ignored: number;
-            deleted: number;
-        };
-    }>;
+    importSummaries?: Array<
+        | {
+              responseType: "ImportSummary";
+              status: "ERROR";
+              description: string;
+              importOptions: object;
+              conflicts: Array<{
+                  object: string;
+                  value: string;
+              }>;
+              importCount: {
+                  imported: number;
+                  updated: number;
+                  ignored: number;
+                  deleted: number;
+              };
+          }
+        | {
+              responseType: "ImportSummary";
+              status: "SUCCESS";
+              reference: string;
+              href: string;
+              importOptions: object;
+              importCount: {
+                  imported: number;
+                  updated: number;
+                  ignored: number;
+                  deleted: number;
+              };
+          }
+    >;
 }>;
 
 export type EventsGetRequest = RequireAtLeastOne<
