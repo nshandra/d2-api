@@ -51,6 +51,7 @@ export type EventsPostResponse = HttpResponse<{
         | {
               responseType: "ImportSummary";
               status: "ERROR";
+              reference?: string;
               description: string;
               importOptions: object;
               conflicts: Array<{
