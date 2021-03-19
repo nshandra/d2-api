@@ -38,7 +38,7 @@ export type EventsPostParams = Partial<{
 
 export type IdScheme = string;
 
-export type EventsPostResponse = HttpResponse<{
+export interface EventsPostResponse {
     responseType: "ImportSummaries";
     status: "ERROR" | "SUCCESS";
     imported: number;
@@ -79,7 +79,7 @@ export type EventsPostResponse = HttpResponse<{
               };
           }
     >;
-}>;
+}
 
 export type EventsGetRequest = RequireAtLeastOne<
     EventsGetRequestFilters,
