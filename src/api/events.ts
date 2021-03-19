@@ -180,8 +180,15 @@ export class Events {
         });
     }
 
-    post(params: EventsPostParams, request: EventsPostRequest): D2ApiResponse<EventsPostResponse> {
-        return this.d2Api.post<EventsPostResponse>("/events", { ...params, async: false }, request);
+    post(
+        params: EventsPostParams,
+        request: EventsPostRequest
+    ): D2ApiResponse<HttpResponse<EventsPostResponse>> {
+        return this.d2Api.post<HttpResponse<EventsPostResponse>>(
+            "/events",
+            { ...params, async: false },
+            request
+        );
     }
 
     postAsync(
