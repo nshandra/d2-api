@@ -54,8 +54,8 @@ export class System {
 
             const result = response || [];
 
-            if (!result || !result[0]) return false;
-            return !result[0].completed;
+            if (!result || !result[0]) return true;
+            return result[0].completed;
         };
 
         const prepareResponse = async () => {
