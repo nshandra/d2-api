@@ -54,7 +54,7 @@ export class System {
 
             const result = response || [];
 
-            if (!result || !result[0]) return true;
+            if (!result || !result[0]) return false;
             return result[0].completed;
         };
 
