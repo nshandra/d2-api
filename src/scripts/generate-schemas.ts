@@ -86,7 +86,8 @@ const interfaceFromClass: _.Dictionary<string> = {
     "org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension": "any",
     "org.hisp.dhis.trackedentity.TrackedEntityProgramOwner": "any",
     "org.hisp.dhis.common.DimensionalItemObject": "any",
-
+    "org.hisp.dhis.visualization.ReportingParams": "D2ReportingParams",
+    "org.hisp.dhis.visualization.Axis": "D2Axis",
     "java.lang.Object": "object",
     "java.util.Map": "object",
 };
@@ -198,6 +199,7 @@ const instances: Instance[] = [
     { version: "2.31", url: "http://admin:district@localhost:8031", isDeprecated: true },
     { version: "2.32", url: "https://admin:district@play.dhis2.org/2.32" },
     { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33" },
+    { version: "2.34", url: "https://admin:district@play.dhis2.org/2.34" },
 ];
 
 async function generateSchema(instance: Instance) {
@@ -205,14 +207,12 @@ async function generateSchema(instance: Instance) {
     const schemaUrl = joinPath(url, "/api/schemas.json?fields=:all,metadata");
     console.debug(`GET ${schemaUrl}`);
 
-    const { schemas } = (await axios.get(schemaUrl, {
+    const { schemas: allSchemas } = (await axios.get(schemaUrl, {
         validateStatus: (status: number) => status >= 200 && status < 300,
     })).data as { schemas: Schema[] };
 
-    const models = _(schemas)
-        .filter(schema => !!schema.href)
-        .sortBy(schema => schema.name)
-        .value();
+    const schemas = _.sortBy(allSchemas, schema => _.last(schema.klass.split(".")));
+    const models = schemas.filter(schema => !!schema.href);
     const schemasByClassName = _.keyBy(schemas, schema => _.last(schema.klass.split(".")) || "");
 
     const modelsDeclaration = `
@@ -222,7 +222,7 @@ async function generateSchema(instance: Instance) {
             Id, Preset, FieldPresets, D2SchemaProperties,
             D2Access, D2Translation, D2Geometry,  D2Style,
             D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression,
-            D2RelationshipConstraint
+            D2RelationshipConstraint, D2ReportingParams, D2Axis
         } from "../schemas/base";
 
         ${schemas
