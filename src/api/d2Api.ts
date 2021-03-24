@@ -5,6 +5,7 @@ import { D2SchemaProperties } from "../schemas";
 import { cache, defineLazyCachedProperty } from "../utils/cache";
 import { joinPath } from "../utils/connection";
 import { Analytics } from "./analytics";
+import { AppHub } from "./appHub";
 import { D2ApiDefinitionBase, D2ApiResponse, Params } from "./common";
 import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
@@ -147,6 +148,11 @@ export abstract class D2ApiVersioned<
     @cache()
     get files() {
         return new Files(this);
+    }
+
+    @cache()
+    get appHub() {
+        return new AppHub(this);
     }
 }
 
