@@ -38,7 +38,7 @@ export class AxiosHttpClientRepository implements HttpClientRepository {
         return axios.create({
             baseURL: options.baseUrl,
             auth: options.auth,
-            withCredentials: options.credentials === "include" ? !options.auth : undefined,
+            withCredentials: !options.auth,
             paramsSerializer: params => qs.stringify(params, { arrayFormat: "repeat" }),
             validateStatus: status => status >= 200 && status < 300,
             timeout: options.timeout,
