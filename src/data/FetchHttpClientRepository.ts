@@ -21,7 +21,7 @@ export class FetchHttpClientRepository implements HttpClientRepository {
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {
         const controller = new AbortController();
-        const { baseUrl = "", auth, credentials = "include" } = this.options;
+        const { baseUrl = "", auth } = this.options;
         const timeout = options.timeout || this.options.timeout;
         const {
             method,
@@ -44,13 +44,12 @@ export class FetchHttpClientRepository implements HttpClientRepository {
             ? { Authorization: "Basic " + btoa(auth.username + ":" + auth.password) }
             : {};
 
-        const credentialsStrategy = auth ? "omit" : "include";
         const fetchOptions: RequestInit = {
             method,
             signal: controller.signal,
             body: getBody(dataType, data),
             headers: { ...baseHeaders, ...authHeaders, ...extraHeaders },
-            credentials: credentials === "include" ? credentialsStrategy : undefined,
+            credentials: auth ? "omit" : ("include" as const),
         };
 
         const fullUrl = joinPath(baseUrl, url) + getQueryStrings(params);

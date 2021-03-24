@@ -35,7 +35,6 @@ export interface Credentials {
 export interface ConstructorOptions {
     baseUrl?: string;
     auth?: Credentials;
-    credentials?: "include" | "ignore";
     timeout?: number;
 }
 
