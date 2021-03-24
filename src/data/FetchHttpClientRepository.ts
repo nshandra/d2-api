@@ -8,6 +8,7 @@ import qs from "qs";
 import { CancelableResponse } from "../repositories/CancelableResponse";
 import {
     ConstructorOptions,
+    getBody,
     HttpClientRepository,
     HttpError,
     HttpRequest,
@@ -22,11 +23,21 @@ export class FetchHttpClientRepository implements HttpClientRepository {
         const controller = new AbortController();
         const { baseUrl = "", auth } = this.options;
         const timeout = options.timeout || this.options.timeout;
-        const { method, url, params, data, validateStatus = validateStatus2xx } = options;
+        const {
+            method,
+            url,
+            params,
+            data,
+            dataType = "json",
+            headers: extraHeaders = {},
+            validateStatus = validateStatus2xx,
+        } = options;
 
         const baseHeaders: Record<string, string> = {
             Accept: "application/json, text/plain",
-            ...(data ? { "Content-Type": "application/json;charset=UTF-8" } : {}),
+            ...(data && dataType === "json"
+                ? { "Content-Type": "application/json;charset=UTF-8" }
+                : {}),
         };
 
         const authHeaders: Record<string, string> = auth
@@ -36,8 +47,8 @@ export class FetchHttpClientRepository implements HttpClientRepository {
         const fetchOptions: RequestInit = {
             method,
             signal: controller.signal,
-            ...(data ? { body: JSON.stringify(data) } : {}),
-            headers: { ...baseHeaders, ...authHeaders },
+            body: getBody(dataType, data),
+            headers: { ...baseHeaders, ...authHeaders, ...extraHeaders },
             credentials: auth ? "omit" : ("include" as const),
         };
 

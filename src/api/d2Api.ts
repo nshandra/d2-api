@@ -10,6 +10,7 @@ import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
 import { DataValues } from "./dataValues";
 import { Email } from "./email";
+import { Files } from "./files";
 import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
@@ -141,6 +142,11 @@ export abstract class D2ApiVersioned<
     @cache()
     get email() {
         return new Email(this);
+    }
+
+    @cache()
+    get files() {
+        return new Files(this);
     }
 }
 
