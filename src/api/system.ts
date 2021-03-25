@@ -48,13 +48,11 @@ export class System {
         let retries = 0;
 
         const checkTask = async () => {
-            const response = await this.d2Api
+            const result = await this.d2Api
                 .get<{ message: string; completed?: boolean }[]>(`/system/tasks/${jobType}/${id}`)
                 .getData();
 
-            const result = response || [];
-
-            if (!result || !result[0]) return false;
+            if (!Array.isArray(result) || !result[0]) return false;
             return result[0].completed;
         };
 
