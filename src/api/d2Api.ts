@@ -11,10 +11,12 @@ import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
 import { DataValues } from "./dataValues";
 import { Email } from "./email";
+import { Events } from "./events";
 import { Files } from "./files";
 import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
+import { Sharing } from "./sharing";
 import { System } from "./system";
 import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
 
@@ -131,8 +133,18 @@ export abstract class D2ApiVersioned<
     }
 
     @cache()
+    get events() {
+        return new Events(this);
+    }
+
+    @cache()
     get system() {
         return new System(this);
+    }
+
+    @cache()
+    get sharing() {
+        return new Sharing(this);
     }
 
     @cache()
