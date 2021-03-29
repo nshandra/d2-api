@@ -52,8 +52,7 @@ export class System {
                 .get<{ message: string; completed?: boolean }[]>(`/system/tasks/${jobType}/${id}`)
                 .getData();
 
-            if (!Array.isArray(result) || !result[0]) return false;
-            return result[0].completed;
+            return _.some(result, ({ completed }) => completed)
         };
 
         const prepareResponse = async () => {
