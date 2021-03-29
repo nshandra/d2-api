@@ -15,8 +15,10 @@ export interface HttpRequest {
     url: string;
     params?: Record<string, ParamValue | ParamValue[]>;
     data?: unknown;
+    dataType?: "json" | "raw";
     validateStatus?(status: number): boolean;
     timeout?: number;
+    headers?: Record<string, string>;
 }
 
 export interface HttpResponse<Data> {
@@ -49,5 +51,16 @@ export class HttpError extends Error implements HttpErrorOptions {
         super(message);
         this.request = obj.request;
         this.response = obj.response;
+    }
+}
+
+export function getBody(dataType: HttpRequest["dataType"], data: any) {
+    switch (dataType) {
+        case "json": {
+            return JSON.stringify(data);
+        }
+        default: {
+            return data;
+        }
     }
 }

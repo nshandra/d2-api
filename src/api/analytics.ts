@@ -78,7 +78,7 @@ export type RunAnalyticsOptions = {
     skipEvents?: boolean;
     skipEnrollment?: boolean;
     lastYears?: number;
-}
+};
 
 export class Analytics {
     constructor(public d2Api: D2ApiGeneric) {}

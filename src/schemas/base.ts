@@ -192,3 +192,15 @@ export interface D2SchemaProperties {
     embeddedObject: boolean;
     properties: D2SchemaFieldProperties[];
 }
+
+export interface D2ReportingParams {
+    reportingPeriod: boolean;
+    grandParentOrganisationUnit: boolean;
+    parentOrganisationUnit: boolean;
+    organisationUnit: boolean;
+}
+
+export interface D2Axis {
+    dimensionalItem: string;
+    axis: number;
+}
