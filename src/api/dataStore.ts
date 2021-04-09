@@ -57,14 +57,13 @@ export class DataStore {
                 ...config,
                 validateStatus: validate404,
             })
-            .map(validateResponse)
             .flatMap(response => {
                 if (response.status === 404) {
                     return d2Api
                         .request<UpdateResponse>({ method: "post", ...config })
                         .map(validateResponse);
                 } else {
-                    const voidResponse = { ...response, data: undefined };
+                    const voidResponse = { ...response, data: validateResponse(response) };
                     return D2ApiResponse.build({ response: Promise.resolve(voidResponse) });
                 }
             });
@@ -89,7 +88,7 @@ function validate404(status: number): boolean {
 
 function validateResponse(response: HttpClientResponse<HttpResponse<unknown>>): undefined {
     const { data } = response;
-    if (data.status === "OK") {
+    if (response.status === 200 && data.status === "OK") {
         return;
     } else {
         throw new Error(data.message || "Invalid response from server");
