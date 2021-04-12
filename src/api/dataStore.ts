@@ -1,5 +1,8 @@
-import { D2ApiResponse } from "./common";
+import { D2ApiResponse, HttpResponse } from "./common";
+import { HttpResponse as HttpClientResponse } from "../repositories/HttpClientRepository";
 import { D2ApiGeneric } from "./d2Api";
+
+type UpdateResponse = HttpResponse<undefined>;
 
 export class DataStore {
     private endpoint: string;
@@ -49,16 +52,19 @@ export class DataStore {
         const config = { url: `/${this.endpoint}/${namespace}/${key}`, data: value };
 
         return d2Api
-            .request<void>({
+            .request<UpdateResponse>({
                 method: "put",
                 ...config,
                 validateStatus: validate404,
             })
             .flatMap(response => {
                 if (response.status === 404) {
-                    return d2Api.request({ method: "post", ...config });
+                    return d2Api
+                        .request<UpdateResponse>({ method: "post", ...config })
+                        .map(validateResponse);
                 } else {
-                    return D2ApiResponse.build({ response: Promise.resolve(response) });
+                    const voidResponse = { ...response, data: validateResponse(response) };
+                    return D2ApiResponse.build({ response: Promise.resolve(voidResponse) });
                 }
             });
     }
@@ -67,17 +73,26 @@ export class DataStore {
         const { d2Api, namespace } = this;
 
         return d2Api
-            .request({
+            .request<UpdateResponse>({
                 method: "delete",
                 url: `/${this.endpoint}/${namespace}/${key}`,
                 validateStatus: validate404,
             })
-            .map(response => (response.status === 404 ? false : true));
+            .map(response => (response.status === 404 ? false : response.data.status === "OK"));
     }
 }
 
 function validate404(status: number): boolean {
     return (status >= 200 && status < 300) || status === 404;
+}
+
+function validateResponse(response: HttpClientResponse<HttpResponse<unknown>>): undefined {
+    const { data } = response;
+    if (response.status === 200 && data.status === "OK") {
+        return;
+    } else {
+        throw new Error(data.message || "Invalid response from server");
+    }
 }
 
 export type DataStoreType = "global" | "user";
