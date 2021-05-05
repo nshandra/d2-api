@@ -82,13 +82,17 @@ export class DataStore {
     }
 }
 
+function validate2xx(status: number): boolean {
+    return (status >= 200 && status < 300);
+}
+
 function validate404(status: number): boolean {
-    return (status >= 200 && status < 300) || status === 404;
+    return validate2xx(status) || status === 404;
 }
 
 function validateResponse(response: HttpClientResponse<HttpResponse<unknown>>): undefined {
     const { data } = response;
-    if (response.status === 200 && data.status === "OK") {
+    if (validate2xx(response.status) && data.status === "OK") {
         return;
     } else {
         throw new Error(data.message || "Invalid response from server");
