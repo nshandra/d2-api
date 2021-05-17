@@ -84,6 +84,10 @@ export type D2RelationshipConstraint =
     | {
           relationshipEntity: "PROGRAM_STAGE_INSTANCE";
           program: Ref;
+      }
+    | {
+          relationshipEntity: "PROGRAM_STAGE_INSTANCE";
+          programStage: Ref;
       };
 
 export type D2AccessSchema = GetDefaultSchema<D2Access>;
