@@ -4,7 +4,6 @@ import qs from "qs";
 import { CancelableResponse } from "../repositories/CancelableResponse";
 import {
     ConstructorOptions,
-    getBody,
     HttpClientRepository,
     HttpRequest,
     HttpResponse,
