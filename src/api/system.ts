@@ -44,7 +44,6 @@ export class System {
     ): D2ApiResponse<WaitForResponse[Type] | null> {
         const { interval = 1000, maxRetries } = options;
 
-        let isCancel = false;
         let retries = 0;
 
         const checkTask = async () => {
@@ -60,7 +59,7 @@ export class System {
             while (true) {
                 const isDone = await checkTask();
                 const hasReachedMaxRetries = maxRetries !== undefined && retries > maxRetries;
-                if (isDone || isCancel || hasReachedMaxRetries) break;
+                if (isDone || hasReachedMaxRetries) break;
 
                 await timeout(interval);
                 retries = retries + 1;
