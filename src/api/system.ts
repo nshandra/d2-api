@@ -52,10 +52,11 @@ export class System {
                 .get<{ message: string; completed?: boolean }[]>(`/system/tasks/${jobType}/${id}`)
                 .getData();
 
-            return _.some(result, ({ completed }) => completed)
+            return _.some(result, ({ completed }) => completed);
         };
 
         const prepareResponse = async () => {
+            // eslint-disable-next-line no-constant-condition
             while (true) {
                 const isDone = await checkTask();
                 const hasReachedMaxRetries = maxRetries !== undefined && retries > maxRetries;
@@ -73,7 +74,7 @@ export class System {
         };
 
         return D2ApiResponse.build({
-            cancel: () => {},
+            cancel: _.noop,
             response: prepareResponse(),
         });
     }
