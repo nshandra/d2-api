@@ -83,7 +83,7 @@ export class DataStore {
 }
 
 function validate2xx(status: number): boolean {
-    return (status >= 200 && status < 300);
+    return status >= 200 && status < 300;
 }
 
 function validate404(status: number): boolean {

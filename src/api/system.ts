@@ -44,7 +44,6 @@ export class System {
     ): D2ApiResponse<WaitForResponse[Type] | null> {
         const { interval = 1000, maxRetries } = options;
 
-        let isCancel = false;
         let retries = 0;
 
         const checkTask = async () => {
@@ -52,14 +51,15 @@ export class System {
                 .get<{ message: string; completed?: boolean }[]>(`/system/tasks/${jobType}/${id}`)
                 .getData();
 
-            return _.some(result, ({ completed }) => completed)
+            return _.some(result, ({ completed }) => completed);
         };
 
         const prepareResponse = async () => {
+            // eslint-disable-next-line no-constant-condition
             while (true) {
                 const isDone = await checkTask();
                 const hasReachedMaxRetries = maxRetries !== undefined && retries > maxRetries;
-                if (isDone || isCancel || hasReachedMaxRetries) break;
+                if (isDone || hasReachedMaxRetries) break;
 
                 await timeout(interval);
                 retries = retries + 1;
@@ -73,7 +73,7 @@ export class System {
         };
 
         return D2ApiResponse.build({
-            cancel: () => {},
+            cancel: _.noop,
             response: prepareResponse(),
         });
     }
