@@ -26,6 +26,14 @@ export interface FileUploadResult {
 export class Files {
     constructor(public d2Api: D2ApiGeneric) {}
 
+    get(id: string): D2ApiResponse<Blob>  {
+        return this.d2Api.apiConnection.request<Blob>({
+            method: "get",
+            url: `/documents/${id}/data`,
+            dataType: "raw"
+        });
+    }
+
     upload(params: FileUploadParameters): D2ApiResponse<FileUploadResult> {
         const { id = generateUid(), name, data } = params;
 
