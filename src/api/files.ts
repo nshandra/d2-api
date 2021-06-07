@@ -27,11 +27,11 @@ export interface FileUploadResult {
 export class Files {
     constructor(public d2Api: D2ApiGeneric) {}
 
-    get(id: string): D2ApiResponse<Blob>  {
+    get(id: string): D2ApiResponse<Blob> {
         return this.d2Api.apiConnection.request<Blob>({
             method: "get",
             url: `/documents/${id}/data`,
-            dataType: "raw"
+            dataType: "raw",
         });
     }
 
@@ -50,11 +50,15 @@ export class Files {
                 dataType: "raw",
             })
             .flatMap(({ data }) => {
-                const fileResourceId =
-                    data.response && data.response.fileResource
-                        ? data.response.fileResource.id
-                        : undefined;
+                if (
+                    !data.response ||
+                    !data.response.fileResource ||
+                    !data.response.fileResource.id
+                ) {
+                    throw new Error("Unable to store file, couldn't find resource");
+                }
 
+                const fileResourceId = data.response.fileResource.id;
                 const document = { id, name, url: fileResourceId };
 
                 return this.d2Api
