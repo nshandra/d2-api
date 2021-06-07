@@ -20,6 +20,7 @@ interface PartialSaveResponse {
 
 export interface FileUploadResult {
     id: string;
+    fileResourceId: string;
     response: MetadataResponse;
 }
 
@@ -58,7 +59,7 @@ export class Files {
 
                 return this.d2Api
                     .post<MetadataResponse>("/metadata", {}, { documents: [document] })
-                    .map(({ data }) => ({ id, response: data }));
+                    .map(({ data }) => ({ id, fileResourceId, response: data }));
             });
     }
 }
