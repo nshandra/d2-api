@@ -127,6 +127,7 @@ export interface DataValueSetsDataValue {
     created: string;
     lastUpdated: string;
     followup: boolean;
+    deleted: boolean;
 }
 
 export class DataValues {
