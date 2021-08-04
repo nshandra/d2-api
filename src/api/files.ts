@@ -20,11 +20,20 @@ interface PartialSaveResponse {
 
 export interface FileUploadResult {
     id: string;
+    fileResourceId: string;
     response: MetadataResponse;
 }
 
 export class Files {
     constructor(public d2Api: D2ApiGeneric) {}
+
+    get(id: string): D2ApiResponse<Blob> {
+        return this.d2Api.apiConnection.request<Blob>({
+            method: "get",
+            url: `/documents/${id}/data`,
+            dataType: "raw",
+        });
+    }
 
     upload(params: FileUploadParameters): D2ApiResponse<FileUploadResult> {
         const { id = generateUid(), name, data } = params;
@@ -38,19 +47,24 @@ export class Files {
                 method: "post",
                 url: "/fileResources",
                 data: formData,
+                bodyType: "raw",
                 dataType: "raw",
             })
             .flatMap(({ data }) => {
-                const fileResourceId =
-                    data.response && data.response.fileResource
-                        ? data.response.fileResource.id
-                        : undefined;
+                if (
+                    !data.response ||
+                    !data.response.fileResource ||
+                    !data.response.fileResource.id
+                ) {
+                    throw new Error("Unable to store file, couldn't find resource");
+                }
 
+                const fileResourceId = data.response.fileResource.id;
                 const document = { id, name, url: fileResourceId };
 
                 return this.d2Api
                     .post<MetadataResponse>("/metadata", {}, { documents: [document] })
-                    .map(({ data }) => ({ id, response: data }));
+                    .map(({ data }) => ({ id, fileResourceId, response: data }));
             });
     }
 }
