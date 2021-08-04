@@ -25,6 +25,7 @@ export class Expressions {
             method: "post",
             url: buildUrl(type),
             data: expression,
+            // TODO: Axios does not support this flag yet
             bodyType: "raw",
         });
     }
