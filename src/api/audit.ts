@@ -27,7 +27,6 @@ export type DataValuesAuditOptions = {
     pe?: string[];
     ou?: Id[];
     auditType?: AuditType;
-    // paging: boolean;
     page?: number;
     pageSize?: number;
 };
