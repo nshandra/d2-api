@@ -157,6 +157,7 @@ export class DataValues {
                 url: "/dataValues",
                 data: new URLSearchParams(_.omitBy(request, _.isUndefined)),
                 dataType: "raw",
+                bodyType: "raw",
             })
             .map(_res => undefined);
     }
