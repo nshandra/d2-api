@@ -6,6 +6,7 @@ import { cache, defineLazyCachedProperty } from "../utils/cache";
 import { joinPath } from "../utils/connection";
 import { Analytics } from "./analytics";
 import { AppHub } from "./appHub";
+import { Audit } from "./audit";
 import { D2ApiDefinitionBase, D2ApiResponse, Params } from "./common";
 import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
@@ -177,6 +178,11 @@ export abstract class D2ApiVersioned<
     @cache()
     get expressions() {
         return new Expressions(this);
+    }
+
+    @cache()
+    get audit() {
+        return new Audit(this);
     }
 }
 
