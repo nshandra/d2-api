@@ -22,6 +22,7 @@ import { Model } from "./model";
 import { Sharing } from "./sharing";
 import { System } from "./system";
 import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
+import { SqlViews } from "./SqlViews";
 
 export class D2ApiGeneric {
     public baseUrl: string;
@@ -183,6 +184,11 @@ export abstract class D2ApiVersioned<
     @cache()
     get audit() {
         return new Audit(this);
+    }
+
+    @cache()
+    get sqlViews() {
+        return new SqlViews(this);
     }
 }
 
