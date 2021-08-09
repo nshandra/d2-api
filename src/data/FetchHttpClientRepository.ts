@@ -29,14 +29,14 @@ export class FetchHttpClientRepository implements HttpClientRepository {
             params,
             data,
             bodyType = "json",
-            dataType = "json",
+            responseType = "json",
             headers: extraHeaders = {},
             validateStatus = validateStatus2xx,
         } = options;
 
         const baseHeaders: Record<string, string> = {
             Accept: "application/json, text/plain",
-            ...(data && dataType === "json"
+            ...(data && bodyType === "json"
                 ? { "Content-Type": "application/json;charset=UTF-8" }
                 : {}),
         };
@@ -62,7 +62,7 @@ export class FetchHttpClientRepository implements HttpClientRepository {
         const response: Promise<HttpResponse<Data>> = fetchResponse
             .then(async res => {
                 const headers = getHeadersRecord(res.headers);
-                const data = await getResponseData(res, dataType);
+                const data = await getResponseData(res, responseType);
 
                 if (!validateStatus(res.status)) raiseHttpError(options, res, data);
                 return { status: res.status, data: data as Data, headers };
@@ -118,7 +118,7 @@ function getCharset(headers: _.Dictionary<string>): string {
     return contentTypes["charset"] || "utf-8";
 }
 
-async function getResponseData(res: Response, type: HttpRequest["dataType"]): Promise<unknown> {
+async function getResponseData(res: Response, type: HttpRequest["responseType"]): Promise<unknown> {
     if (type === "raw") {
         return res.blob();
     }

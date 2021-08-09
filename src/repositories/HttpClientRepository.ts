@@ -16,7 +16,7 @@ export interface HttpRequest {
     params?: Record<string, ParamValue | ParamValue[]>;
     data?: unknown;
     bodyType?: "json" | "raw";
-    dataType?: "json" | "raw";
+    responseType?: "json" | "raw";
     validateStatus?(status: number): boolean;
     timeout?: number;
     headers?: Record<string, string>;
@@ -55,7 +55,7 @@ export class HttpError extends Error implements HttpErrorOptions {
     }
 }
 
-export function getBody(dataType: HttpRequest["dataType"], data: any) {
+export function getBody(dataType: HttpRequest["responseType"], data: any) {
     switch (dataType) {
         case "json": {
             return JSON.stringify(data);

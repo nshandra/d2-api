@@ -31,12 +31,12 @@ export class Files {
         return this.d2Api.apiConnection.request<Blob>({
             method: "get",
             url: `/documents/${id}/data`,
-            dataType: "raw",
+            responseType: "raw",
         });
     }
 
-    upload(params: FileUploadParameters): D2ApiResponse<FileUploadResult> {
-        const { id = generateUid(), name, data } = params;
+    saveFileResource(params: Omit<FileUploadParameters, "id">): D2ApiResponse<string> {
+        const { name, data } = params;
 
         const formData = new FormData();
         formData.append("file", data, name);
@@ -48,9 +48,8 @@ export class Files {
                 url: "/fileResources",
                 data: formData,
                 bodyType: "raw",
-                dataType: "raw",
             })
-            .flatMap(({ data }) => {
+            .map(({ data }) => {
                 if (
                     !data.response ||
                     !data.response.fileResource ||
@@ -59,12 +58,23 @@ export class Files {
                     throw new Error("Unable to store file, couldn't find resource");
                 }
 
-                const fileResourceId = data.response.fileResource.id;
-                const document = { id, name, url: fileResourceId };
-
-                return this.d2Api
-                    .post<MetadataResponse>("/metadata", {}, { documents: [document] })
-                    .map(({ data }) => ({ id, fileResourceId, response: data }));
+                return data.response.fileResource.id;
             });
+    }
+
+    upload(params: FileUploadParameters): D2ApiResponse<FileUploadResult> {
+        const { id = generateUid(), name, data } = params;
+
+        const formData = new FormData();
+        formData.append("file", data, name);
+        formData.append("domain", "DOCUMENT");
+
+        return this.saveFileResource(params).flatMap(({ data: fileResourceId }) => {
+            const document = { id, name, url: fileResourceId };
+
+            return this.d2Api
+                .post<MetadataResponse>("/metadata", {}, { documents: [document] })
+                .map(({ data }) => ({ id, fileResourceId, response: data }));
+        });
     }
 }
