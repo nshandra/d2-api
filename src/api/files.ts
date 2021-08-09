@@ -31,7 +31,7 @@ export class Files {
         return this.d2Api.apiConnection.request<Blob>({
             method: "get",
             url: `/documents/${id}/data`,
-            responseType: "raw",
+            responseDataType: "raw",
         });
     }
 
@@ -47,7 +47,7 @@ export class Files {
                 method: "post",
                 url: "/fileResources",
                 data: formData,
-                bodyType: "raw",
+                requestBodyType: "raw",
             })
             .map(({ data }) => {
                 if (
