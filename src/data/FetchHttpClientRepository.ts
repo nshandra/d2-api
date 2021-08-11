@@ -118,7 +118,10 @@ function getCharset(headers: _.Dictionary<string>): string {
     return contentTypes["charset"] || "utf-8";
 }
 
-async function getResponseData(res: Response, type: HttpRequest["responseDataType"]): Promise<unknown> {
+async function getResponseData(
+    res: Response,
+    type: HttpRequest["responseDataType"]
+): Promise<unknown> {
     if (type === "raw") {
         return res.blob();
     }
@@ -129,9 +132,9 @@ async function getResponseData(res: Response, type: HttpRequest["responseDataTyp
     const arrayBuffer = await res.arrayBuffer();
     const content = iconv.decode(Buffer.from(arrayBuffer), encoding);
 
-    if ((headers["content-type"] || "").includes("json")) {
+    try {
         return JSON.parse(content);
+    } catch (error) {
+        return content;
     }
-
-    return content;
 }
