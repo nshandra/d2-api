@@ -135,6 +135,10 @@ async function getResponseData(
     try {
         return JSON.parse(content);
     } catch (error) {
+        if ((headers["content-type"] || "").includes("json")) {
+            throw error;
+        }
+
         return content;
     }
 }
