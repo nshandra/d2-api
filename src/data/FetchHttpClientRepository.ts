@@ -28,15 +28,15 @@ export class FetchHttpClientRepository implements HttpClientRepository {
             url,
             params,
             data,
-            bodyType = "json",
-            dataType = "json",
+            requestBodyType = "json",
+            responseDataType = "json",
             headers: extraHeaders = {},
             validateStatus = validateStatus2xx,
         } = options;
 
         const baseHeaders: Record<string, string> = {
             Accept: "application/json, text/plain",
-            ...(data && dataType === "json"
+            ...(data && requestBodyType === "json"
                 ? { "Content-Type": "application/json;charset=UTF-8" }
                 : {}),
         };
@@ -48,7 +48,7 @@ export class FetchHttpClientRepository implements HttpClientRepository {
         const fetchOptions: RequestInit = {
             method,
             signal: controller.signal,
-            body: getBody(bodyType, data),
+            body: getBody(requestBodyType, data),
             headers: { ...baseHeaders, ...authHeaders, ...extraHeaders },
             credentials: auth ? "omit" : ("include" as const),
         };
@@ -62,7 +62,7 @@ export class FetchHttpClientRepository implements HttpClientRepository {
         const response: Promise<HttpResponse<Data>> = fetchResponse
             .then(async res => {
                 const headers = getHeadersRecord(res.headers);
-                const data = await getResponseData(res, dataType);
+                const data = await getResponseData(res, responseDataType);
 
                 if (!validateStatus(res.status)) raiseHttpError(options, res, data);
                 return { status: res.status, data: data as Data, headers };
@@ -118,7 +118,10 @@ function getCharset(headers: _.Dictionary<string>): string {
     return contentTypes["charset"] || "utf-8";
 }
 
-async function getResponseData(res: Response, type: HttpRequest["dataType"]): Promise<unknown> {
+async function getResponseData(
+    res: Response,
+    type: HttpRequest["responseDataType"]
+): Promise<unknown> {
     if (type === "raw") {
         return res.blob();
     }
@@ -129,9 +132,13 @@ async function getResponseData(res: Response, type: HttpRequest["dataType"]): Pr
     const arrayBuffer = await res.arrayBuffer();
     const content = iconv.decode(Buffer.from(arrayBuffer), encoding);
 
-    if ((headers["content-type"] || "").includes("json")) {
+    try {
         return JSON.parse(content);
-    }
+    } catch (error) {
+        if ((headers["content-type"] || "").includes("json")) {
+            throw error;
+        }
 
-    return content;
+        return content;
+    }
 }
