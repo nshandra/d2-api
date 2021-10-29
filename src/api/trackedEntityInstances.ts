@@ -8,7 +8,7 @@ export class TrackedEntityInstances {
     get(params: TeiGetRequest): D2ApiResponse<PaginatedTeiGetResponse> {
         return this.d2Api.get<PaginatedTeiGetResponse>("/trackedEntityInstances", {
             ...params,
-            ou: params.ou.join(";"),
+            ou: params.ou?.join(";"),
             paging: true,
         });
     }
@@ -16,7 +16,7 @@ export class TrackedEntityInstances {
     getAll(params: TeiGetRequest): D2ApiResponse<TeiGetResponse> {
         return this.d2Api.get<TeiGetResponse>("/trackedEntityInstances", {
             ...params,
-            ou: params.ou.join(";"),
+            ou: params.ou?.join(";"),
             paging: false,
             page: undefined,
             pageSize: undefined,
@@ -94,7 +94,7 @@ export interface Attribute {
 
 export interface TeiGetRequest {
     ouMode?: "SELECTED" | "CHILDREN" | "DESCENDANTS" | "ACCESSIBLE" | "CAPTURE" | "ALL";
-    ou: Id[];
+    ou?: Id[];
     program?: Id;
     programStatus?: "ACTIVE" | "COMPLETED" | "CANCELLED";
     followUp?: boolean;
