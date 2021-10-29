@@ -86,6 +86,7 @@ export interface AttributeValue {
 
 export interface Attribute {
     attribute: Id;
+    valueType?: string;
     value: string;
 }
 
@@ -100,7 +101,7 @@ export interface TeiGetRequest {
     pageSize?: number;
     page?: number;
     totalPages: true;
-    fields?: string;
+    fields?: string; // TODO: Add inference
     programStartDate?: string;
     programEndDate?: string;
     lastUpdatedStartDate?: string;
@@ -120,23 +121,14 @@ export interface PaginatedTeiGetResponse extends TeiGetResponse {
 }
 
 export interface TeiPostRequest {
-    events: Array<{
-        event?: string;
-        orgUnit: string;
-        program: string;
-        status: string;
-        eventDate: string;
-        coordinate?: {
-            latitude: string;
-            longitude: string;
-        };
-        attributeOptionCombo?: string;
-        trackedEntityInstance?: string;
-        programStage?: string;
-        dataValues: Array<{
-            dataElement: string;
-            value: string | number | boolean;
-        }>;
+    trackedEntityInstances: Array<{
+        trackedEntityInstance: Id;
+        trackedEntityType: Id;
+        inactive?: boolean;
+        orgUnit: Id;
+        attributes: Attribute[];
+        enrollments: Enrollment[];
+        relationships: Relationship[];
     }>;
 }
 
