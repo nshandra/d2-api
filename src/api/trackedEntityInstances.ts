@@ -97,10 +97,11 @@ export type TeiOuRequest =
     | { ouMode?: "SELECTED" | "CHILDREN" | "DESCENDANTS"; ou: Id[] };
 
 export type TeiGetRequest = TeiOuRequest & {
+    // Program and tracked entity type cannot be specified simultaneously
     program?: Id;
+    trackedEntityType?: Id;
     programStatus?: "ACTIVE" | "COMPLETED" | "CANCELLED";
     followUp?: boolean;
-    trackedEntityType?: Id;
     order?: string;
     pageSize?: number;
     page?: number;
