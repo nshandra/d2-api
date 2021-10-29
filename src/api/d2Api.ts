@@ -20,9 +20,10 @@ import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
 import { Sharing } from "./sharing";
-import { System } from "./system";
-import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
 import { SqlViews } from "./SqlViews";
+import { System } from "./system";
+import { TrackedEntityInstances } from "./teis";
+import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
 
 export class D2ApiGeneric {
     public baseUrl: string;
@@ -139,6 +140,11 @@ export abstract class D2ApiVersioned<
     @cache()
     get events() {
         return new Events(this);
+    }
+
+    @cache()
+    get teis() {
+        return new TrackedEntityInstances(this);
     }
 
     @cache()
