@@ -22,7 +22,7 @@ import { Model } from "./model";
 import { Sharing } from "./sharing";
 import { SqlViews } from "./SqlViews";
 import { System } from "./system";
-import { TrackedEntityInstances } from "./teis";
+import { TrackedEntityInstances } from "./trackedEntityInstances";
 import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
 
 export class D2ApiGeneric {
@@ -143,7 +143,7 @@ export abstract class D2ApiVersioned<
     }
 
     @cache()
-    get teis() {
+    get trackedEntityInstances() {
         return new TrackedEntityInstances(this);
     }
 

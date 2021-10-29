@@ -6,7 +6,7 @@ import { D2ApiGeneric } from "./d2Api";
 import { DataValueSetsPostResponse } from "./dataValues";
 import { EventsPostResponse } from "./events";
 import { MetadataResponse } from "./metadata";
-import { TeiPostResponse } from "./teis";
+import { TeiPostResponse } from "./trackedEntityInstances";
 
 export class System {
     constructor(public d2Api: D2ApiGeneric) {}
