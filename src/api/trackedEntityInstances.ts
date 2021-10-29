@@ -8,7 +8,7 @@ export class TrackedEntityInstances {
     get(params: TeiGetRequest): D2ApiResponse<PaginatedTeiGetResponse> {
         return this.d2Api.get<PaginatedTeiGetResponse>("/trackedEntityInstances", {
             ...params,
-            ou: params.ou?.join(";"),
+            ou: params.ou ? params.ou.join(";") : undefined,
             paging: true,
         });
     }
@@ -16,7 +16,7 @@ export class TrackedEntityInstances {
     getAll(params: TeiGetRequest): D2ApiResponse<TeiGetResponse> {
         return this.d2Api.get<TeiGetResponse>("/trackedEntityInstances", {
             ...params,
-            ou: params.ou?.join(";"),
+            ou: params.ou ? params.ou.join(";") : undefined,
             paging: false,
             page: undefined,
             pageSize: undefined,
@@ -92,9 +92,11 @@ export interface Attribute {
     value: string;
 }
 
-export interface TeiGetRequest {
-    ouMode?: "SELECTED" | "CHILDREN" | "DESCENDANTS" | "ACCESSIBLE" | "CAPTURE" | "ALL";
-    ou?: Id[];
+export type TeiOuRequest =
+    | { ouMode?: "ACCESSIBLE" | "CAPTURE" | "ALL"; ou?: never[] }
+    | { ouMode?: "SELECTED" | "CHILDREN" | "DESCENDANTS"; ou: Id[] };
+
+export type TeiGetRequest = TeiOuRequest & {
     program?: Id;
     programStatus?: "ACTIVE" | "COMPLETED" | "CANCELLED";
     followUp?: boolean;
@@ -112,7 +114,7 @@ export interface TeiGetRequest {
     assignedUserMode?: "CURRENT" | "PROVIDED" | "NONE" | "ANY";
     trackedEntityInstance?: string;
     includeDeleted?: boolean;
-}
+};
 
 export interface TeiGetResponse {
     trackedEntityInstances: TrackedEntityInstance[];
