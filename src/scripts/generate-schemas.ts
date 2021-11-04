@@ -8,6 +8,7 @@ import { joinPath } from "../utils/connection";
 import { ArgumentParser } from "argparse";
 
 interface Schema extends D2SchemaProperties {
+    name: string;
     href: string;
     properties: SchemaFieldProperties[];
 }
@@ -53,7 +54,7 @@ const schemaFieldProperties: Array<keyof D2SchemaFieldProperties> = [
     "itemKlass",
 ];
 
-const interfaceFromClass: _.Dictionary<string> = {
+const interfaceFromClass: _.Dictionary<string | { type: string; schema: string }> = {
     "org.hisp.dhis.security.acl.Access": "D2Access",
     "org.hisp.dhis.translation.ObjectTranslation": "D2Translation",
     "org.hisp.dhis.translation.Translation": "D2Translation",
@@ -63,7 +64,10 @@ const interfaceFromClass: _.Dictionary<string> = {
     "org.hisp.dhis.expression.Expression": "D2Expression",
     "org.hisp.dhis.period.PeriodType": "string",
     "org.hisp.dhis.chart.Series": "any",
-    "org.hisp.dhis.attribute.AttributeValue": "D2AttributeValueGeneric<D2Attribute>",
+    "org.hisp.dhis.attribute.AttributeValue": {
+        type: "D2AttributeValueGeneric<D2Attribute>",
+        schema: "D2AttributeValueGenericSchema<D2Attribute, D2AttributeSchema>",
+    },
     "org.hisp.dhis.eventdatavalue.EventDataValue": "any",
     "org.hisp.dhis.common.DataDimensionItem": "any",
     "org.hisp.dhis.common.DimensionalObject": "any",
@@ -154,7 +158,12 @@ function getInterface(schemas: Schemas, property: SchemaProperty, suffix?: strin
     if (schemas[className]) {
         return `D2${className}${suffix || ""}`;
     } else if (interfaceFromClass[property.klass]) {
-        return interfaceFromClass[property.klass];
+        const value = interfaceFromClass[property.klass];
+        if (typeof value === "string") {
+            return value;
+        } else {
+            return suffix === "Schema" ? value.schema : value.type;
+        }
     } else {
         console.log(`Unsupported complex type, default to any: ${property.klass}`);
         return "any";
@@ -167,9 +176,33 @@ function getPropertyName(property: SchemaProperty): string {
     else return value;
 }
 
+/* From 2.35,  userAccess and userGroupAccess schemas have empty fields (why?) */
+
+const customModelProperties: _.Dictionary<_.Dictionary<string>> = {
+    userAccess: {
+        access: "string",
+        displayName: "string",
+        id: "string",
+        userUid: "string",
+    },
+    userGroupAccess: {
+        access: "string",
+        displayName: "string",
+        id: "string",
+        userGroupUid: "string",
+    },
+};
+
 function getModelProperties(schemas: Schemas, schema: Schema, suffix?: string): string {
-    return _(schema.properties)
-        .map(property => [getPropertyName(property), getType(schemas, property, suffix)])
+    const fromSchema = schema.properties.map(property => [
+        getPropertyName(property),
+        getType(schemas, property, suffix),
+    ]);
+
+    const fromCustom = _.toPairs(customModelProperties[schema.name] || {});
+    const pairs = _.isEmpty(fromSchema) ? fromCustom : fromSchema;
+
+    return _(pairs)
         .sortBy()
         .map(([key, value]) => `${key}: ${value}`)
         .join(";");
@@ -224,8 +257,9 @@ async function generateSchema(instance: Instance) {
         import {
             Id, Preset, FieldPresets, D2SchemaProperties,
             D2Access, D2Translation, D2Geometry,  D2Style,
-            D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression,
-            D2RelationshipConstraint, D2ReportingParams, D2Axis
+            D2DimensionalKeywords, D2Expression,
+            D2RelationshipConstraint, D2ReportingParams, D2Axis,
+            D2AttributeValueGeneric, D2AttributeValueGenericSchema
         } from "../schemas/base";
 
         ${schemas
