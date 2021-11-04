@@ -187,6 +187,8 @@ export type D2Category = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -291,6 +293,8 @@ export type D2CategoryOption = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -342,6 +346,7 @@ export type D2CategoryOption = {
     legendSets: D2LegendSet[];
     name: string;
     organisationUnits: D2OrganisationUnit[];
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     startDate: string;
@@ -360,6 +365,8 @@ export type D2CategoryOptionCombo = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -408,6 +415,7 @@ export type D2CategoryOptionCombo = {
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
     name: string;
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -424,6 +432,8 @@ export type D2CategoryOptionGroup = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -472,6 +482,7 @@ export type D2CategoryOptionGroup = {
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
     name: string;
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -488,6 +499,8 @@ export type D2CategoryOptionGroupSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -565,6 +578,8 @@ export type D2Chart = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -583,7 +598,6 @@ export type D2Chart = {
     categoryDimensions: D2CategoryDimension[];
     categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimension[];
     code: Id;
-    colorSet: D2ColorSet;
     columns: any[];
     completedOnly: boolean;
     created: string;
@@ -662,6 +676,7 @@ export type D2Chart = {
         | "STACKED_COLUMN"
         | "BAR"
         | "STACKED_BAR"
+        | "STACKED_AREA"
         | "LINE"
         | "AREA"
         | "PIE"
@@ -678,50 +693,6 @@ export type D2Chart = {
     userOrganisationUnitChildren: boolean;
     userOrganisationUnitGrandChildren: boolean;
     yearlySeries: string[];
-};
-
-export type D2Color = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    color: string;
-    created: string;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
-};
-
-export type D2ColorSet = {
-    access: D2Access;
-    attributeValues: D2AttributeValueGeneric<D2Attribute>[];
-    code: Id;
-    colors: D2Color[];
-    created: string;
-    displayName: string;
-    externalAccess: boolean;
-    favorite: boolean;
-    favorites: string[];
-    href: string;
-    id: Id;
-    lastUpdated: string;
-    lastUpdatedBy: D2User;
-    name: string;
-    publicAccess: string;
-    translations: D2Translation[];
-    user: D2User;
-    userAccesses: D2UserAccess[];
-    userGroupAccesses: D2UserGroupAccess[];
 };
 
 export type D2Constant = {
@@ -894,6 +865,8 @@ export type D2DataElement = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -947,6 +920,7 @@ export type D2DataElement = {
     name: string;
     optionSet: D2OptionSet;
     optionSetValue: boolean;
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     style: D2Style;
@@ -992,6 +966,8 @@ export type D2DataElementGroup = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -1039,6 +1015,7 @@ export type D2DataElementGroup = {
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
     name: string;
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -1055,6 +1032,8 @@ export type D2DataElementGroupSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -1133,6 +1112,8 @@ export type D2DataElementOperand = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -1181,6 +1162,7 @@ export type D2DataElementOperand = {
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
     name: string;
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -1227,6 +1209,8 @@ export type D2DataSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -1291,6 +1275,7 @@ export type D2DataSet = {
     openFuturePeriods: number;
     openPeriodsAfterCoEndDate: number;
     organisationUnits: D2OrganisationUnit[];
+    periodOffset: number;
     periodType: string;
     publicAccess: string;
     renderAsTabs: boolean;
@@ -1382,6 +1367,8 @@ export type D2EventChart = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -1401,7 +1388,6 @@ export type D2EventChart = {
     categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimension[];
     code: Id;
     collapseDataDimensions: boolean;
-    colorSet: D2ColorSet;
     columnDimensions: string[];
     columns: any[];
     completedOnly: boolean;
@@ -1487,6 +1473,7 @@ export type D2EventChart = {
         | "STACKED_COLUMN"
         | "BAR"
         | "STACKED_BAR"
+        | "STACKED_AREA"
         | "LINE"
         | "AREA"
         | "PIE"
@@ -1514,6 +1501,8 @@ export type D2EventReport = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -1706,6 +1695,8 @@ export type D2Indicator = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -1762,6 +1753,7 @@ export type D2Indicator = {
     name: string;
     numerator: string;
     numeratorDescription: string;
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     style: D2Style;
@@ -1777,6 +1769,7 @@ export type D2IndicatorGroup = {
     attributeValues: D2AttributeValueGeneric<D2Attribute>[];
     code: Id;
     created: string;
+    description: string;
     displayName: string;
     externalAccess: boolean;
     favorite: boolean;
@@ -1957,18 +1950,18 @@ export type D2JobConfiguration = {
         | "TRACKER_IMPORT_JOB"
         | "TRACKER_IMPORT_NOTIFICATION_JOB"
         | "TRACKER_IMPORT_RULE_ENGINE_JOB"
-        | "MOCK"
-        | "DATAVALUE_IMPORT"
-        | "ANALYTICSTABLE_UPDATE"
-        | "METADATA_IMPORT"
-        | "GML_IMPORT"
-        | "DATAVALUE_IMPORT_INTERNAL"
-        | "EVENT_IMPORT"
-        | "ENROLLMENT_IMPORT"
-        | "TEI_IMPORT"
         | "LEADER_ELECTION"
         | "LEADER_RENEWAL"
         | "COMPLETE_DATA_SET_REGISTRATION_IMPORT"
+        | "DATAVALUE_IMPORT_INTERNAL"
+        | "METADATA_IMPORT"
+        | "DATAVALUE_IMPORT"
+        | "EVENT_IMPORT"
+        | "ENROLLMENT_IMPORT"
+        | "TEI_IMPORT"
+        | "MOCK"
+        | "GML_IMPORT"
+        | "ANALYTICSTABLE_UPDATE"
         | "PROGRAM_DATA_SYNC";
     lastExecuted: string;
     lastExecutedStatus:
@@ -2110,6 +2103,8 @@ export type D2MapView = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -2151,6 +2146,7 @@ export type D2MapView = {
     eventCoordinateField: string;
     eventPointColor: string;
     eventPointRadius: number;
+    eventStatus: "ACTIVE" | "COMPLETED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
     externalAccess: boolean;
     favorite: boolean;
     favorites: string[];
@@ -2176,6 +2172,7 @@ export type D2MapView = {
     legendSet: D2LegendSet;
     method: number;
     name: string;
+    noDataColor: string;
     opacity: number;
     orgUnitField: string;
     organisationUnitGroupSet: D2OrganisationUnitGroupSet;
@@ -2210,6 +2207,7 @@ export type D2MapView = {
     subscribed: boolean;
     subscribers: string[];
     subtitle: string;
+    thematicMapType: "CHOROPLETH" | "BUBBLE";
     timeField: string;
     title: string;
     topLimit: number;
@@ -2357,6 +2355,8 @@ export type D2OptionGroup = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -2404,6 +2404,7 @@ export type D2OptionGroup = {
     name: string;
     optionSet: D2OptionSet;
     options: D2Option[];
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -2420,6 +2421,8 @@ export type D2OptionGroupSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -2543,6 +2546,8 @@ export type D2OrganisationUnit = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -2603,6 +2608,7 @@ export type D2OrganisationUnit = {
     organisationUnitGroups: D2OrganisationUnitGroup[];
     parent: D2OrganisationUnit;
     path: string;
+    periodOffset: number;
     phoneNumber: string;
     programs: D2Program[];
     publicAccess: string;
@@ -2624,6 +2630,8 @@ export type D2OrganisationUnitGroup = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -2674,6 +2682,7 @@ export type D2OrganisationUnitGroup = {
     legendSets: D2LegendSet[];
     name: string;
     organisationUnits: D2OrganisationUnit[];
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     symbol: string;
@@ -2691,6 +2700,8 @@ export type D2OrganisationUnitGroupSet = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -2914,6 +2925,8 @@ export type D2ProgramDataElementDimensionItem = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -2960,6 +2973,7 @@ export type D2ProgramDataElementDimensionItem = {
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
     name: string;
+    periodOffset: number;
     program: D2Program;
     publicAccess: string;
     shortName: string;
@@ -3005,6 +3019,8 @@ export type D2ProgramIndicator = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -3056,6 +3072,7 @@ export type D2ProgramIndicator = {
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
     name: string;
+    periodOffset: number;
     program: D2Program;
     programIndicatorGroups: D2ProgramIndicatorGroup[];
     publicAccess: string;
@@ -3576,6 +3593,8 @@ export type D2ProgramTrackedEntityAttributeDimensionItem = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -3622,6 +3641,7 @@ export type D2ProgramTrackedEntityAttributeDimensionItem = {
     legendSet: D2LegendSet;
     legendSets: D2LegendSet[];
     name: string;
+    periodOffset: number;
     program: D2Program;
     publicAccess: string;
     shortName: string;
@@ -3790,6 +3810,8 @@ export type D2ReportTable = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -3893,6 +3915,8 @@ export type D2ReportingRate = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -3945,6 +3969,7 @@ export type D2ReportingRate = {
         | "ACTUAL_REPORTS_ON_TIME"
         | "EXPECTED_REPORTS";
     name: string;
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     translations: D2Translation[];
@@ -4072,6 +4097,8 @@ export type D2TrackedEntityAttribute = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -4128,6 +4155,7 @@ export type D2TrackedEntityAttribute = {
     optionSetValue: boolean;
     orgunitScope: boolean;
     pattern: string;
+    periodOffset: number;
     publicAccess: string;
     shortName: string;
     skipSynchronization: boolean;
@@ -4207,6 +4235,7 @@ export type D2TrackedEntityInstance = {
     programOwners: any[];
     publicAccess: string;
     relationshipItems: any[];
+    storedBy: string;
     trackedEntityAttributeValues: D2TrackedEntityAttributeValue[];
     trackedEntityType: D2TrackedEntityType;
     translations: D2Translation[];
@@ -4535,6 +4564,8 @@ export type D2ValidationRule = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -4594,6 +4625,7 @@ export type D2ValidationRule = {
         | "compulsory_pair"
         | "exclusive_pair";
     organisationUnitLevels: number[];
+    periodOffset: number;
     periodType: string;
     publicAccess: string;
     rightSide: D2Expression;
@@ -4637,6 +4669,8 @@ export type D2Visualization = {
         | "AVERAGE_SUM_ORG_UNIT"
         | "LAST"
         | "LAST_AVERAGE_ORG_UNIT"
+        | "LAST_IN_PERIOD"
+        | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
         | "FIRST"
         | "FIRST_AVERAGE_ORG_UNIT"
         | "COUNT"
@@ -4656,7 +4690,7 @@ export type D2Visualization = {
     code: Id;
     colSubTotals: boolean;
     colTotals: boolean;
-    colorSet: D2ColorSet;
+    colorSet: string;
     columnDimensions: string[];
     columns: any[];
     completedOnly: boolean;
@@ -4686,6 +4720,7 @@ export type D2Visualization = {
     filterDimensions: string[];
     filters: any[];
     fontSize: "LARGE" | "NORMAL" | "SMALL";
+    fontStyle: any;
     formName: string;
     hideEmptyColumns: boolean;
     hideEmptyRowItems: "NONE" | "BEFORE_FIRST" | "AFTER_LAST" | "BEFORE_FIRST_AFTER_LAST" | "ALL";
@@ -4729,6 +4764,7 @@ export type D2Visualization = {
     rowSubTotals: boolean;
     rowTotals: boolean;
     rows: any[];
+    series: any[];
     shortName: string;
     showData: boolean;
     showDimensionLabels: boolean;
@@ -4752,6 +4788,7 @@ export type D2Visualization = {
         | "STACKED_BAR"
         | "LINE"
         | "AREA"
+        | "STACKED_AREA"
         | "PIE"
         | "RADAR"
         | "GAUGE"
@@ -5121,6 +5158,8 @@ export interface D2CategorySchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -5323,6 +5362,8 @@ export interface D2CategoryOptionSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -5374,6 +5415,7 @@ export interface D2CategoryOptionSchema {
         legendSets: D2LegendSetSchema[];
         name: string;
         organisationUnits: D2OrganisationUnitSchema[];
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         startDate: string;
@@ -5446,6 +5488,8 @@ export interface D2CategoryOptionComboSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -5494,6 +5538,7 @@ export interface D2CategoryOptionComboSchema {
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
         name: string;
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -5547,6 +5592,8 @@ export interface D2CategoryOptionGroupSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -5595,6 +5642,7 @@ export interface D2CategoryOptionGroupSchema {
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
         name: string;
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -5657,6 +5705,8 @@ export interface D2CategoryOptionGroupSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -5798,6 +5848,8 @@ export interface D2ChartSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -5816,7 +5868,6 @@ export interface D2ChartSchema {
         categoryDimensions: D2CategoryDimensionSchema[];
         categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema[];
         code: Id;
-        colorSet: D2ColorSetSchema;
         columns: any[];
         completedOnly: boolean;
         created: string;
@@ -5900,6 +5951,7 @@ export interface D2ChartSchema {
             | "STACKED_COLUMN"
             | "BAR"
             | "STACKED_BAR"
+            | "STACKED_AREA"
             | "LINE"
             | "AREA"
             | "PIE"
@@ -5923,112 +5975,6 @@ export interface D2ChartSchema {
         $nameable: Preset<D2Chart, FieldPresets["nameable"]>;
         $persisted: Preset<D2Chart, never>;
         $owner: Preset<D2Chart, never>;
-    };
-}
-
-export interface D2ColorSchema {
-    name: "D2Color";
-    model: D2Color;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGenericSchema<D2Attribute, D2AttributeSchema>[];
-        code: Id;
-        color: string;
-        created: string;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        publicAccess: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2Color, keyof D2Color>;
-        $identifiable: Preset<D2Color, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2Color, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2Color,
-            | "lastUpdatedBy"
-            | "code"
-            | "color"
-            | "created"
-            | "lastUpdated"
-            | "translations"
-            | "name"
-            | "id"
-        >;
-        $owner: Preset<
-            D2Color,
-            | "lastUpdatedBy"
-            | "code"
-            | "color"
-            | "created"
-            | "lastUpdated"
-            | "translations"
-            | "name"
-            | "id"
-        >;
-    };
-}
-
-export interface D2ColorSetSchema {
-    name: "D2ColorSet";
-    model: D2ColorSet;
-    fields: {
-        access: D2Access;
-        attributeValues: D2AttributeValueGenericSchema<D2Attribute, D2AttributeSchema>[];
-        code: Id;
-        colors: D2ColorSchema[];
-        created: string;
-        displayName: string;
-        externalAccess: boolean;
-        favorite: boolean;
-        favorites: string[];
-        href: string;
-        id: Id;
-        lastUpdated: string;
-        lastUpdatedBy: D2UserSchema;
-        name: string;
-        publicAccess: string;
-        translations: D2Translation[];
-        user: D2UserSchema;
-        userAccesses: D2UserAccessSchema[];
-        userGroupAccesses: D2UserGroupAccessSchema[];
-    };
-    fieldPresets: {
-        $all: Preset<D2ColorSet, keyof D2ColorSet>;
-        $identifiable: Preset<D2ColorSet, FieldPresets["identifiable"]>;
-        $nameable: Preset<D2ColorSet, FieldPresets["nameable"]>;
-        $persisted: Preset<
-            D2ColorSet,
-            | "lastUpdatedBy"
-            | "code"
-            | "created"
-            | "colors"
-            | "lastUpdated"
-            | "translations"
-            | "name"
-            | "id"
-        >;
-        $owner: Preset<
-            D2ColorSet,
-            | "lastUpdatedBy"
-            | "code"
-            | "created"
-            | "colors"
-            | "lastUpdated"
-            | "translations"
-            | "name"
-            | "id"
-        >;
     };
 }
 
@@ -6439,6 +6385,8 @@ export interface D2DataElementSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -6492,6 +6440,7 @@ export interface D2DataElementSchema {
         name: string;
         optionSet: D2OptionSetSchema;
         optionSetValue: boolean;
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         style: D2Style;
@@ -6608,6 +6557,8 @@ export interface D2DataElementGroupSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -6655,6 +6606,7 @@ export interface D2DataElementGroupSchema {
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
         name: string;
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -6670,6 +6622,7 @@ export interface D2DataElementGroupSchema {
             D2DataElementGroup,
             | "code"
             | "publicAccess"
+            | "description"
             | "lastUpdated"
             | "translations"
             | "id"
@@ -6688,6 +6641,7 @@ export interface D2DataElementGroupSchema {
             D2DataElementGroup,
             | "code"
             | "publicAccess"
+            | "description"
             | "lastUpdated"
             | "translations"
             | "id"
@@ -6715,6 +6669,8 @@ export interface D2DataElementGroupSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -6854,6 +6810,8 @@ export interface D2DataElementOperandSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -6902,6 +6860,7 @@ export interface D2DataElementOperandSchema {
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
         name: string;
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -7001,6 +6960,8 @@ export interface D2DataSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -7065,6 +7026,7 @@ export interface D2DataSetSchema {
         openFuturePeriods: number;
         openPeriodsAfterCoEndDate: number;
         organisationUnits: D2OrganisationUnitSchema[];
+        periodOffset: number;
         periodType: string;
         publicAccess: string;
         renderAsTabs: boolean;
@@ -7368,6 +7330,8 @@ export interface D2EventChartSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -7387,7 +7351,6 @@ export interface D2EventChartSchema {
         categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema[];
         code: Id;
         collapseDataDimensions: boolean;
-        colorSet: D2ColorSetSchema;
         columnDimensions: string[];
         columns: any[];
         completedOnly: boolean;
@@ -7478,6 +7441,7 @@ export interface D2EventChartSchema {
             | "STACKED_COLUMN"
             | "BAR"
             | "STACKED_BAR"
+            | "STACKED_AREA"
             | "LINE"
             | "AREA"
             | "PIE"
@@ -7663,6 +7627,8 @@ export interface D2EventReportSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -8141,6 +8107,8 @@ export interface D2IndicatorSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -8197,6 +8165,7 @@ export interface D2IndicatorSchema {
         name: string;
         numerator: string;
         numeratorDescription: string;
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         style: D2Style;
@@ -8283,6 +8252,7 @@ export interface D2IndicatorGroupSchema {
         attributeValues: D2AttributeValueGenericSchema<D2Attribute, D2AttributeSchema>[];
         code: Id;
         created: string;
+        description: string;
         displayName: string;
         externalAccess: boolean;
         favorite: boolean;
@@ -8312,6 +8282,7 @@ export interface D2IndicatorGroupSchema {
             | "created"
             | "publicAccess"
             | "attributeValues"
+            | "description"
             | "indicators"
             | "indicatorGroupSet"
             | "lastUpdated"
@@ -8329,6 +8300,7 @@ export interface D2IndicatorGroupSchema {
             | "created"
             | "publicAccess"
             | "attributeValues"
+            | "description"
             | "indicators"
             | "indicatorGroupSet"
             | "lastUpdated"
@@ -8652,18 +8624,18 @@ export interface D2JobConfigurationSchema {
             | "TRACKER_IMPORT_JOB"
             | "TRACKER_IMPORT_NOTIFICATION_JOB"
             | "TRACKER_IMPORT_RULE_ENGINE_JOB"
-            | "MOCK"
-            | "DATAVALUE_IMPORT"
-            | "ANALYTICSTABLE_UPDATE"
-            | "METADATA_IMPORT"
-            | "GML_IMPORT"
-            | "DATAVALUE_IMPORT_INTERNAL"
-            | "EVENT_IMPORT"
-            | "ENROLLMENT_IMPORT"
-            | "TEI_IMPORT"
             | "LEADER_ELECTION"
             | "LEADER_RENEWAL"
             | "COMPLETE_DATA_SET_REGISTRATION_IMPORT"
+            | "DATAVALUE_IMPORT_INTERNAL"
+            | "METADATA_IMPORT"
+            | "DATAVALUE_IMPORT"
+            | "EVENT_IMPORT"
+            | "ENROLLMENT_IMPORT"
+            | "TEI_IMPORT"
+            | "MOCK"
+            | "GML_IMPORT"
+            | "ANALYTICSTABLE_UPDATE"
             | "PROGRAM_DATA_SYNC";
         lastExecuted: string;
         lastExecutedStatus:
@@ -9029,6 +9001,8 @@ export interface D2MapViewSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -9070,6 +9044,7 @@ export interface D2MapViewSchema {
         eventCoordinateField: string;
         eventPointColor: string;
         eventPointRadius: number;
+        eventStatus: "ACTIVE" | "COMPLETED" | "SCHEDULE" | "OVERDUE" | "SKIPPED";
         externalAccess: boolean;
         favorite: boolean;
         favorites: string[];
@@ -9095,6 +9070,7 @@ export interface D2MapViewSchema {
         legendSet: D2LegendSetSchema;
         method: number;
         name: string;
+        noDataColor: string;
         opacity: number;
         orgUnitField: string;
         organisationUnitGroupSet: D2OrganisationUnitGroupSetSchema;
@@ -9129,6 +9105,7 @@ export interface D2MapViewSchema {
         subscribed: boolean;
         subscribers: string[];
         subtitle: string;
+        thematicMapType: "CHOROPLETH" | "BUBBLE";
         timeField: string;
         title: string;
         topLimit: number;
@@ -9163,6 +9140,7 @@ export interface D2MapViewSchema {
             | "renderingStrategy"
             | "labels"
             | "startDate"
+            | "noDataColor"
             | "userOrganisationUnitGrandChildren"
             | "styleDataItem"
             | "labelFontColor"
@@ -9174,6 +9152,7 @@ export interface D2MapViewSchema {
             | "radiusHigh"
             | "eventClustering"
             | "colorLow"
+            | "eventStatus"
             | "opacity"
             | "config"
             | "colorScale"
@@ -9191,6 +9170,7 @@ export interface D2MapViewSchema {
             | "code"
             | "categoryOptionGroupSetDimensions"
             | "hidden"
+            | "thematicMapType"
             | "classes"
             | "description"
             | "organisationUnitGroupSetDimensions"
@@ -9224,6 +9204,7 @@ export interface D2MapViewSchema {
             | "renderingStrategy"
             | "labels"
             | "startDate"
+            | "noDataColor"
             | "userOrganisationUnitGrandChildren"
             | "styleDataItem"
             | "labelFontColor"
@@ -9235,6 +9216,7 @@ export interface D2MapViewSchema {
             | "radiusHigh"
             | "eventClustering"
             | "colorLow"
+            | "eventStatus"
             | "opacity"
             | "config"
             | "colorScale"
@@ -9252,6 +9234,7 @@ export interface D2MapViewSchema {
             | "code"
             | "categoryOptionGroupSetDimensions"
             | "hidden"
+            | "thematicMapType"
             | "classes"
             | "description"
             | "organisationUnitGroupSetDimensions"
@@ -9574,6 +9557,8 @@ export interface D2OptionGroupSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -9621,6 +9606,7 @@ export interface D2OptionGroupSchema {
         name: string;
         optionSet: D2OptionSetSchema;
         options: D2OptionSchema[];
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -9680,6 +9666,8 @@ export interface D2OptionGroupSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -9893,6 +9881,8 @@ export interface D2OrganisationUnitSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -9953,6 +9943,7 @@ export interface D2OrganisationUnitSchema {
         organisationUnitGroups: D2OrganisationUnitGroupSchema[];
         parent: D2OrganisationUnitSchema;
         path: string;
+        periodOffset: number;
         phoneNumber: string;
         programs: D2ProgramSchema[];
         publicAccess: string;
@@ -10040,6 +10031,8 @@ export interface D2OrganisationUnitGroupSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -10090,6 +10083,7 @@ export interface D2OrganisationUnitGroupSchema {
         legendSets: D2LegendSetSchema[];
         name: string;
         organisationUnits: D2OrganisationUnitSchema[];
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         symbol: string;
@@ -10157,6 +10151,8 @@ export interface D2OrganisationUnitGroupSetSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -10677,6 +10673,8 @@ export interface D2ProgramDataElementDimensionItemSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -10723,6 +10721,7 @@ export interface D2ProgramDataElementDimensionItemSchema {
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
         name: string;
+        periodOffset: number;
         program: D2ProgramSchema;
         publicAccess: string;
         shortName: string;
@@ -10779,6 +10778,8 @@ export interface D2ProgramIndicatorSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -10830,6 +10831,7 @@ export interface D2ProgramIndicatorSchema {
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
         name: string;
+        periodOffset: number;
         program: D2ProgramSchema;
         programIndicatorGroups: D2ProgramIndicatorGroupSchema[];
         publicAccess: string;
@@ -12086,6 +12088,8 @@ export interface D2ProgramTrackedEntityAttributeDimensionItemSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -12132,6 +12136,7 @@ export interface D2ProgramTrackedEntityAttributeDimensionItemSchema {
         legendSet: D2LegendSetSchema;
         legendSets: D2LegendSetSchema[];
         name: string;
+        periodOffset: number;
         program: D2ProgramSchema;
         publicAccess: string;
         shortName: string;
@@ -12528,6 +12533,8 @@ export interface D2ReportTableSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -12642,6 +12649,8 @@ export interface D2ReportingRateSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -12694,6 +12703,7 @@ export interface D2ReportingRateSchema {
             | "ACTUAL_REPORTS_ON_TIME"
             | "EXPECTED_REPORTS";
         name: string;
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         translations: D2Translation[];
@@ -12985,6 +12995,8 @@ export interface D2TrackedEntityAttributeSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -13041,6 +13053,7 @@ export interface D2TrackedEntityAttributeSchema {
         optionSetValue: boolean;
         orgunitScope: boolean;
         pattern: string;
+        periodOffset: number;
         publicAccess: string;
         shortName: string;
         skipSynchronization: boolean;
@@ -13085,74 +13098,74 @@ export interface D2TrackedEntityAttributeSchema {
         $nameable: Preset<D2TrackedEntityAttribute, FieldPresets["nameable"]>;
         $persisted: Preset<
             D2TrackedEntityAttribute,
-            | "aggregationType"
-            | "code"
-            | "displayInListNoProgram"
             | "publicAccess"
-            | "pattern"
-            | "description"
-            | "skipSynchronization"
-            | "sortOrderInListNoProgram"
             | "lastUpdated"
-            | "optionSet"
             | "generated"
-            | "displayOnVisitSchedule"
             | "translations"
             | "valueType"
-            | "formName"
-            | "sortOrderInVisitSchedule"
             | "id"
-            | "orgunitScope"
             | "confidential"
-            | "fieldMask"
             | "lastUpdatedBy"
             | "userGroupAccesses"
-            | "expression"
             | "created"
             | "attributeValues"
             | "unique"
             | "userAccesses"
-            | "inherit"
             | "name"
             | "legendSets"
             | "style"
             | "shortName"
+            | "aggregationType"
+            | "code"
+            | "displayInListNoProgram"
+            | "pattern"
+            | "description"
+            | "skipSynchronization"
+            | "sortOrderInListNoProgram"
+            | "optionSet"
+            | "displayOnVisitSchedule"
+            | "formName"
+            | "sortOrderInVisitSchedule"
+            | "orgunitScope"
+            | "fieldMask"
+            | "expression"
+            | "inherit"
             | "user"
         >;
         $owner: Preset<
             D2TrackedEntityAttribute,
-            | "aggregationType"
-            | "code"
-            | "displayInListNoProgram"
             | "publicAccess"
-            | "pattern"
-            | "description"
-            | "skipSynchronization"
-            | "sortOrderInListNoProgram"
             | "lastUpdated"
-            | "optionSet"
             | "generated"
-            | "displayOnVisitSchedule"
             | "translations"
             | "valueType"
-            | "formName"
-            | "sortOrderInVisitSchedule"
             | "id"
-            | "orgunitScope"
             | "confidential"
-            | "fieldMask"
             | "lastUpdatedBy"
             | "userGroupAccesses"
-            | "expression"
             | "created"
             | "attributeValues"
             | "unique"
             | "userAccesses"
-            | "inherit"
             | "name"
             | "legendSets"
             | "style"
             | "shortName"
+            | "aggregationType"
+            | "code"
+            | "displayInListNoProgram"
+            | "pattern"
+            | "description"
+            | "skipSynchronization"
+            | "sortOrderInListNoProgram"
+            | "optionSet"
+            | "displayOnVisitSchedule"
+            | "formName"
+            | "sortOrderInVisitSchedule"
+            | "orgunitScope"
+            | "fieldMask"
+            | "expression"
+            | "inherit"
             | "user"
         >;
     };
@@ -13232,6 +13245,7 @@ export interface D2TrackedEntityInstanceSchema {
         programOwners: any[];
         publicAccess: string;
         relationshipItems: any[];
+        storedBy: string;
         trackedEntityAttributeValues: D2TrackedEntityAttributeValueSchema[];
         trackedEntityType: D2TrackedEntityTypeSchema;
         translations: D2Translation[];
@@ -13247,6 +13261,7 @@ export interface D2TrackedEntityInstanceSchema {
             D2TrackedEntityInstance,
             | "programOwners"
             | "code"
+            | "storedBy"
             | "programInstances"
             | "organisationUnit"
             | "createdAtClient"
@@ -13265,6 +13280,7 @@ export interface D2TrackedEntityInstanceSchema {
         $owner: Preset<
             D2TrackedEntityInstance,
             | "code"
+            | "storedBy"
             | "organisationUnit"
             | "createdAtClient"
             | "lastUpdated"
@@ -14049,6 +14065,8 @@ export interface D2ValidationRuleSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -14108,6 +14126,7 @@ export interface D2ValidationRuleSchema {
             | "compulsory_pair"
             | "exclusive_pair";
         organisationUnitLevels: number[];
+        periodOffset: number;
         periodType: string;
         publicAccess: string;
         rightSide: D2ExpressionSchema;
@@ -14253,6 +14272,8 @@ export interface D2VisualizationSchema {
             | "AVERAGE_SUM_ORG_UNIT"
             | "LAST"
             | "LAST_AVERAGE_ORG_UNIT"
+            | "LAST_IN_PERIOD"
+            | "LAST_IN_PERIOD_AVERAGE_ORG_UNIT"
             | "FIRST"
             | "FIRST_AVERAGE_ORG_UNIT"
             | "COUNT"
@@ -14272,7 +14293,7 @@ export interface D2VisualizationSchema {
         code: Id;
         colSubTotals: boolean;
         colTotals: boolean;
-        colorSet: D2ColorSetSchema;
+        colorSet: string;
         columnDimensions: string[];
         columns: any[];
         completedOnly: boolean;
@@ -14302,6 +14323,7 @@ export interface D2VisualizationSchema {
         filterDimensions: string[];
         filters: any[];
         fontSize: "LARGE" | "NORMAL" | "SMALL";
+        fontStyle: any;
         formName: string;
         hideEmptyColumns: boolean;
         hideEmptyRowItems:
@@ -14350,6 +14372,7 @@ export interface D2VisualizationSchema {
         rowSubTotals: boolean;
         rowTotals: boolean;
         rows: any[];
+        series: any[];
         shortName: string;
         showData: boolean;
         showDimensionLabels: boolean;
@@ -14373,6 +14396,7 @@ export interface D2VisualizationSchema {
             | "STACKED_BAR"
             | "LINE"
             | "AREA"
+            | "STACKED_AREA"
             | "PIE"
             | "RADAR"
             | "GAUGE"
@@ -14417,6 +14441,7 @@ export interface D2VisualizationSchema {
             | "domainAxisLabel"
             | "subscribers"
             | "cumulativeValues"
+            | "fontStyle"
             | "optionalAxes"
             | "showDimensionLabels"
             | "sortOrder"
@@ -14435,6 +14460,7 @@ export interface D2VisualizationSchema {
             | "reportingParams"
             | "hideTitle"
             | "rowDimensions"
+            | "series"
             | "colorSet"
             | "skipRounding"
             | "showData"
@@ -14502,6 +14528,7 @@ export interface D2VisualizationSchema {
             | "domainAxisLabel"
             | "subscribers"
             | "cumulativeValues"
+            | "fontStyle"
             | "optionalAxes"
             | "showDimensionLabels"
             | "sortOrder"
@@ -14520,6 +14547,7 @@ export interface D2VisualizationSchema {
             | "reportingParams"
             | "hideTitle"
             | "rowDimensions"
+            | "series"
             | "colorSet"
             | "skipRounding"
             | "showData"
@@ -14581,8 +14609,6 @@ export type D2Model =
     | D2CategoryOptionGroupSet
     | D2CategoryOptionGroupSetDimension
     | D2Chart
-    | D2Color
-    | D2ColorSet
     | D2Constant
     | D2Dashboard
     | D2DashboardItem
@@ -15809,6 +15835,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "translation",
                 fieldName: "translations",
                 propertyType: "COLLECTION",
@@ -16032,6 +16064,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "ignoreApproval",
                 fieldName: "ignoreApproval",
                 propertyType: "BOOLEAN",
@@ -16234,6 +16272,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdated",
                 propertyType: "DATE",
                 klass: "java.util.Date",
+            },
+            {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "translation",
@@ -17151,12 +17195,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Double",
             },
             {
-                name: "colorSet",
-                fieldName: "colorSet",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.color.ColorSet",
-            },
-            {
                 name: "category",
                 fieldName: "category",
                 propertyType: "TEXT",
@@ -17169,246 +17207,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.user.User",
             },
-        ],
-    },
-    colors: {
-        klass: "org.hisp.dhis.color.Color",
-        shareable: false,
-        metadata: false,
-        plural: "colors",
-        displayName: "Color",
-        collectionName: "colors",
-        nameableObject: false,
-        translatable: true,
-        identifiableObject: true,
-        dataShareable: false,
-        name: "color",
-        persisted: true,
-        embeddedObject: true,
-        properties: [
-            {
-                name: "favorite",
-                fieldName: "favorites",
-                propertyType: "COLLECTION",
-                itemPropertyType: "TEXT",
-                klass: "java.util.Set",
-                itemKlass: "java.lang.String",
-            },
-            {
-                name: "lastUpdatedBy",
-                fieldName: "lastUpdatedBy",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "access",
-                fieldName: "access",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.security.acl.Access",
-            },
-            {
-                name: "userGroupAccess",
-                fieldName: "userGroupAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
-            },
-            {
-                name: "code",
-                fieldName: "code",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            { name: "color", fieldName: "color", propertyType: "TEXT", klass: "java.lang.String" },
-            {
-                name: "created",
-                fieldName: "created",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "displayName",
-                fieldName: "displayName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "publicAccess",
-                fieldName: "publicAccess",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "attributeValue",
-                fieldName: "attributeValues",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "externalAccess",
-                fieldName: "externalAccess",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "lastUpdated",
-                fieldName: "lastUpdated",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "translation",
-                fieldName: "translations",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.translation.Translation",
-            },
-            {
-                name: "userAccess",
-                fieldName: "userAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserAccess",
-            },
-            { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
-            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
-            {
-                name: "user",
-                fieldName: "user",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-        ],
-    },
-    colorSets: {
-        klass: "org.hisp.dhis.color.ColorSet",
-        shareable: false,
-        metadata: true,
-        relativeApiEndpoint: "/colorSets",
-        plural: "colorSets",
-        displayName: "Color Set",
-        collectionName: "colorSets",
-        nameableObject: false,
-        translatable: true,
-        identifiableObject: true,
-        dataShareable: false,
-        name: "colorSet",
-        persisted: true,
-        embeddedObject: false,
-        properties: [
-            {
-                name: "favorite",
-                fieldName: "favorites",
-                propertyType: "COLLECTION",
-                itemPropertyType: "TEXT",
-                klass: "java.util.Set",
-                itemKlass: "java.lang.String",
-            },
-            {
-                name: "lastUpdatedBy",
-                fieldName: "lastUpdatedBy",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "access",
-                fieldName: "access",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.security.acl.Access",
-            },
-            {
-                name: "userGroupAccess",
-                fieldName: "userGroupAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
-            },
-            {
-                name: "code",
-                fieldName: "code",
-                propertyType: "IDENTIFIER",
-                klass: "java.lang.String",
-            },
-            {
-                name: "created",
-                fieldName: "created",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "displayName",
-                fieldName: "displayName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "publicAccess",
-                fieldName: "publicAccess",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "attributeValue",
-                fieldName: "attributeValues",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "color",
-                fieldName: "colors",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.color.Color",
-            },
-            {
-                name: "externalAccess",
-                fieldName: "externalAccess",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "lastUpdated",
-                fieldName: "lastUpdated",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "translation",
-                fieldName: "translations",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.translation.Translation",
-            },
-            {
-                name: "userAccess",
-                fieldName: "userAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserAccess",
-            },
-            { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
-            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
-            {
-                name: "user",
-                fieldName: "user",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
         ],
     },
     constants: {
@@ -18328,6 +18126,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "optionSet",
                 fieldName: "optionSet",
                 propertyType: "REFERENCE",
@@ -18564,6 +18368,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdated",
                 propertyType: "DATE",
                 klass: "java.util.Date",
+            },
+            {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "translation",
@@ -19024,6 +18834,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdated",
                 propertyType: "DATE",
                 klass: "java.util.Date",
+            },
+            {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "translation",
@@ -19596,6 +19412,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "fieldCombinationRequired",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
+            },
+            {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "formName",
@@ -20332,12 +20154,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "eventStatus",
                 propertyType: "CONSTANT",
                 klass: "org.hisp.dhis.event.EventStatus",
-            },
-            {
-                name: "colorSet",
-                fieldName: "colorSet",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.color.ColorSet",
             },
             { name: "displayBaseLineLabel", propertyType: "TEXT", klass: "java.lang.String" },
             {
@@ -21195,7 +21011,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         klass: "org.hisp.dhis.expression.Expression",
         shareable: false,
         metadata: false,
-        relativeApiEndpoint: "/expressions",
         plural: "expressions",
         displayName: "Expression",
         collectionName: "expressions",
@@ -21774,6 +21589,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.String",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "indicatorType",
                 fieldName: "indicatorType",
                 propertyType: "REFERENCE",
@@ -22019,6 +21840,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemPropertyType: "COMPLEX",
                 klass: "java.util.Set",
                 itemKlass: "org.hisp.dhis.attribute.AttributeValue",
+            },
+            {
+                name: "description",
+                fieldName: "description",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
             },
             {
                 name: "indicator",
@@ -23634,6 +23461,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
+                name: "noDataColor",
+                fieldName: "noDataColor",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
                 name: "access",
                 fieldName: "access",
                 propertyType: "COMPLEX",
@@ -23737,6 +23570,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "colorLow",
                 propertyType: "COLOR",
                 klass: "java.lang.String",
+            },
+            {
+                name: "eventStatus",
+                fieldName: "eventStatus",
+                propertyType: "CONSTANT",
+                klass: "org.hisp.dhis.mapping.EventStatus",
             },
             {
                 name: "opacity",
@@ -23904,6 +23743,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "hidden",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
+            },
+            {
+                name: "thematicMapType",
+                fieldName: "thematicMapType",
+                propertyType: "CONSTANT",
+                klass: "org.hisp.dhis.mapping.ThematicMapType",
             },
             {
                 name: "classes",
@@ -24838,6 +24683,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "optionSet",
                 fieldName: "optionSet",
                 propertyType: "REFERENCE",
@@ -25543,6 +25394,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "formName",
                 fieldName: "formName",
                 propertyType: "TEXT",
@@ -25685,6 +25542,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdated",
                 propertyType: "DATE",
                 klass: "java.util.Date",
+            },
+            {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "translation",
@@ -27000,6 +26863,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "translation",
                 fieldName: "translations",
                 propertyType: "COLLECTION",
@@ -27205,6 +27074,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdated",
                 propertyType: "DATE",
                 klass: "java.util.Date",
+            },
+            {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "translation",
@@ -27492,7 +27367,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         klass: "org.hisp.dhis.program.ProgramInstance",
         shareable: false,
         metadata: false,
-        relativeApiEndpoint: "/programInstances",
         plural: "programInstances",
         displayName: "Program Instance",
         collectionName: "programInstances",
@@ -29100,7 +28974,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         klass: "org.hisp.dhis.program.ProgramStageInstance",
         shareable: false,
         metadata: false,
-        relativeApiEndpoint: "/programStageInstances",
         plural: "programStageInstances",
         displayName: "Program Stage Instance",
         collectionName: "programStageInstances",
@@ -29951,6 +29824,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "lastUpdated",
                 propertyType: "DATE",
                 klass: "java.util.Date",
+            },
+            {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "translation",
@@ -31468,6 +31347,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.util.Date",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "translation",
                 fieldName: "translations",
                 propertyType: "COLLECTION",
@@ -32141,6 +32026,128 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         embeddedObject: false,
         properties: [
             {
+                name: "publicAccess",
+                fieldName: "publicAccess",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "lastUpdated",
+                fieldName: "lastUpdated",
+                propertyType: "DATE",
+                klass: "java.util.Date",
+            },
+            {
+                name: "generated",
+                fieldName: "generated",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "translation",
+                fieldName: "translations",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.translation.Translation",
+            },
+            {
+                name: "valueType",
+                fieldName: "valueType",
+                propertyType: "CONSTANT",
+                klass: "org.hisp.dhis.common.ValueType",
+            },
+            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
+            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
+            {
+                name: "confidential",
+                fieldName: "confidential",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "displayDescription",
+                fieldName: "displayDescription",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "lastUpdatedBy",
+                fieldName: "lastUpdatedBy",
+                propertyType: "REFERENCE",
+                klass: "org.hisp.dhis.user.User",
+            },
+            {
+                name: "userGroupAccess",
+                fieldName: "userGroupAccesses",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
+            },
+            {
+                name: "created",
+                fieldName: "created",
+                propertyType: "DATE",
+                klass: "java.util.Date",
+            },
+            {
+                name: "attributeValue",
+                fieldName: "attributeValues",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
+            },
+            {
+                name: "displayFormName",
+                fieldName: "displayFormName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            {
+                name: "unique",
+                fieldName: "unique",
+                propertyType: "BOOLEAN",
+                klass: "java.lang.Boolean",
+            },
+            {
+                name: "userAccess",
+                fieldName: "userAccesses",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.Set",
+                itemKlass: "org.hisp.dhis.user.UserAccess",
+            },
+            { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
+            {
+                name: "legendSets",
+                fieldName: "legendSets",
+                propertyType: "COLLECTION",
+                itemPropertyType: "REFERENCE",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.legend.LegendSet",
+            },
+            {
+                name: "style",
+                fieldName: "style",
+                propertyType: "COMPLEX",
+                klass: "org.hisp.dhis.common.ObjectStyle",
+            },
+            {
+                name: "shortName",
+                fieldName: "shortName",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
+            },
+            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
+            {
+                name: "dimensionItemType",
+                fieldName: "dimensionItemType",
+                propertyType: "CONSTANT",
+                klass: "org.hisp.dhis.common.DimensionItemType",
+            },
+            {
                 name: "favorite",
                 fieldName: "favorites",
                 propertyType: "COLLECTION",
@@ -32175,12 +32182,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             {
                 name: "displayName",
                 fieldName: "displayName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "publicAccess",
-                fieldName: "publicAccess",
                 propertyType: "TEXT",
                 klass: "java.lang.String",
             },
@@ -32221,10 +32222,10 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Integer",
             },
             {
-                name: "lastUpdated",
-                fieldName: "lastUpdated",
-                propertyType: "DATE",
-                klass: "java.util.Date",
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
             },
             {
                 name: "optionSet",
@@ -32233,30 +32234,10 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.option.OptionSet",
             },
             {
-                name: "generated",
-                fieldName: "generated",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
                 name: "displayOnVisitSchedule",
                 fieldName: "displayOnVisitSchedule",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
-            },
-            {
-                name: "translation",
-                fieldName: "translations",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.translation.Translation",
-            },
-            {
-                name: "valueType",
-                fieldName: "valueType",
-                propertyType: "CONSTANT",
-                klass: "org.hisp.dhis.common.ValueType",
             },
             {
                 name: "formName",
@@ -32270,17 +32251,9 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "INTEGER",
                 klass: "java.lang.Integer",
             },
-            { name: "id", fieldName: "uid", propertyType: "IDENTIFIER", klass: "java.lang.String" },
-            { name: "href", fieldName: "href", propertyType: "URL", klass: "java.lang.String" },
             {
                 name: "orgunitScope",
                 fieldName: "orgunitScope",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "confidential",
-                fieldName: "confidential",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
             },
@@ -32291,26 +32264,6 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.String",
             },
             {
-                name: "displayDescription",
-                fieldName: "displayDescription",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "lastUpdatedBy",
-                fieldName: "lastUpdatedBy",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.user.User",
-            },
-            {
-                name: "userGroupAccess",
-                fieldName: "userGroupAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserGroupAccess",
-            },
-            {
                 name: "expression",
                 fieldName: "expression",
                 propertyType: "TEXT",
@@ -32318,70 +32271,15 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
             },
             { name: "dimensionItem", propertyType: "TEXT", klass: "java.lang.String" },
             {
-                name: "created",
-                fieldName: "created",
-                propertyType: "DATE",
-                klass: "java.util.Date",
-            },
-            {
-                name: "attributeValue",
-                fieldName: "attributeValues",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.attribute.AttributeValue",
-            },
-            {
-                name: "displayFormName",
-                fieldName: "displayFormName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
-            },
-            {
-                name: "unique",
-                fieldName: "unique",
-                propertyType: "BOOLEAN",
-                klass: "java.lang.Boolean",
-            },
-            {
-                name: "userAccess",
-                fieldName: "userAccesses",
-                propertyType: "COLLECTION",
-                itemPropertyType: "COMPLEX",
-                klass: "java.util.Set",
-                itemKlass: "org.hisp.dhis.user.UserAccess",
-            },
-            {
                 name: "inherit",
                 fieldName: "inherit",
                 propertyType: "BOOLEAN",
                 klass: "java.lang.Boolean",
             },
-            { name: "name", fieldName: "name", propertyType: "TEXT", klass: "java.lang.String" },
             {
                 name: "legendSet",
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.legend.LegendSet",
-            },
-            {
-                name: "legendSets",
-                fieldName: "legendSets",
-                propertyType: "COLLECTION",
-                itemPropertyType: "REFERENCE",
-                klass: "java.util.List",
-                itemKlass: "org.hisp.dhis.legend.LegendSet",
-            },
-            {
-                name: "style",
-                fieldName: "style",
-                propertyType: "COMPLEX",
-                klass: "org.hisp.dhis.common.ObjectStyle",
-            },
-            {
-                name: "shortName",
-                fieldName: "shortName",
-                propertyType: "TEXT",
-                klass: "java.lang.String",
             },
             {
                 name: "user",
@@ -32389,21 +32287,13 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 propertyType: "REFERENCE",
                 klass: "org.hisp.dhis.user.User",
             },
-            { name: "favorite", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
             { name: "optionSetValue", propertyType: "BOOLEAN", klass: "java.lang.Boolean" },
-            {
-                name: "dimensionItemType",
-                fieldName: "dimensionItemType",
-                propertyType: "CONSTANT",
-                klass: "org.hisp.dhis.common.DimensionItemType",
-            },
         ],
     },
     trackedEntityAttributeValues: {
         klass: "org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue",
         shareable: false,
         metadata: false,
-        relativeApiEndpoint: "/trackedEntityAttributeValues",
         plural: "trackedEntityAttributeValues",
         displayName: "Tracked Entity Attribute Value",
         collectionName: "trackedEntityAttributeValues",
@@ -32532,6 +32422,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 fieldName: "access",
                 propertyType: "COMPLEX",
                 klass: "org.hisp.dhis.security.acl.Access",
+            },
+            {
+                name: "storedBy",
+                fieldName: "storedBy",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
             },
             {
                 name: "programInstance",
@@ -34393,6 +34289,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "org.hisp.dhis.expression.Expression",
             },
             {
+                name: "periodOffset",
+                fieldName: "periodOffset",
+                propertyType: "INTEGER",
+                klass: "java.lang.Integer",
+            },
+            {
                 name: "notificationTemplates",
                 fieldName: "notificationTemplates",
                 propertyType: "COLLECTION",
@@ -34671,7 +34573,7 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
         nameableObject: true,
         translatable: true,
         identifiableObject: true,
-        dataShareable: true,
+        dataShareable: false,
         name: "visualization",
         persisted: true,
         embeddedObject: false,
@@ -34843,6 +34745,12 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 klass: "java.lang.Boolean",
             },
             {
+                name: "fontStyle",
+                fieldName: "fontStyle",
+                propertyType: "COMPLEX",
+                klass: "org.hisp.dhis.visualization.VisualizationFontStyle",
+            },
+            {
                 name: "axis",
                 fieldName: "optionalAxes",
                 propertyType: "COLLECTION",
@@ -35007,10 +34915,18 @@ export const models: Record<keyof D2ModelSchemas, D2SchemaProperties> = {
                 itemKlass: "java.lang.String",
             },
             {
+                name: "seriesItem",
+                fieldName: "series",
+                propertyType: "COLLECTION",
+                itemPropertyType: "COMPLEX",
+                klass: "java.util.List",
+                itemKlass: "org.hisp.dhis.visualization.Series",
+            },
+            {
                 name: "colorSet",
                 fieldName: "colorSet",
-                propertyType: "REFERENCE",
-                klass: "org.hisp.dhis.color.ColorSet",
+                propertyType: "TEXT",
+                klass: "java.lang.String",
             },
             { name: "displayBaseLineLabel", propertyType: "TEXT", klass: "java.lang.String" },
             {
@@ -35347,8 +35263,6 @@ export type D2ModelSchemas = {
     categoryOptionGroupSets: D2CategoryOptionGroupSetSchema;
     categoryOptionGroupSetDimensions: D2CategoryOptionGroupSetDimensionSchema;
     charts: D2ChartSchema;
-    colors: D2ColorSchema;
-    colorSets: D2ColorSetSchema;
     constants: D2ConstantSchema;
     dashboards: D2DashboardSchema;
     dashboardItems: D2DashboardItemSchema;
