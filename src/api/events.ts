@@ -36,6 +36,7 @@ export type EventsPostParams = Partial<{
     payloadFormat: "json" | "xml" | "csv";
     async: boolean;
     dryRun: boolean;
+    strategy: "CREATE" | "UPDATE" | "CREATE_AND_UPDATE" | "DELETE";
 }>;
 
 export type IdScheme = string;
