@@ -3,12 +3,14 @@ import { AsyncPostResponse, D2ApiResponse, HttpResponse } from "./common";
 import { D2ApiGeneric } from "./d2Api";
 import { Pager } from "./model";
 
+export type EventStatus = "ACTIVE" | "COMPLETED" | "VISITED" | "SCHEDULED" | "OVERDUE" | "SKIPPED";
+
 export interface EventsPostRequest {
     events: Array<{
         event?: string;
         orgUnit: string;
         program: string;
-        status: string;
+        status: EventStatus;
         eventDate: string;
         coordinate?: {
             latitude: string;
@@ -34,6 +36,7 @@ export type EventsPostParams = Partial<{
     payloadFormat: "json" | "xml" | "csv";
     async: boolean;
     dryRun: boolean;
+    strategy: "CREATE" | "UPDATE" | "CREATE_AND_UPDATE" | "DELETE";
 }>;
 
 export type IdScheme = string;
@@ -139,7 +142,7 @@ export interface Event {
     event: string;
     programStage: string;
     orgUnit: string;
-    status: string;
+    status: EventStatus;
     orgUnitName: string;
     eventDate: string;
     attributeCategoryOptions: string;
