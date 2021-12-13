@@ -115,6 +115,23 @@ export interface Message extends MessageDestination {
     text?: string;
 }
 
+/* 2.36 has moved plain access fields from models to sharing key */
+
+type Access = string;
+
+interface IdAccess {
+    id: Id;
+    access: Access;
+}
+
+export interface Sharing {
+    owner: Id;
+    public: Access;
+    users: Record<Id, IdAccess>;
+    userGroups: Record<Id, IdAccess>;
+    external: boolean;
+}
+
 /* 2.33 has removed attributeValue from the schema (why?), so we need to provide a model and schema */
 
 export type D2AttributeValueGeneric<D2Attribute> = {
