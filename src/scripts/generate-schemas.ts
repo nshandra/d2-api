@@ -74,7 +74,7 @@ const interfaceFromClass: _.Dictionary<string | { type: string; schema: string }
     "org.hisp.dhis.interpretation.Mention": "unknown",
     "org.hisp.dhis.message.Message": "unknown",
     "org.hisp.dhis.message.UserMessage": "unknown",
-    "org.hisp.dhis.period.Period": "unknown",
+    "org.hisp.dhis.period.Period": "Ref",
     "org.hisp.dhis.period.RelativePeriods": "unknown",
     "org.hisp.dhis.programstagefilter.EventQueryCriteria": "unknown",
     "org.hisp.dhis.relationship.RelationshipConstraint": "D2RelationshipConstraint",
@@ -256,7 +256,7 @@ async function generateSchema(instance: Instance) {
         /* eslint-disable */
 
         import {
-            Id, Preset, FieldPresets, D2SchemaProperties,
+            Id, Ref, Preset, FieldPresets, D2SchemaProperties,
             D2Access, D2Translation, D2Geometry,  D2Style,
             D2DimensionalKeywords, D2Expression,
             D2RelationshipConstraint, D2ReportingParams, D2Axis, Sharing,
