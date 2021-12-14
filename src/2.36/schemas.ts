@@ -2,6 +2,7 @@
 
 import {
     Id,
+    Ref,
     Preset,
     FieldPresets,
     D2SchemaProperties,
@@ -670,7 +671,7 @@ export type D2Chart = {
     organisationUnits: D2OrganisationUnit[];
     parentGraphMap: D2Map;
     percentStackedValues: boolean;
-    periods: unknown[];
+    periods: Ref[];
     programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
     publicAccess: string;
     rangeAxisDecimals: number;
@@ -1249,7 +1250,7 @@ export type D2DataEntryForm = {
 export type D2DataInputPeriod = {
     closingDate: string;
     openingDate: string;
-    period: unknown;
+    period: Ref;
 };
 
 export type D2DataSet = {
@@ -1498,7 +1499,7 @@ export type D2EventChart = {
     outputType: "EVENT" | "ENROLLMENT" | "TRACKED_ENTITY_INSTANCE";
     parentGraphMap: D2Map;
     percentStackedValues: boolean;
-    periods: unknown[];
+    periods: Ref[];
     program: D2Program;
     programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
     programStage: D2ProgramStage;
@@ -1628,7 +1629,7 @@ export type D2EventReport = {
     organisationUnits: D2OrganisationUnit[];
     outputType: "EVENT" | "ENROLLMENT" | "TRACKED_ENTITY_INSTANCE";
     parentGraphMap: D2Map;
-    periods: unknown[];
+    periods: Ref[];
     program: D2Program;
     programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
     programStage: D2ProgramStage;
@@ -1940,7 +1941,7 @@ export type D2Interpretation = {
     mentions: unknown[];
     name: string;
     organisationUnit: D2OrganisationUnit;
-    period: unknown;
+    period: Ref;
     publicAccess: string;
     reportTable: D2ReportTable;
     sharing: Sharing;
@@ -2285,7 +2286,7 @@ export type D2MapView = {
     parentGraph: string;
     parentGraphMap: D2Map;
     parentLevel: number;
-    periods: unknown[];
+    periods: Ref[];
     program: D2Program;
     programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
     programStage: D2ProgramStage;
@@ -4047,7 +4048,7 @@ export type D2ReportTable = {
     organisationUnitLevels: number[];
     organisationUnits: D2OrganisationUnit[];
     parentGraphMap: D2Map;
-    periods: unknown[];
+    periods: Ref[];
     programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
     publicAccess: string;
     regression: boolean;
@@ -4750,7 +4751,7 @@ export type D2ValidationResult = {
     leftsideValue: number;
     notificationSent: boolean;
     organisationUnit: D2OrganisationUnit;
-    period: unknown;
+    period: Ref;
     rightsideValue: number;
     validationRule: D2ValidationRule;
 };
@@ -4958,7 +4959,7 @@ export type D2Visualization = {
     outlierAnalysis: unknown;
     parentGraphMap: D2Map;
     percentStackedValues: boolean;
-    periods: unknown[];
+    periods: Ref[];
     programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimension[];
     publicAccess: string;
     rangeAxisDecimals: number;
@@ -6143,7 +6144,7 @@ export interface D2ChartSchema {
         organisationUnits: D2OrganisationUnitSchema[];
         parentGraphMap: D2MapSchema;
         percentStackedValues: boolean;
-        periods: unknown[];
+        periods: Ref[];
         programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
         publicAccess: string;
         rangeAxisDecimals: number;
@@ -7163,7 +7164,7 @@ export interface D2DataEntryFormSchema {
 export interface D2DataInputPeriodSchema {
     name: "D2DataInputPeriod";
     model: D2DataInputPeriod;
-    fields: { closingDate: string; openingDate: string; period: unknown };
+    fields: { closingDate: string; openingDate: string; period: Ref };
     fieldPresets: {
         $all: Preset<D2DataInputPeriod, keyof D2DataInputPeriod>;
         $identifiable: Preset<D2DataInputPeriod, FieldPresets["identifiable"]>;
@@ -7629,7 +7630,7 @@ export interface D2EventChartSchema {
         outputType: "EVENT" | "ENROLLMENT" | "TRACKED_ENTITY_INSTANCE";
         parentGraphMap: D2MapSchema;
         percentStackedValues: boolean;
-        periods: unknown[];
+        periods: Ref[];
         program: D2ProgramSchema;
         programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
         programStage: D2ProgramStageSchema;
@@ -7911,7 +7912,7 @@ export interface D2EventReportSchema {
         organisationUnits: D2OrganisationUnitSchema[];
         outputType: "EVENT" | "ENROLLMENT" | "TRACKED_ENTITY_INSTANCE";
         parentGraphMap: D2MapSchema;
-        periods: unknown[];
+        periods: Ref[];
         program: D2ProgramSchema;
         programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
         programStage: D2ProgramStageSchema;
@@ -8693,7 +8694,7 @@ export interface D2InterpretationSchema {
         mentions: unknown[];
         name: string;
         organisationUnit: D2OrganisationUnitSchema;
-        period: unknown;
+        period: Ref;
         publicAccess: string;
         reportTable: D2ReportTableSchema;
         sharing: Sharing;
@@ -9314,7 +9315,7 @@ export interface D2MapViewSchema {
         parentGraph: string;
         parentGraphMap: D2MapSchema;
         parentLevel: number;
-        periods: unknown[];
+        periods: Ref[];
         program: D2ProgramSchema;
         programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
         programStage: D2ProgramStageSchema;
@@ -12851,7 +12852,7 @@ export interface D2ReportTableSchema {
         organisationUnitLevels: number[];
         organisationUnits: D2OrganisationUnitSchema[];
         parentGraphMap: D2MapSchema;
-        periods: unknown[];
+        periods: Ref[];
         programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
         publicAccess: string;
         regression: boolean;
@@ -14293,7 +14294,7 @@ export interface D2ValidationResultSchema {
         leftsideValue: number;
         notificationSent: boolean;
         organisationUnit: D2OrganisationUnitSchema;
-        period: unknown;
+        period: Ref;
         rightsideValue: number;
         validationRule: D2ValidationRuleSchema;
     };
@@ -14617,7 +14618,7 @@ export interface D2VisualizationSchema {
         outlierAnalysis: unknown;
         parentGraphMap: D2MapSchema;
         percentStackedValues: boolean;
-        periods: unknown[];
+        periods: Ref[];
         programIndicatorDimensions: D2TrackedEntityProgramIndicatorDimensionSchema[];
         publicAccess: string;
         rangeAxisDecimals: number;
