@@ -21,7 +21,6 @@ import { Metadata } from "./metadata";
 import { Model } from "./model";
 import { Sharing } from "./sharing";
 import { SqlViews } from "./SqlViews";
-import { UserLookup } from "./UserLookup";
 import { System } from "./system";
 import { TrackedEntityInstances } from "./trackedEntityInstances";
 import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
@@ -196,11 +195,6 @@ export abstract class D2ApiVersioned<
     @cache()
     get sqlViews() {
         return new SqlViews(this);
-    }
-
-    @cache()
-    get userLookup() {
-        return new UserLookup(this);
     }
 }
 
