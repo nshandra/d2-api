@@ -8,6 +8,7 @@ import { joinPath } from "../utils/connection";
 import { ArgumentParser } from "argparse";
 
 interface Schema extends D2SchemaProperties {
+    name: string;
     href: string;
     properties: SchemaFieldProperties[];
 }
@@ -53,7 +54,7 @@ const schemaFieldProperties: Array<keyof D2SchemaFieldProperties> = [
     "itemKlass",
 ];
 
-const interfaceFromClass: _.Dictionary<string> = {
+const interfaceFromClass: _.Dictionary<string | { type: string; schema: string }> = {
     "org.hisp.dhis.security.acl.Access": "D2Access",
     "org.hisp.dhis.translation.ObjectTranslation": "D2Translation",
     "org.hisp.dhis.translation.Translation": "D2Translation",
@@ -62,30 +63,34 @@ const interfaceFromClass: _.Dictionary<string> = {
     "com.vividsolutions.jts.geom.Geometry": "D2Geometry",
     "org.hisp.dhis.expression.Expression": "D2Expression",
     "org.hisp.dhis.period.PeriodType": "string",
-    "org.hisp.dhis.chart.Series": "any",
-    "org.hisp.dhis.attribute.AttributeValue": "D2AttributeValueGeneric<D2Attribute>",
-    "org.hisp.dhis.eventdatavalue.EventDataValue": "any",
-    "org.hisp.dhis.common.DataDimensionItem": "any",
-    "org.hisp.dhis.common.DimensionalObject": "any",
-    "org.hisp.dhis.interpretation.Mention": "any",
-    "org.hisp.dhis.message.Message": "any",
-    "org.hisp.dhis.message.UserMessage": "any",
-    "org.hisp.dhis.period.Period": "any",
-    "org.hisp.dhis.period.RelativePeriods": "any",
-    "org.hisp.dhis.programstagefilter.EventQueryCriteria": "any",
+    "org.hisp.dhis.chart.Series": "unknown",
+    "org.hisp.dhis.attribute.AttributeValue": {
+        type: "D2AttributeValueGeneric<D2Attribute>",
+        schema: "D2AttributeValueGenericSchema<D2Attribute, D2AttributeSchema>",
+    },
+    "org.hisp.dhis.eventdatavalue.EventDataValue": "unknown",
+    "org.hisp.dhis.common.DataDimensionItem": "unknown",
+    "org.hisp.dhis.common.DimensionalObject": "unknown",
+    "org.hisp.dhis.interpretation.Mention": "unknown",
+    "org.hisp.dhis.message.Message": "unknown",
+    "org.hisp.dhis.message.UserMessage": "unknown",
+    "org.hisp.dhis.period.Period": "Ref",
+    "org.hisp.dhis.period.RelativePeriods": "unknown",
+    "org.hisp.dhis.programstagefilter.EventQueryCriteria": "unknown",
     "org.hisp.dhis.relationship.RelationshipConstraint": "D2RelationshipConstraint",
-    "org.hisp.dhis.relationship.RelationshipItem": "any",
-    "org.hisp.dhis.render.DeviceRenderTypeMap": "any",
-    "org.hisp.dhis.reporttable.ReportParams": "any",
-    "org.hisp.dhis.sms.command.code.SMSCode": "any",
-    "org.hisp.dhis.sms.command.SMSSpecialCharacter": "any",
-    "org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue": "any",
-    "org.hisp.dhis.trackedentitycomment.TrackedEntityComment": "any",
-    "org.hisp.dhis.trackedentityfilter.EventFilter": "any",
-    "org.hisp.dhis.trackedentityfilter.FilterPeriod": "any",
-    "org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension": "any",
-    "org.hisp.dhis.trackedentity.TrackedEntityProgramOwner": "any",
-    "org.hisp.dhis.common.DimensionalItemObject": "any",
+    "org.hisp.dhis.relationship.RelationshipItem": "unknown",
+    "org.hisp.dhis.render.DeviceRenderTypeMap": "unknown",
+    "org.hisp.dhis.reporttable.ReportParams": "unknown",
+    "org.hisp.dhis.sms.command.code.SMSCode": "unknown",
+    "org.hisp.dhis.sms.command.SMSSpecialCharacter": "unknown",
+    "org.hisp.dhis.trackedentityattributevalue.TrackedEntityAttributeValue": "unknown",
+    "org.hisp.dhis.trackedentitycomment.TrackedEntityComment": "unknown",
+    "org.hisp.dhis.trackedentityfilter.EventFilter": "unknown",
+    "org.hisp.dhis.trackedentityfilter.FilterPeriod": "unknown",
+    "org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension": "unknown",
+    "org.hisp.dhis.trackedentity.TrackedEntityProgramOwner": "unknown",
+    "org.hisp.dhis.user.sharing.Sharing": "Sharing",
+    "org.hisp.dhis.common.DimensionalItemObject": "unknown",
     "org.hisp.dhis.visualization.ReportingParams": "D2ReportingParams",
     "org.hisp.dhis.visualization.Axis": "D2Axis",
     "java.lang.Object": "object",
@@ -154,10 +159,15 @@ function getInterface(schemas: Schemas, property: SchemaProperty, suffix?: strin
     if (schemas[className]) {
         return `D2${className}${suffix || ""}`;
     } else if (interfaceFromClass[property.klass]) {
-        return interfaceFromClass[property.klass];
+        const value = interfaceFromClass[property.klass];
+        if (typeof value === "string") {
+            return value;
+        } else {
+            return suffix === "Schema" ? value.schema : value.type;
+        }
     } else {
-        console.log(`Unsupported complex type, default to any: ${property.klass}`);
-        return "any";
+        console.log(`Unsupported complex type, default to unknown: ${property.klass}`);
+        return "unknown";
     }
 }
 
@@ -167,9 +177,33 @@ function getPropertyName(property: SchemaProperty): string {
     else return value;
 }
 
+/* From 2.35,  userAccess and userGroupAccess schemas have empty fields (why?) */
+
+const customModelProperties: _.Dictionary<_.Dictionary<string>> = {
+    userAccess: {
+        access: "string",
+        displayName: "string",
+        id: "string",
+        userUid: "string",
+    },
+    userGroupAccess: {
+        access: "string",
+        displayName: "string",
+        id: "string",
+        userGroupUid: "string",
+    },
+};
+
 function getModelProperties(schemas: Schemas, schema: Schema, suffix?: string): string {
-    return _(schema.properties)
-        .map(property => [getPropertyName(property), getType(schemas, property, suffix)])
+    const fromSchema = schema.properties.map(property => [
+        getPropertyName(property),
+        getType(schemas, property, suffix),
+    ]);
+
+    const fromCustom = _.toPairs(customModelProperties[schema.name] || {});
+    const pairs = _.isEmpty(fromSchema) ? fromCustom : fromSchema;
+
+    return _(pairs)
         .sortBy()
         .map(([key, value]) => `${key}: ${value}`)
         .join(";");
@@ -197,9 +231,12 @@ type Instance = { version: string; url: string; isDeprecated?: boolean };
 const instances: Instance[] = [
     { version: "2.30", url: "http://admin:district@localhost:8030", isDeprecated: true },
     { version: "2.31", url: "http://admin:district@localhost:8031", isDeprecated: true },
-    { version: "2.32", url: "https://admin:district@play.dhis2.org/2.32" },
-    { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33" },
+    { version: "2.32", url: "https://admin:district@play.dhis2.org/2.32", isDeprecated: true },
+    { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33", isDeprecated: true },
     { version: "2.34", url: "https://admin:district@play.dhis2.org/2.34" },
+    { version: "2.35", url: "https://admin:district@play.dhis2.org/2.35" },
+    { version: "2.36", url: "https://admin:district@play.dhis2.org/2.36" },
+    { version: "2.37", url: "https://admin:district@play.dhis2.org/2.37" },
 ];
 
 async function generateSchema(instance: Instance) {
@@ -219,10 +256,11 @@ async function generateSchema(instance: Instance) {
         /* eslint-disable */
 
         import {
-            Id, Preset, FieldPresets, D2SchemaProperties,
+            Id, Ref, Preset, FieldPresets, D2SchemaProperties,
             D2Access, D2Translation, D2Geometry,  D2Style,
-            D2AttributeValueGeneric, D2DimensionalKeywords, D2Expression,
-            D2RelationshipConstraint, D2ReportingParams, D2Axis
+            D2DimensionalKeywords, D2Expression,
+            D2RelationshipConstraint, D2ReportingParams, D2Axis, Sharing,
+            D2AttributeValueGeneric, D2AttributeValueGenericSchema
         } from "../schemas/base";
 
         ${schemas

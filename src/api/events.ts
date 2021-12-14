@@ -11,8 +11,8 @@ export interface EventsPostRequest {
         status: string;
         eventDate: string;
         coordinate?: {
-            latitude: string;
-            longitude: string;
+            latitude: number;
+            longitude: number;
         };
         attributeOptionCombo?: string;
         trackedEntityInstance?: string;
@@ -148,8 +148,8 @@ export interface Event {
     deleted: boolean;
     attributeOptionCombo: string;
     coordinate?: {
-        latitude: string;
-        longitude: string;
+        latitude: number;
+        longitude: number;
     };
     dataValues: Array<{
         lastUpdated: string;
