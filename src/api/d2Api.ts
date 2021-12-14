@@ -24,6 +24,7 @@ import { SqlViews } from "./SqlViews";
 import { System } from "./system";
 import { TrackedEntityInstances } from "./trackedEntityInstances";
 import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
+import { UserLookup } from "./UserLookup";
 
 export class D2ApiGeneric {
     public baseUrl: string;
@@ -195,6 +196,11 @@ export abstract class D2ApiVersioned<
     @cache()
     get sqlViews() {
         return new SqlViews(this);
+    }
+
+    @cache()
+    get userLookup() {
+        return new UserLookup(this);
     }
 }
 
