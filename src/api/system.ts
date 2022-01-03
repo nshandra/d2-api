@@ -6,6 +6,7 @@ import { D2ApiGeneric } from "./d2Api";
 import { DataValueSetsPostResponse } from "./dataValues";
 import { EventsPostResponse } from "./events";
 import { MetadataResponse } from "./metadata";
+import { TeiPostResponse } from "./trackedEntityInstances";
 
 export class System {
     constructor(public d2Api: D2ApiGeneric) {}
@@ -209,4 +210,5 @@ export type WaitForResponse = {
     DATAVALUE_IMPORT: DataValueSetsPostResponse;
     EVENT_IMPORT: EventsPostResponse;
     METADATA_IMPORT: MetadataResponse;
+    TEI_IMPORT: TeiPostResponse;
 };

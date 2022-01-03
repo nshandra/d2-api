@@ -128,7 +128,7 @@ export interface DataValueSetsDataValue {
     created: string;
     lastUpdated: string;
     followup: boolean;
-    deleted: boolean;
+    deleted?: boolean;
 }
 
 // https://docs.dhis2.org/en/full/develop/dhis-core-version-master/developer-manual.html#webapi_sending_individual_data_values

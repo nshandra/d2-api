@@ -157,13 +157,29 @@ export interface HttpResponse<Response> {
     response: Response;
 }
 
-export type PartialModel<T> = {
-    [P in keyof T]?: T[P] extends (infer U)[]
-        ? PartialModel<U>[]
-        : T[P] extends object
-        ? PartialModel<T[P]>
-        : T[P];
-};
+type IsAny<T> = 0 extends (1 & T) ? true : false;
+
+type IsNever<T> = [T] extends [never] ? true : false;
+
+type IsUnknown<T> = IsNever<T> extends false
+    ? T extends unknown
+        ? unknown extends T
+            ? IsAny<T> extends false
+                ? true
+                : false
+            : false
+        : false
+    : false;
+
+export type PartialModel<T> = IsUnknown<T> extends true
+    ? unknown
+    : {
+          [P in keyof T]?: T[P] extends (infer U)[]
+              ? PartialModel<U>[]
+              : T[P] extends object
+              ? PartialModel<T[P]>
+              : T[P];
+      };
 
 export type PartialPersistedModel<T> = PartialModel<T> & Ref;
 

@@ -112,7 +112,7 @@ export class Model<
         payload: PartialModel<D2ModelSchema["model"]>,
         options?: Partial<UpdateOptions>
     ): D2ApiResponse<ModelResponse> {
-        return this.d2Api.post(this.modelName, (options || {}) as Params, payload);
+        return this.d2Api.post(this.modelName, (options || {}) as Params, payload as object);
     }
 
     put(
