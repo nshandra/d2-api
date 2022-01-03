@@ -85,7 +85,7 @@ type SelectorKey<
     ? Model["fields"][K] extends Array<infer T>
         ? T extends D2ModelSchemaBase
             ? SelectedPickValidated<T, ModelSelector[K]>[]
-            : T
+            : T[]
         : (Model["fields"][K] extends D2ModelSchemaBase
               ? SelectedPickValidated<Model["fields"][K], ModelSelector[K]>
               : Model["fields"][K])
