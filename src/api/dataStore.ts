@@ -64,7 +64,7 @@ export class DataStore {
                         .map(validateResponse);
                 } else {
                     const voidResponse = { ...response, data: validateResponse(response) };
-                    return D2ApiResponse.build({ response: Promise.resolve(voidResponse) });
+                    return D2ApiResponse.build({ response: () => Promise.resolve(voidResponse) });
                 }
             });
     }
