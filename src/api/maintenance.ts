@@ -1,5 +1,7 @@
+import _ from "lodash";
 import { D2ApiGeneric } from "./d2Api";
 import { D2ApiResponse } from "./common";
+import { fromPairs } from "../utils/misc";
 
 /* https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-master/maintenance.html */
 
@@ -79,4 +81,28 @@ export class Maintenance {
     appReload(): D2ApiResponse<void> {
         return this.d2Api.post<void>("/maintenance/appReload");
     }
+
+    runTasks(tasks: MaintenanceTask[]): D2ApiResponse<void> {
+        const params: MaintenanceParams = fromPairs(tasks.map(task => [task, true]));
+        return this.d2Api.post<void>("/maintenance/", params);
+    }
 }
+
+export type MaintenanceTask =
+    | "analyticsTableClear"
+    | "analyticsTableAnalyze"
+    | "zeroDataValueRemoval"
+    | "softDeletedDataValueRemoval"
+    | "softDeletedEventRemoval"
+    | "softDeletedEnrollmentRemoval"
+    | "softDeletedTrackedEntityInstanceRemoval"
+    | "periodPruning"
+    | "expiredInvitationsClear"
+    | "sqlViewsDrop"
+    | "sqlViewsCreate"
+    | "categoryOptionComboUpdate"
+    | "ouPathsUpdate"
+    | "cacheClear"
+    | "appReload";
+
+type MaintenanceParams = Record<MaintenanceTask, boolean>;
