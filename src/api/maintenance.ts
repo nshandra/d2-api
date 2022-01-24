@@ -5,6 +5,7 @@ import { fromPairs } from "../utils/misc";
 
 /* https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-master/maintenance.html */
 
+// Get the keys from a real DataAdministration->Maintenance POST to make sure the list is complete.
 const keys = [
     "analyticsTableClear",
     "analyticsTableAnalyze",
@@ -26,6 +27,8 @@ const keys = [
 export class Maintenance {
     constructor(public d2Api: D2ApiGeneric) {}
 
+    tasks = maintenanceTasks;
+
     runTasks(tasks: MaintenanceTask[]): D2ApiResponse<void> {
         const params: MaintenanceParams = fromPairs(tasks.map(task => [task, true]));
         return this.d2Api.post<void>("/maintenance/", params);
@@ -38,7 +41,7 @@ type TasksNamespace = { [Task in MaintenanceTask]: Task };
 
 type MaintenanceParams = Record<MaintenanceTask, boolean>;
 
-export const maintenanceTasks = _(keys)
+const maintenanceTasks = _(keys)
     .map(name => [name, name])
     .fromPairs()
     .value() as TasksNamespace;
