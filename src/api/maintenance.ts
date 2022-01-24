@@ -5,6 +5,24 @@ import { fromPairs } from "../utils/misc";
 
 /* https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-master/maintenance.html */
 
+const keys = [
+    "analyticsTableClear",
+    "analyticsTableAnalyze",
+    "zeroDataValueRemoval",
+    "softDeletedDataValueRemoval",
+    "softDeletedEventRemoval",
+    "softDeletedEnrollmentRemoval",
+    "softDeletedTrackedEntityInstanceRemoval",
+    "periodPruning",
+    "expiredInvitationsClear",
+    "sqlViewsDrop",
+    "sqlViewsCreate",
+    "categoryOptionComboUpdate",
+    "ouPathsUpdate",
+    "cacheClear",
+    "appReload",
+] as const;
+
 export class Maintenance {
     constructor(public d2Api: D2ApiGeneric) {}
 
@@ -88,21 +106,13 @@ export class Maintenance {
     }
 }
 
-export type MaintenanceTask =
-    | "analyticsTableClear"
-    | "analyticsTableAnalyze"
-    | "zeroDataValueRemoval"
-    | "softDeletedDataValueRemoval"
-    | "softDeletedEventRemoval"
-    | "softDeletedEnrollmentRemoval"
-    | "softDeletedTrackedEntityInstanceRemoval"
-    | "periodPruning"
-    | "expiredInvitationsClear"
-    | "sqlViewsDrop"
-    | "sqlViewsCreate"
-    | "categoryOptionComboUpdate"
-    | "ouPathsUpdate"
-    | "cacheClear"
-    | "appReload";
+export type MaintenanceTask = typeof keys[number];
+
+type TasksNamespace = { [Task in MaintenanceTask]: Task };
 
 type MaintenanceParams = Record<MaintenanceTask, boolean>;
+
+export const maintenanceTasks = _(keys)
+    .map(name => [name, name])
+    .fromPairs()
+    .value() as TasksNamespace;
