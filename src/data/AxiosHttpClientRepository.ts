@@ -18,13 +18,15 @@ export class AxiosHttpClientRepository implements HttpClientRepository {
 
     request<Data>(options: HttpRequest): CancelableResponse<Data> {
         const { token: cancelToken, cancel } = axios.CancelToken.source();
-        const axiosResponse = this.instance({ ...options, cancelToken });
 
-        const response: Promise<HttpResponse<Data>> = axiosResponse.then(res => ({
-            status: res.status,
-            data: res.data as Data,
-            headers: res.headers,
-        }));
+        const response: () => Promise<HttpResponse<Data>> = () => {
+            const axiosResponse = this.instance({ ...options, cancelToken });
+            return axiosResponse.then(res => ({
+                status: res.status,
+                data: res.data as Data,
+                headers: res.headers,
+            }));
+        };
 
         return CancelableResponse.build({ cancel, response: response });
     }

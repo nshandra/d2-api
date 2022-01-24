@@ -70,12 +70,12 @@ export class System {
                 `/system/taskSummaries/${jobType}/${id}`
             );
 
-            return response;
+            return response();
         };
 
         return D2ApiResponse.build({
             cancel: _.noop,
-            response: prepareResponse(),
+            response: () => prepareResponse(),
         });
     }
 

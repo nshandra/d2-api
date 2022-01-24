@@ -57,21 +57,23 @@ export class FetchHttpClientRepository implements HttpClientRepository {
 
         // Fetch API has no timeout mechanism, implement with a setTimeout + controller.abort
         const timeoutId = timeout ? setTimeout(() => controller.abort(), timeout) : null;
-        const fetchResponse = fetch(fullUrl, fetchOptions);
 
-        const response: Promise<HttpResponse<Data>> = fetchResponse
-            .then(async res => {
-                const headers = getHeadersRecord(res.headers);
-                const data = await getResponseData(res, responseDataType);
+        const response: () => Promise<HttpResponse<Data>> = () => {
+            const fetchResponse = fetch(fullUrl, fetchOptions);
+            return fetchResponse
+                .then(async res => {
+                    const headers = getHeadersRecord(res.headers);
+                    const data = await getResponseData(res, responseDataType);
 
-                if (!validateStatus(res.status)) raiseHttpError(options, res, data);
-                return { status: res.status, data: data as Data, headers };
-            })
-            .catch(error => {
-                if (error.request) throw error;
-                throw new HttpError(error.toString(), { request: options });
-            })
-            .finally(() => (timeoutId !== null ? clearTimeout(timeoutId) : null));
+                    if (!validateStatus(res.status)) raiseHttpError(options, res, data);
+                    return { status: res.status, data: data as Data, headers };
+                })
+                .catch(error => {
+                    if (error.request) throw error;
+                    throw new HttpError(error.toString(), { request: options });
+                })
+                .finally(() => (timeoutId !== null ? clearTimeout(timeoutId) : null));
+        };
 
         return CancelableResponse.build({ response, cancel: () => controller.abort() });
     }
