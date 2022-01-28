@@ -60,9 +60,11 @@ export interface D2DimensionalKeywords {
     code: string;
 }
 
+export type D2Coordinates = [number, number];
+
 export type D2Geometry =
-    | { type: "Point"; coordinates: [number, number] }
-    | { type: "Polygon"; coordinates: Array<Array<[number, number]>> };
+    | { type: "Point"; coordinates: D2Coordinates }
+    | { type: "Polygon"; coordinates: Array<D2Coordinates[]> };
 
 export interface D2Expression {
     expression: string;
@@ -248,3 +250,11 @@ export interface D2Axis {
     dimensionalItem: string;
     axis: number;
 }
+
+export interface D2ProgramOwner {
+    ownerOrgUnit: Id;
+    program: Id;
+    trackedEntityInstance: Id;
+}
+
+export type D2ProgramOwnerSchema = GetDefaultSchema<D2ProgramOwner>;
