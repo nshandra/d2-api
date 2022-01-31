@@ -33,6 +33,12 @@ export class Maintenance {
         const params: MaintenanceParams = fromPairs(tasks.map(task => [task, true]));
         return this.d2Api.post<void>("/maintenance/", params);
     }
+
+    categoryOptionComboUpdate(options: { categoryComboId?: string } = {}): D2ApiResponse<void> {
+        const { categoryComboId } = options;
+        const extraPath = categoryComboId ? `/categoryCombo/${categoryComboId}` : "";
+        return this.d2Api.post<void>("/maintenance/categoryOptionComboUpdate" + extraPath);
+    }
 }
 
 export type MaintenanceTask = typeof keys[number];
