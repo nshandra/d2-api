@@ -34,10 +34,16 @@ export class Maintenance {
         return this.d2Api.post<void>("/maintenance/", params);
     }
 
-    categoryOptionComboUpdate(options: { categoryComboId?: string } = {}): D2ApiResponse<void> {
-        const { categoryComboId } = options;
-        const extraPath = categoryComboId ? `/categoryCombo/${categoryComboId}` : "";
-        return this.d2Api.post<void>("/maintenance/categoryOptionComboUpdate" + extraPath);
+    categoryOptionComboSingleUpdate(id: string): D2ApiResponse<void> {
+        return this.d2Api.post<void>(`/maintenance/categoryOptionComboUpdate/categoryCombo/${id}`);
+    }
+
+    dataPruningOrganisationUnit(id: string): D2ApiResponse<void> {
+        return this.d2Api.post<void>(`/maintenance/dataPruning/organisationUnits/${id}`);
+    }
+
+    dataPruningDataElement(id: string): D2ApiResponse<void> {
+        return this.d2Api.post<void>(`/maintenance/dataPruning/dataElements/${id}`);
     }
 }
 
