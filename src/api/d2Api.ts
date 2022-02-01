@@ -33,7 +33,7 @@ export class D2ApiGeneric {
     apiConnection: HttpClientRepository;
 
     public constructor(options?: D2ApiOptions) {
-        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "xhr", timeout } =
+        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "fetch", timeout } =
             options || {};
         this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
