@@ -88,7 +88,10 @@ const interfaceFromClass: _.Dictionary<string | { type: string; schema: string }
     "org.hisp.dhis.trackedentityfilter.EventFilter": "unknown",
     "org.hisp.dhis.trackedentityfilter.FilterPeriod": "unknown",
     "org.hisp.dhis.trackedentity.TrackedEntityAttributeDimension": "unknown",
-    "org.hisp.dhis.trackedentity.TrackedEntityProgramOwner": "unknown",
+    "org.hisp.dhis.trackedentity.TrackedEntityProgramOwner": {
+        type: "D2ProgramOwner",
+        schema: "D2ProgramOwnerSchema",
+    },
     "org.hisp.dhis.user.sharing.Sharing": "Sharing",
     "org.hisp.dhis.common.DimensionalItemObject": "unknown",
     "org.hisp.dhis.visualization.ReportingParams": "D2ReportingParams",
@@ -233,7 +236,7 @@ const instances: Instance[] = [
     { version: "2.31", url: "http://admin:district@localhost:8031", isDeprecated: true },
     { version: "2.32", url: "https://admin:district@play.dhis2.org/2.32", isDeprecated: true },
     { version: "2.33", url: "https://admin:district@play.dhis2.org/2.33", isDeprecated: true },
-    { version: "2.34", url: "https://admin:district@play.dhis2.org/2.34" },
+    { version: "2.34", url: "https://admin:district@play.dhis2.org/2.34", isDeprecated: true },
     { version: "2.35", url: "https://admin:district@play.dhis2.org/2.35" },
     { version: "2.36", url: "https://admin:district@play.dhis2.org/2.36" },
     { version: "2.37", url: "https://admin:district@play.dhis2.org/2.37" },
@@ -260,6 +263,7 @@ async function generateSchema(instance: Instance) {
             D2Access, D2Translation, D2Geometry,  D2Style,
             D2DimensionalKeywords, D2Expression,
             D2RelationshipConstraint, D2ReportingParams, D2Axis, Sharing,
+            D2ProgramOwner, D2ProgramOwnerSchema,
             D2AttributeValueGeneric, D2AttributeValueGenericSchema
         } from "../schemas/base";
 
