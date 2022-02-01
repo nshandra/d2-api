@@ -1,3 +1,5 @@
+import { D2Geometry, D2ProgramOwner } from "../schemas";
+import { PartialBy } from "../utils/types";
 import { Id, Pager } from "./base";
 import { AsyncPostResponse, D2ApiResponse, HttpResponse } from "./common";
 import { D2ApiGeneric } from "./d2Api";
@@ -46,15 +48,51 @@ export class TrackedEntityInstances {
     }
 }
 
-export interface TrackedEntityInstance {
+interface TrackedEntityInstanceBase {
     trackedEntityInstance: Id;
     trackedEntityType: Id;
-    inactive: boolean;
+    inactive?: boolean;
     orgUnit: Id;
     attributes: Attribute[];
     enrollments: Enrollment[];
     relationships: Relationship[];
+    created: string;
+    createdAtClient: string;
+    lastUpdated: string;
+    programOwners: D2ProgramOwner[];
 }
+
+export type TrackedEntityInstanceToPost = PartialBy<
+    TrackedEntityInstance,
+    Exclude<keyof TrackedEntityInstance, "trackedEntityInstance" | "orgUnit">
+>;
+
+export type TrackedEntityInstance = TeiGeometryNone | TeiGeometryPoint | TeiGeometryPolygon;
+
+interface GeometryNone {
+    featureType: "NONE";
+}
+
+interface GeometryPoint {
+    featureType: "POINT";
+    geometry: Extract<D2Geometry, { type: "Point" }>;
+}
+
+interface GeometryPolygon {
+    featureType: "POLYGON";
+    geometry: Extract<D2Geometry, { type: "Polygon" }>;
+}
+
+export type TrackedEntityInstanceGeometryAttributes =
+    | GeometryNone
+    | GeometryPoint
+    | GeometryPolygon;
+
+type TeiGeometryNone = TrackedEntityInstanceBase & GeometryNone;
+
+type TeiGeometryPoint = TrackedEntityInstanceBase & GeometryPoint;
+
+type TeiGeometryPolygon = TrackedEntityInstanceBase & GeometryPolygon;
 
 export interface Relationship {
     relationship: Id;
@@ -126,15 +164,7 @@ export interface PaginatedTeiGetResponse extends TeiGetResponse {
 }
 
 export interface TeiPostRequest {
-    trackedEntityInstances: Array<{
-        trackedEntityInstance: Id;
-        trackedEntityType: Id;
-        inactive?: boolean;
-        orgUnit: Id;
-        attributes: Attribute[];
-        enrollments: Enrollment[];
-        relationships: Relationship[];
-    }>;
+    trackedEntityInstances: TrackedEntityInstanceToPost[];
 }
 
 export type TeiPostParams = Partial<{
