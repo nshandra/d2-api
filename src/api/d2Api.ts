@@ -1,53 +1,57 @@
-import Axios, { AxiosBasicCredentials, AxiosInstance, AxiosRequestConfig } from "axios";
+import { AxiosHttpClientRepository } from "../data/AxiosHttpClientRepository";
+import { FetchHttpClientRepository } from "../data/FetchHttpClientRepository";
+import { HttpClientRepository } from "../repositories/HttpClientRepository";
+import { D2SchemaProperties } from "../schemas";
 import { cache, defineLazyCachedProperty } from "../utils/cache";
-import { joinPath, prepareConnection } from "../utils/connection";
+import { joinPath } from "../utils/connection";
 import { Analytics } from "./analytics";
+import { AppHub } from "./appHub";
+import { Audit } from "./audit";
 import { D2ApiDefinitionBase, D2ApiResponse, Params } from "./common";
 import { CurrentUser } from "./currentUser";
 import { DataStore } from "./dataStore";
 import { DataValues } from "./dataValues";
+import { Email } from "./email";
+import { Events } from "./events";
+import { Expressions } from "./expressions";
+import { Files } from "./files";
+import { Maintenance } from "./maintenance";
+import { MessageConversations } from "./messageConversations";
 import { Metadata } from "./metadata";
 import { Model } from "./model";
+import { Sharing } from "./sharing";
+import { SqlViews } from "./SqlViews";
 import { System } from "./system";
-import { MessageConversations } from "./messageConversations";
-
-export interface D2ApiOptions {
-    baseUrl?: string;
-    apiVersion?: number;
-    auth?: AxiosBasicCredentials;
-}
-
-export type IndexedModels<D2ApiDefinition extends D2ApiDefinitionBase> = {
-    [ModelKey in keyof D2ApiDefinition["schemas"]]: Model<
-        D2ApiDefinition,
-        D2ApiDefinition["schemas"][ModelKey]
-    >;
-};
+import { TrackedEntityInstances } from "./trackedEntityInstances";
+import { D2ApiOptions, D2ApiRequest, IndexedModels } from "./types";
+import { UserLookup } from "./UserLookup";
 
 export class D2ApiGeneric {
     public baseUrl: string;
     public apiPath: string;
-    public connection: AxiosInstance;
-    public baseConnection: AxiosInstance;
+    baseConnection: HttpClientRepository;
+    apiConnection: HttpClientRepository;
 
     public constructor(options?: D2ApiOptions) {
-        const { baseUrl = "http://localhost:8080", apiVersion, auth } = options || {};
+        const { baseUrl = "http://localhost:8080", apiVersion, auth, backend = "xhr", timeout } =
+            options || {};
         this.baseUrl = baseUrl;
         this.apiPath = joinPath(baseUrl, "api", apiVersion ? String(apiVersion) : null);
-        this.connection = prepareConnection(this.apiPath, auth);
-        this.baseConnection = prepareConnection(baseUrl, auth);
+        const HttpClientRepositoryImpl =
+            backend === "fetch" ? FetchHttpClientRepository : AxiosHttpClientRepository;
+        this.baseConnection = new HttpClientRepositoryImpl({ baseUrl, auth, timeout });
+        this.apiConnection = new HttpClientRepositoryImpl({ baseUrl: this.apiPath, auth, timeout });
     }
 
-    public request<T>(config: AxiosRequestConfig): D2ApiResponse<T> {
-        const { token: cancelToken, cancel } = Axios.CancelToken.source();
-        const axiosResponse = this.connection({ cancelToken, ...config });
-        const apiResponse = axiosResponse.then(response_ => ({
-            status: response_.status,
-            data: response_.data as T,
-            headers: response_.headers,
-        }));
+    @cache()
+    public getMockAdapter() {
+        return this.apiConnection.getMockAdapter();
+    }
 
-        return D2ApiResponse.build({ cancel, response: apiResponse });
+    public request<T>(options: D2ApiRequest): D2ApiResponse<T> {
+        const { skipApiPrefix = false, ...requestOptions } = options;
+        const connection = skipApiPrefix ? this.baseConnection : this.apiConnection;
+        return connection.request(requestOptions);
     }
 
     public get<T>(url: string, params?: Params) {
@@ -79,19 +83,34 @@ export abstract class D2ApiVersioned<
         modelClass: any,
         modelKeys: Array<keyof D2ApiDefinition["schemas"]>
     ): IndexedModels<D2ApiDefinition> {
-        let indexedModels: Partial<IndexedModels<D2ApiDefinition>> = {};
+        const indexedModels: Partial<IndexedModels<D2ApiDefinition>> = {};
         modelKeys.forEach(key => {
-            defineLazyCachedProperty(indexedModels, key, () => new modelClass(this, key));
+            defineLazyCachedProperty(
+                indexedModels,
+                key,
+                () => new modelClass(this, this.schemaModels[key])
+            );
         });
         return indexedModels as IndexedModels<D2ApiDefinition>;
     }
 
     dataStore(namespace: string): DataStore {
-        return new DataStore(this, namespace);
+        return new DataStore(this, "global", namespace);
     }
 
-    constructor(options?: D2ApiOptions, private modelKeys?: (keyof D2ApiDefinition["schemas"])[]) {
+    userDataStore(namespace: string): DataStore {
+        return new DataStore(this, "user", namespace);
+    }
+
+    constructor(
+        private schemaModels: Record<keyof D2ApiDefinition["schemas"], D2SchemaProperties>,
+        options?: D2ApiOptions
+    ) {
         super(options);
+    }
+
+    get modelKeys(): Array<keyof D2ApiDefinition["schemas"]> | undefined {
+        return this.schemaModels ? Object.keys(this.schemaModels) : undefined;
     }
 
     @cache()
@@ -120,12 +139,69 @@ export abstract class D2ApiVersioned<
     }
 
     @cache()
+    get events() {
+        return new Events(this);
+    }
+
+    @cache()
+    get trackedEntityInstances() {
+        return new TrackedEntityInstances(this);
+    }
+
+    @cache()
     get system() {
         return new System(this);
+    }
+
+    @cache()
+    get sharing() {
+        return new Sharing(this);
     }
 
     @cache()
     get messageConversations() {
         return new MessageConversations(this);
     }
+
+    @cache()
+    get email() {
+        return new Email(this);
+    }
+
+    @cache()
+    get files() {
+        return new Files(this);
+    }
+
+    @cache()
+    get appHub() {
+        return new AppHub(this);
+    }
+
+    @cache()
+    get maintenance() {
+        return new Maintenance(this);
+    }
+
+    @cache()
+    get expressions() {
+        return new Expressions(this);
+    }
+
+    @cache()
+    get audit() {
+        return new Audit(this);
+    }
+
+    @cache()
+    get sqlViews() {
+        return new SqlViews(this);
+    }
+
+    @cache()
+    get userLookup() {
+        return new UserLookup(this);
+    }
 }
+
+export { D2ApiOptions };

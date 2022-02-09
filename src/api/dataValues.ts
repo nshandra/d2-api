@@ -1,6 +1,7 @@
-import { D2ApiResponse } from "./common";
-import { D2ApiGeneric } from "./d2Api";
+import _ from "lodash";
 import { Id } from "../schemas";
+import { AsyncPostResponse, D2ApiResponse, HttpResponse } from "./common";
+import { D2ApiGeneric } from "./d2Api";
 
 export interface DataValueSetsPostRequest {
     dataSet?: Id;
@@ -29,11 +30,18 @@ export type DataValueSetsPostParams = Partial<{
     importStrategy: ImportStrategy;
     skipExistingCheck: boolean;
     skipAudit: boolean;
-    async: boolean;
     force: boolean;
 }>;
 
-type ImportStrategy = "CREATE" | "UPDATE" | "CREATE_AND_UPDATE" | "DELETE";
+type ImportStrategy =
+    | "CREATE"
+    | "UPDATE"
+    | "CREATE_AND_UPDATE"
+    | "DELETE"
+    | "NEW_AND_UPDATES"
+    | "NEW"
+    | "UPDATES"
+    | "DELETES";
 
 export interface DataValueSetsPostResponse {
     responseType: "ImportSummary";
@@ -120,10 +128,38 @@ export interface DataValueSetsDataValue {
     created: string;
     lastUpdated: string;
     followup: boolean;
+    deleted?: boolean;
 }
+
+// https://docs.dhis2.org/en/full/develop/dhis-core-version-master/developer-manual.html#webapi_sending_individual_data_values
+export interface DataValuePostRequest {
+    ou: string;
+    pe: string;
+    de: string;
+    co?: string;
+    cc?: string;
+    cp?: string;
+    ds?: string;
+    value?: string;
+    comment?: string;
+    followUp?: string;
+}
+
+export type DataValuePostResponse = HttpResponse<void>;
 
 export class DataValues {
     constructor(public d2Api: D2ApiGeneric) {}
+
+    post(request: DataValuePostRequest): D2ApiResponse<void> {
+        return this.d2Api
+            .request<DataValuePostResponse>({
+                method: "post",
+                url: "/dataValues",
+                data: new URLSearchParams(_.omitBy(request, _.isUndefined)),
+                requestBodyType: "raw",
+            })
+            .map(_res => undefined);
+    }
 
     getSet(params: DataValueSetsGetRequest): D2ApiResponse<DataValueSetsGetResponse> {
         return this.d2Api
@@ -135,6 +171,21 @@ export class DataValues {
         params: DataValueSetsPostParams,
         request: DataValueSetsPostRequest
     ): D2ApiResponse<DataValueSetsPostResponse> {
-        return this.d2Api.post<DataValueSetsPostResponse>("/dataValueSets", params, request);
+        return this.d2Api.post<DataValueSetsPostResponse>(
+            "/dataValueSets",
+            { ...params, async: false },
+            request
+        );
+    }
+
+    postSetAsync(
+        params: DataValueSetsPostParams,
+        request: DataValueSetsPostRequest
+    ): D2ApiResponse<AsyncPostResponse<"DATAVALUE_IMPORT">> {
+        return this.d2Api.post<AsyncPostResponse<"DATAVALUE_IMPORT">>(
+            "/dataValueSets",
+            { ...params, async: true },
+            request
+        );
     }
 }

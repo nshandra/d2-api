@@ -1,26 +1,30 @@
 import _ from "lodash";
-
+import { Id } from "../schemas";
+import { timeout } from "../utils/promises";
 import { D2ApiResponse } from "./common";
 import { D2ApiGeneric } from "./d2Api";
-import { Id } from "../schemas";
+import { DataValueSetsPostResponse } from "./dataValues";
+import { EventsPostResponse } from "./events";
+import { MetadataResponse } from "./metadata";
+import { TeiPostResponse } from "./trackedEntityInstances";
 
 export class System {
     constructor(public d2Api: D2ApiGeneric) {}
 
     getIds(options: { limit?: number }): D2ApiResponse<Id[]> {
         return this.d2Api
-            .request<{ codes: Id[] }>({ method: "GET", url: `/system/id`, params: options })
+            .request<{ codes: Id[] }>({ method: "get", url: `/system/id`, params: options })
             .map(res => (res.data && res.data.codes) || []);
     }
 
     get info(): D2ApiResponse<SystemInfo> {
-        return this.d2Api.request({ method: "GET", url: `/system/info` });
+        return this.d2Api.request({ method: "get", url: `/system/info` });
     }
 
     ping(): D2ApiResponse<boolean> {
         return this.d2Api
             .request({
-                method: "GET",
+                method: "get",
                 url: `/system/info`,
                 validateStatus: (status: number) => [200, 302, 401].includes(status),
             })
@@ -29,21 +33,62 @@ export class System {
 
     getTaskEntries(selector: TaskSelector): D2ApiResponse<TaskEntry[]> {
         return this.d2Api.request({
-            method: "GET",
+            method: "get",
             url: _.compact(["/system/tasks", selector.category, selector.id]).join("/"),
         });
     }
 
+    waitFor<Type extends keyof WaitForResponse>(
+        jobType: Type,
+        id: string,
+        options: { interval?: number; maxRetries?: number } = {}
+    ): D2ApiResponse<WaitForResponse[Type] | null> {
+        const { interval = 1000, maxRetries } = options;
+
+        let retries = 0;
+
+        const checkTask = async () => {
+            const result = await this.d2Api
+                .get<{ message: string; completed?: boolean }[]>(`/system/tasks/${jobType}/${id}`)
+                .getData();
+
+            return _.some(result, ({ completed }) => completed);
+        };
+
+        const prepareResponse = async () => {
+            // eslint-disable-next-line no-constant-condition
+            while (true) {
+                const isDone = await checkTask();
+                const hasReachedMaxRetries = maxRetries !== undefined && retries > maxRetries;
+                if (isDone || hasReachedMaxRetries) break;
+
+                await timeout(interval);
+                retries = retries + 1;
+            }
+
+            const { response } = this.d2Api.get<WaitForResponse[typeof jobType] | null>(
+                `/system/taskSummaries/${jobType}/${id}`
+            );
+
+            return response();
+        };
+
+        return D2ApiResponse.build({
+            cancel: _.noop,
+            response: () => prepareResponse(),
+        });
+    }
+
     get tasks(): D2ApiResponse<Tasks> {
-        return this.d2Api.request({ method: "GET", url: `/system/tasks` });
+        return this.d2Api.request({ method: "get", url: `/system/tasks` });
     }
 
     get flags(): D2ApiResponse<SystemItem[]> {
-        return this.d2Api.request({ method: "GET", url: `/system/flags` });
+        return this.d2Api.request({ method: "get", url: `/system/flags` });
     }
 
     get styles(): D2ApiResponse<SystemItem[]> {
-        return this.d2Api.request({ method: "GET", url: `/system/styles` });
+        return this.d2Api.request({ method: "get", url: `/system/styles` });
     }
 }
 
@@ -160,3 +205,10 @@ export interface SystemInfo {
     };
     metadataSyncEnabled?: boolean;
 }
+
+export type WaitForResponse = {
+    DATAVALUE_IMPORT: DataValueSetsPostResponse;
+    EVENT_IMPORT: EventsPostResponse;
+    METADATA_IMPORT: MetadataResponse;
+    TEI_IMPORT: TeiPostResponse;
+};

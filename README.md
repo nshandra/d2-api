@@ -44,6 +44,7 @@ import { D2Api } from "d2-api/2.32"
 const api = new D2Api({
     baseUrl: "https://play.dhis2.org/2.30",
     auth: { username: "admin", password: "district" },
+    timeout: 60 * 1000,
 });
 ```
 
@@ -200,6 +201,33 @@ const value = await dataStore.get("key1").getData();
 ```
 const dataStore = api.dataStore("namespace1");
 dataStore.save("key1", {x: 1, y: 2});
+```
+
+#### Emails
+
+Send a test email:
+
+```
+await api.email.sendTestMessage().getData();
+```
+
+Send a system notification:
+
+```
+await api.email.sendSystemNotification({
+    subject: "My subject",
+    text: "My message",
+}).getData();
+```
+
+Send a message (requires role `ALL` or `F_SEND_EMAIL`):
+
+```
+await api.email.sendMessage({
+    recipients: ["user@server.org"],
+    subject: "My subject",
+    text: "My message",
+}).getData();
 ```
 
 ## Using type helpers

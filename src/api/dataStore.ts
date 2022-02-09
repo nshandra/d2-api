@@ -1,16 +1,23 @@
-import { D2ApiResponse } from "./common";
+import { D2ApiResponse, HttpResponse } from "./common";
+import { HttpResponse as HttpClientResponse } from "../repositories/HttpClientRepository";
 import { D2ApiGeneric } from "./d2Api";
 
+type UpdateResponse = HttpResponse<undefined>;
+
 export class DataStore {
-    constructor(public d2Api: D2ApiGeneric, public namespace: string) {}
+    private endpoint: string;
+
+    constructor(public d2Api: D2ApiGeneric, type: DataStoreType, public namespace: string) {
+        this.endpoint = type === "user" ? "userDataStore" : "dataStore";
+    }
 
     getKeys(): D2ApiResponse<string[]> {
         const { d2Api, namespace } = this;
 
         return d2Api
             .request<string[]>({
-                method: "GET",
-                url: `/dataStore/${namespace}`,
+                method: "get",
+                url: `/${this.endpoint}/${namespace}`,
                 validateStatus: validate404,
             })
             .map(response => (response.status === 404 ? [] : response.data));
@@ -21,8 +28,20 @@ export class DataStore {
 
         return d2Api
             .request<T>({
-                method: "GET",
-                url: `/dataStore/${namespace}/${key}`,
+                method: "get",
+                url: `/${this.endpoint}/${namespace}/${key}`,
+                validateStatus: validate404,
+            })
+            .map(response => (response.status === 404 ? undefined : response.data));
+    }
+
+    getMetadata(key: string): D2ApiResponse<DataStoreKeyMetadata | undefined> {
+        const { d2Api, namespace } = this;
+
+        return d2Api
+            .request<DataStoreKeyMetadata>({
+                method: "get",
+                url: `/${this.endpoint}/${namespace}/${key}/metaData`,
                 validateStatus: validate404,
             })
             .map(response => (response.status === 404 ? undefined : response.data));
@@ -30,19 +49,22 @@ export class DataStore {
 
     save(key: string, value: object): D2ApiResponse<void> {
         const { d2Api, namespace } = this;
-        const config = { url: `/dataStore/${namespace}/${key}`, data: value };
+        const config = { url: `/${this.endpoint}/${namespace}/${key}`, data: value };
 
         return d2Api
-            .request<void>({
-                method: "PUT",
+            .request<UpdateResponse>({
+                method: "put",
                 ...config,
                 validateStatus: validate404,
             })
             .flatMap(response => {
                 if (response.status === 404) {
-                    return d2Api.request({ method: "POST", ...config });
+                    return d2Api
+                        .request<UpdateResponse>({ method: "post", ...config })
+                        .map(validateResponse);
                 } else {
-                    return D2ApiResponse.build({ response: Promise.resolve(response) });
+                    const voidResponse = { ...response, data: validateResponse(response) };
+                    return D2ApiResponse.build({ response: () => Promise.resolve(voidResponse) });
                 }
             });
     }
@@ -51,15 +73,52 @@ export class DataStore {
         const { d2Api, namespace } = this;
 
         return d2Api
-            .request({
-                method: "DELETE",
-                url: `/dataStore/${namespace}/${key}`,
+            .request<UpdateResponse>({
+                method: "delete",
+                url: `/${this.endpoint}/${namespace}/${key}`,
                 validateStatus: validate404,
             })
-            .map(response => (response.status === 404 ? false : true));
+            .map(response => (response.status === 404 ? false : response.data.status === "OK"));
     }
 }
 
+function validate2xx(status: number): boolean {
+    return status >= 200 && status < 300;
+}
+
 function validate404(status: number): boolean {
-    return (status >= 200 && status < 300) || status === 404;
+    return validate2xx(status) || status === 404;
+}
+
+function validateResponse(response: HttpClientResponse<HttpResponse<unknown>>): undefined {
+    const { data } = response;
+    if (validate2xx(response.status) && data.status === "OK") {
+        return;
+    } else {
+        throw new Error(data.message || "Invalid response from server");
+    }
+}
+
+export type DataStoreType = "global" | "user";
+
+export interface DataStoreKeyMetadata {
+    created: Date;
+    user: { id: string };
+    lastUpdated: Date;
+    lastUpdatedBy: { id: string };
+    namespace: string;
+    key: string;
+    value: string;
+    favorite: boolean;
+    id: string;
+    publicAccess: string;
+    externalAccess: boolean;
+    userAccesses: SharingSetting[];
+    userGroupAccesses: SharingSetting[];
+}
+
+interface SharingSetting {
+    access: string;
+    displayName: string;
+    id: string;
 }

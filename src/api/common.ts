@@ -1,8 +1,7 @@
-import { Ref } from "./../schemas/base";
 import _ from "lodash";
-import { Selector, D2ModelSchemaBase } from "./inference";
-
-export { D2ApiResponse } from "./api-response";
+import { Ref } from "./../schemas/base";
+import { D2ModelSchemaBase, Selector } from "./inference";
+import { TaskCategory } from "./system";
 
 export interface GetOptionValue<
     D2ApiDefinition extends D2ApiDefinitionBase,
@@ -62,11 +61,18 @@ export interface FilterBase {
 
 function applyFieldTransformers(key: string, value: any) {
     if (value.hasOwnProperty("$fn")) {
+        const valueWithFn = _.omit(value, ["$fn"]);
+
         switch (value["$fn"]["name"]) {
             case "rename":
                 return {
                     key: `${key}~rename(${value["$fn"]["to"]})`,
-                    value: _.omit(value, ["$fn"]),
+                    value: valueWithFn,
+                };
+            case "size":
+                return {
+                    key: `${key}~size`,
+                    value: valueWithFn,
                 };
             default:
                 return { key, value };
@@ -139,12 +145,6 @@ export function processFieldsFilterParams(
     });
 }
 
-export interface D2Response<Data> {
-    status: number;
-    data: Data;
-    headers: _.Dictionary<string>;
-}
-
 export type D2ApiRequestParamsValue = string | number | boolean | undefined;
 
 export interface Params {
@@ -167,13 +167,29 @@ export interface HttpResponse<Response> {
     response: Response;
 }
 
-export type PartialModel<T> = {
-    [P in keyof T]?: T[P] extends (infer U)[]
-        ? PartialModel<U>[]
-        : T[P] extends object
-        ? PartialModel<T[P]>
-        : T[P];
-};
+type IsAny<T> = 0 extends (1 & T) ? true : false;
+
+type IsNever<T> = [T] extends [never] ? true : false;
+
+type IsUnknown<T> = IsNever<T> extends false
+    ? T extends unknown
+        ? unknown extends T
+            ? IsAny<T> extends false
+                ? true
+                : false
+            : false
+        : false
+    : false;
+
+export type PartialModel<T> = IsUnknown<T> extends true
+    ? unknown
+    : {
+          [P in keyof T]?: T[P] extends (infer U)[]
+              ? PartialModel<U>[]
+              : T[P] extends object
+              ? PartialModel<T[P]>
+              : T[P];
+      };
 
 export type PartialPersistedModel<T> = PartialModel<T> & Ref;
 
@@ -183,3 +199,13 @@ export interface D2ApiDefinitionBase {
     schemas: D2ModelSchemasBase;
     filter: Record<string, any>;
 }
+
+export { CancelableResponse as D2ApiResponse } from "../repositories/CancelableResponse";
+
+export type AsyncPostResponse<Type extends TaskCategory> = HttpResponse<{
+    name: string;
+    id: string;
+    created: string;
+    jobType: Type;
+    relativeNotifierEndpoint: string;
+}>;

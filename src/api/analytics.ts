@@ -72,6 +72,14 @@ export type RunAnalyticsResponse = HttpResponse<{
     relativeNotifierEndpoint: string;
 }>;
 
+export type RunAnalyticsOptions = {
+    skipResourceTables?: boolean;
+    skipAggregate?: boolean;
+    skipEvents?: boolean;
+    skipEnrollment?: boolean;
+    lastYears?: number;
+};
+
 export class Analytics {
     constructor(public d2Api: D2ApiGeneric) {}
 
@@ -79,7 +87,7 @@ export class Analytics {
         return this.d2Api.get<AnalyticsResponse>("/analytics", options);
     }
 
-    run(): D2ApiResponse<RunAnalyticsResponse> {
-        return this.d2Api.post<RunAnalyticsResponse>("/resourceTables/analytics");
+    run(options?: RunAnalyticsOptions): D2ApiResponse<RunAnalyticsResponse> {
+        return this.d2Api.post<RunAnalyticsResponse>("/resourceTables/analytics", options);
     }
 }
