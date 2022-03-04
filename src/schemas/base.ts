@@ -64,7 +64,8 @@ export type D2Coordinates = [number, number];
 
 export type D2Geometry =
     | { type: "Point"; coordinates: D2Coordinates }
-    | { type: "Polygon"; coordinates: Array<D2Coordinates[]> };
+    | { type: "Polygon"; coordinates: Array<D2Coordinates[]> }
+    | { type: "MultiPolygon"; coordinates: Array<Array<D2Coordinates[]>> };
 
 export interface D2Expression {
     expression: string;
