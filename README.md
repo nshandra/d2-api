@@ -1,6 +1,6 @@
 # d2-api
 
-Typescript library for the DHIS2 API.
+Typescript library for the DHIS2 API..
 
 ## Generate schemas
 
